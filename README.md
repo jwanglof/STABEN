@@ -4,9 +4,9 @@ Den nya awsumaste STABEN-hemsidan som kommer BLOWA n0llans skalle AAAAWAY
 
 TODO (x == finished)
 ======
-[x] Set up a new GitHub-repo for the project
+- [X] Set up a new GitHub-repo for the project
 - [ ] Set up a new testing account on Johan's server
-- [ ] 
+- [ ] Set up an index page
 
 TECHNIQUES
 ======
