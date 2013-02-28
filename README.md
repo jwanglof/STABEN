@@ -22,10 +22,10 @@ TODO (x == finished)
 
 <dl>
 	<dt>DATABASE COLUMNS</dt>
-		<dd>[ ] MOTD (id, title, message, show_on_date)</dd>
-		<dd>[ ] Blog (id, title, text, date, time, author)</dd>
-		<dd>[ ] Blog_comments (belong_to_id, comment, date, time, author)</dd>
-		<dd>[ ] Users (id, email, firstname, lastname, title, phonenumber, role)</dd>
+		<dd>[x] MOTD (id, title, message, show_on_date)</dd>
+		<dd>[x] Blog (id, title, text, date, time, author)</dd>
+		<dd>[x] Blog_comments (belong_to_id, comment, date, time, author)</dd>
+		<dd>[x] Users (id, email, firstname, lastname, title, phonenumber, role)</dd>
 		<dd>[ ] Student_poll ()</dd>
 </dl>
 
