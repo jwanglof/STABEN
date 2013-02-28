@@ -11,11 +11,12 @@ TODO (x == finished)
 
 <dl>
 	<dt>SITES TO BE INCLUDED ON WEBSITE</dt>
-		<dd>[ ] Index page</dd>
+		<dd>[-] Layout page</dd>
+		<dd>[ ] Home</dd>
 		<dd>[ ] Blog</dd>
 		<dd>[ ] Gallery</dd>
 		<dd>[ ] Schedule</dd>
-		<dd>[ ] Contact information</dd>
+		<dd>[-] Contact information</dd>
 		<dd>[ ] Sponsors</dd>
 		<dd>[ ] Daily secret</dd>
 </dl>
@@ -27,6 +28,8 @@ TODO (x == finished)
 		<dd>[x] Blog_comments (belong_to_id, comment, date, time, author)</dd>
 		<dd>[x] Users (id, email, firstname, lastname, title, phonenumber, role)</dd>
 		<dd>[ ] Student_poll ()</dd>
+	<dt>MAYBE COLUMNS</dt>
+		<dd>[ ] Contact_information ()</dd>
 </dl>
 
 TECHNIQUES
