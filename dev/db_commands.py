@@ -1,11 +1,12 @@
-import model
+#import model
+import config
 
-app = model.app
-db = model.db
+db = config.db
+app = config.app
 
 # Should check if the DB is created successfully or not!
 def create_app():
-    db.init_app(app)
-    with app.test_request_context():
-        db.create_all()
-    return app
+    #db.init_app(app)
+    #with app.test_request_context():
+    db.create_all()
+    return "Done"

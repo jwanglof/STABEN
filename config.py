@@ -1,6 +1,6 @@
 from flask import Flask, request, session, g, redirect, url_for, render_template
 from flask.ext.sqlalchemy import SQLAlchemy
-from sqlalchemy import Table, Column, Integer, String, Date, Time, Text
+from sqlalchemy import Table, Column, Integer, String, Date, Time, Text, create_engine
 
 dbhost = 'localhost'
 dbuser = 'STABEN'

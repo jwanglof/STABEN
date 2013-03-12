@@ -1,7 +1,11 @@
 # http://www.capsunlock.net/2011/05/coding-with-flask-and-sqlalchemy.html
 # Why UNIQUE=TRUE: http://stackoverflow.com/questions/707874/differences-between-index-primary-unique-fulltext-in-mysql
-#from flaskext.sqlalchemy import SQLAlchemy
-#from sqlalchemy import Table, Column, Integer, String, Date, Float
+
+'''
+* IMPORTANT!
+* The database MUST be created before the script can create the models!
+'''
+
 import config
 
 # Defines

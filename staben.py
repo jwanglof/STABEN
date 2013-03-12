@@ -1,5 +1,5 @@
 import config
-import model
+#import model
 from dev import db_commands
 
 app = config.app
@@ -8,11 +8,16 @@ app = config.app
 # NEED TO BE REMOVED IN PRODUCTION MODE
 @app.route('/db_create')
 def db_create():
-    db_commands.create_app()
+	return db_commands.create_app()
 
 @app.route('/')
-def hello_world():
-    return 'Hello World!'
+def index():
+	return config.render_template('index.html')
+
+@app.route('/contact')
+def contact():
+	return config.render_template('contact.html')
 
 if __name__ == '__main__':
-    app.run()
+	app.debug = True
+	app.run()
