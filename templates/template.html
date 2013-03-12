@@ -3,7 +3,10 @@
 <head>
     <meta charset="utf-8">
     <title>STABEN</title>
-    <link rel="stylesheet" href="../static/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap.css">
+    <script src="../static/js/jquery.min.js"></script>
+    <!--<script src="../static/js/bootstrap.min.js"></script>-->
+    <script src="../static/js/scripts.js"></script>
     <!-- <link rel="stylesheet" href="../static/css/style.css"> -->
 </head>
 
@@ -19,13 +22,13 @@
                 </a>
                 <a class="brand" href="#">STABEN</a>
                 <div class="nav-collapse">
-                    <ul class="nav">
-                        <li class="active"><a href="/">Start</a></li>
-                        <li><a href="#schema">Schema</a></li>
-                        <li><a href="#student_polls">Enkät</a></li>
-                        <li><a href="#gallery">Galleri</a></li>
-                        <li><a href="#blog">Blogg</a></li>
-                        <li><a href="/contact">Kontakt</a></li>
+                    <ul class="nav" id="nav_menu">
+                        <li class='{% block active_index %}{% endblock %}'><a href="{{ url_for('index') }}">Start</a></li>
+                        <li class='{% block active_schedule %}{% endblock %}'><a href="#schema">Schema</a></li>
+                        <li class='{% block active_student_poll %}{% endblock %}'><a href="#student_polls">Enkät</a></li>
+                        <li class='{% block active_gallery %}{% endblock %}'><a href="#gallery">Galleri</a></li>
+                        <li class='{% block active_blog %}{% endblock %}'><a href="#blog">Blogg</a></li>
+                        <li class='{% block active_contact %}{% endblock %}'><a href="{{ url_for('contact') }}">Kontakt</a></li>
                     </ul>
             </div>
         </div>
@@ -45,5 +48,6 @@
     </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script src="../static/js/bootstrap.js"></script>
+
 </body>
 </html>
