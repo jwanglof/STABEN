@@ -3,6 +3,30 @@
 	{
 		"selected_items":
 		[
+			[
+				"nav",
+				"nav_menu"
+			],
+			[
+				"na",
+				"nav_menu"
+			],
+			[
+				"SQL",
+				"SQLAlchemy"
+			],
+			[
+				"db",
+				"dbname"
+			],
+			[
+				"sql",
+				"sql_engine"
+			],
+			[
+				"SQ",
+				"SQLALCHEMY_DATABASE_URI"
+			]
 		]
 	},
 	"buffers":
@@ -11,7 +35,7 @@
 			"file": "/home/johan/Git/STABEN/staben.py",
 			"settings":
 			{
-				"buffer_size": 310,
+				"buffer_size": 776,
 				"line_ending": "Unix"
 			}
 		},
@@ -19,18 +43,15 @@
 			"file": "/home/johan/Git/STABEN/model.py",
 			"settings":
 			{
-				"buffer_size": 3584,
+				"buffer_size": 4123,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"contents": "from flask import Flask, request, session, g, redirect, url_for, render_template\nfrom flask.ext.sqlalchemy import SQLAlchemy\nfrom sqlalchemy import Table, Column, Integer, String, Date, Time, Text\n\ndbhost = 'localhost'\ndbuser = 'STABEN'\ndbpass = 'generalhenrik'\ndbname = 'STABEN'\n\nSQLALCHEMY_DATABASE_URI = 'mysql://' + dbuser + ':' + dbpass + '@' + dbhost + '/' +dbname\nSQLALCHEMY_MIGRATE_REPO = 'db_repository'\n\nsql_engine = sqlalchemy.create_engine\n\nDEBUG = True\nSECRET_KEY = 'development key'\nUSERNAME = 'admin'\nPASSWORD = 'default'\n\napp = Flask(__name__)\napp.config[\"SQLALCHEMY_DATABASE_URI\"] = SQLALCHEMY_DATABASE_URI\ndb = SQLAlchemy(app)\n",
 			"file": "/home/johan/Git/STABEN/config.py",
-			"file_size": 606,
-			"file_write_time": 1363100925000000,
 			"settings":
 			{
-				"buffer_size": 645,
+				"buffer_size": 621,
 				"line_ending": "Unix"
 			}
 		},
@@ -38,7 +59,31 @@
 			"file": "/home/johan/Git/STABEN/dev/db_commands.py",
 			"settings":
 			{
-				"buffer_size": 235,
+				"buffer_size": 352,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/johan/Git/STABEN/templates/index.html",
+			"settings":
+			{
+				"buffer_size": 483,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/johan/Git/STABEN/templates/template.html",
+			"settings":
+			{
+				"buffer_size": 2295,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/johan/Git/STABEN/templates/contact.html",
+			"settings":
+			{
+				"buffer_size": 1163,
 				"line_ending": "Unix"
 			}
 		}
@@ -49,6 +94,10 @@
 		"height": 58.0,
 		"selected_items":
 		[
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
 			[
 				"install",
 				"Package Control: Install Package"
@@ -83,12 +132,22 @@
 	},
 	"file_history":
 	[
+		"/home/johan/.config/sublime-text-2/Packages/User/Default (Linux).sublime-keymap",
+		"/home/johan/Git/TDP022-Mockup/index.html",
+		"/home/johan/Git/STABEN/templates/student_poll.html",
+		"/home/johan/Git/STABEN/templates/schedule.html",
+		"/home/johan/Git/STABEN/templates/gallery.html",
+		"/home/johan/Git/STABEN/templates/blog.html",
+		"/home/johan/Git/STABEN/static/js/scripts.js",
+		"/home/johan/Git/STABEN/static/js/jquery.min.js",
+		"/home/johan/Git/STABEN/templates/contact.html",
+		"/home/johan/Git/STABEN/static/bla",
 		"/home/johan/Git/STABEN/dev/__init__.py",
 		"/home/johan/Git/TDP022-Mockup/js/settings.js"
 	],
 	"find":
 	{
-		"height": 0.0
+		"height": 36.0
 	},
 	"find_in_files":
 	{
@@ -109,6 +168,8 @@
 		"regex": false,
 		"replace_history":
 		[
+			"active",
+			"\")"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -119,7 +180,7 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -127,15 +188,15 @@
 					"file": "/home/johan/Git/STABEN/staben.py",
 					"settings":
 					{
-						"buffer_size": 310,
+						"buffer_size": 776,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								181,
-								181
+								632,
+								632
 							]
 						],
 						"settings":
@@ -153,15 +214,15 @@
 					"file": "/home/johan/Git/STABEN/model.py",
 					"settings":
 					{
-						"buffer_size": 3584,
+						"buffer_size": 4123,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								305,
-								305
+								1147,
+								1147
 							]
 						],
 						"settings":
@@ -171,7 +232,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 240.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -181,15 +242,15 @@
 					"file": "/home/johan/Git/STABEN/config.py",
 					"settings":
 					{
-						"buffer_size": 645,
+						"buffer_size": 621,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								414,
-								414
+								428,
+								428
 							]
 						],
 						"settings":
@@ -207,20 +268,104 @@
 					"file": "/home/johan/Git/STABEN/dev/db_commands.py",
 					"settings":
 					{
-						"buffer_size": 235,
+						"buffer_size": 352,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								201,
-								201
+								230,
+								230
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "/home/johan/Git/STABEN/templates/index.html",
+					"settings":
+					{
+						"buffer_size": 483,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								51,
+								51
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "/home/johan/Git/STABEN/templates/template.html",
+					"settings":
+					{
+						"buffer_size": 2295,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1565,
+								1565
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 192.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "/home/johan/Git/STABEN/templates/contact.html",
+					"settings":
+					{
+						"buffer_size": 1163,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -233,7 +378,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 0.0
+		"height": 34.0
 	},
 	"input":
 	{
