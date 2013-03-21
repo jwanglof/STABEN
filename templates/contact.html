@@ -1,47 +1,63 @@
 {% extends "template.html" %}
 {% block active_contact %}active{% endblock %}
 {% block content %}
+{% if show == 'admins' %}
+<div class="row">
+    <div class="span4">
+        <h2>Webmasters</h2>
+        <ul>
+            <li><b>Namn: </b>Johan Waengloef</li>
+            <li><b>Telefon: </b>Hemligt</li>
+            <li><b>E-post: </b>Hemligt</li>
+            <br>
+            <li><b>Namn: </b>Simon Linden</li>
+            <li><b>Telefon: </b>Hemligt</li>
+            <li><b>E-post: </b>Hemligt</li>
+        </ul>
+    </div>
+</div>
+{% elif show == 'contact' %}
 <div class="row">
     <div class="span12">
         <h1>Kontaktuppgifter</h1>
         <br>
         <p>Här kan <sub>minus</sub> hitta hur hen ska kontakta viktiga personer.</p>
     </div>
-<div class="span4">
-<h2>Överfaddrar</h2>
-<ul>
-    <li><b>Namn: </b>Överfadder1</li>
-    <li><b>Telefon: </b>Nummer1</li>
-    <li><b>E-post: </b>Adress1</li>
-    <br>
-    <li><b>Namn: </b>Överfadder2</li>
-    <li><b>Telefon: </b>Nummer2</li>
-    <li><b>E-post: </b>adress2</li>
-</ul>
+    <div class="span4">
+        <h2>Överfaddrar</h2>
+        <ul>
+            <li><b>Namn: </b>Överfadder1</li>
+            <li><b>Telefon: </b>Nummer1</li>
+            <li><b>E-post: </b>Adress1</li>
+            <br>
+            <li><b>Namn: </b>Överfadder2</li>
+            <li><b>Telefon: </b>Nummer2</li>
+            <li><b>E-post: </b>adress2</li>
+        </ul>
+    </div>
+    <div class="span4">
+        <h2>Klassföreståndare</h2>
+        <ul>
+            <li><b>Klass: </b>IT</li>
+            <li><b>Namn: </b>Föreståndare1</li>
+            <li><b>Telefon: </b>Nummer1</li>
+            <li><b>E-post: </b>Adress1</li>
+            <br>
+            <li><b>Klass: </b>D1a</li>
+            <li><b>Namn: </b>Föreståndare2</li>
+            <li><b>Telefon: </b>Nummer2</li>
+            <li><b>E-post: </b>Adress2</li>
+        </ul>
+    </div>
+    <div class="span4">
+        <h2>Studievägledning</h2>
+        <ul>
+            <li><b>Studievägledare: </b>Siv</li>
+            <li><b>Telefon: </b>nummer</li>
+            <li><b>E-post: </b>adress</li>
+            <li><b>Länk: </b>link</li>
+        </ul>
+    </div>
 </div>
-<div class="span4">
-<h2>Klassföreståndare</h2>
-<ul>
-    <li><b>Klass: </b>IT</li>
-    <li><b>Namn: </b>Föreståndare1</li>
-    <li><b>Telefon: </b>Nummer1</li>
-    <li><b>E-post: </b>Adress1</li>
-    <br>
-    <li><b>Klass: </b>D1a</li>
-    <li><b>Namn: </b>Föreståndare2</li>
-    <li><b>Telefon: </b>Nummer2</li>
-    <li><b>E-post: </b>Adress2</li>
-</ul>
-</div>
-<div class="span4">
-<h2>Studievägledning</h2>
-<ul>
-    <li><b>Studievägledare: </b>Siv</li>
-    <li><b>Telefon: </b>nummer</li>
-    <li><b>E-post: </b>adress</li>
-    <li><b>Länk: </b>link</li>
-</ul>
-</div>
-</div>
-
+{% endif %}
 {% endblock %}
