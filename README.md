@@ -47,3 +47,9 @@ EXAMPLE ON IDE'S TO USE
 WIKI
 ======
 - MediaWiki (http://www.mediawiki.org/wiki/MediaWiki)
+
+REQUIREMENTS
+======
+[in pip] flask-bcrypt (https://github.com/maxcountryman/flask-bcrypt)
+[in pip] flask-sqlalchemy
+[in pip] sqlalchemy-migrate
