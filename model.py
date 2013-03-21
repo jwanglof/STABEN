@@ -19,10 +19,10 @@ app = config.app
 # DB classes
 class Motd(db.Model):
     __tablename__ = 'motd'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer(), primary_key=True)
     title = db.Column(db.String(100), index=True, unique=True)
-    message = db.Column(db.String(254), index=True, unique=True)
-    show_on_date = db.Column(db.Date, index=True, unique=True)
+    message = db.Column(db.String(254), index=True)
+    show_on_date = db.Column(db.Date(), index=True, unique=True)
 
     def __init__(self, title=None, message=None, show_on_date=None):
         self.title = title
@@ -34,12 +34,12 @@ class Motd(db.Model):
 
 class Blog(db.Model):
     __tablename__ = 'blog'
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), index=True, unique=True)
-    text = db.Column(db.Text, index=True, unique=True)
-    date = db.Column(db.Date, index=True, unique=True)
-    time = db.Column(db.Time, index=True, unique=True)
-    author = db.Column(db.String(40), index=True, unique=True)
+    id = db.Column(db.Integer(), primary_key=True)
+    title = db.Column(db.String(100), index=True, unique=False)
+    text = db.Column(db.UnicodeText())
+    date = db.Column(db.Date(), index=True, unique=True)
+    time = db.Column(db.Time(), index=True)
+    author = db.Column(db.String(40), index=True)
 
     def __init__(self, title=None, text=None, date=None, time=None, author=None):
         self.title = title
@@ -53,12 +53,12 @@ class Blog(db.Model):
 
 class BlogComments(db.Model):
     __tablename__ = 'blog_comments'
-    id = db.Column(db.Integer, primary_key=True)
-    belong_to_id = db.Column(db.Integer, index=True, unique=False)
-    comment = db.Column(db.String(250), index=True, unique=True)
-    date = db.Column(db.Date, index=True, unique=True)
-    time = db.Column(db.Time, index=True, unique=True)
-    author = db.Column(db.String(40), index=True, unique=True)
+    id = db.Column(db.Integer(), primary_key=True)
+    belong_to_id = db.Column(db.Integer(), index=True, unique=True)
+    comment = db.Column(db.String(250), index=True)
+    date = db.Column(db.Date(), index=True)
+    time = db.Column(db.Time(), index=True)
+    author = db.Column(db.String(40), index=True)
 
     def __init__(self, belong_to_id=0, comment=None, date=None, time=None, author=None):
         self.belong_to_id = belong_to_id
@@ -79,28 +79,30 @@ class BlogComments(db.Model):
 '''
 class Users(db.Model):
     __tablename__ = 'users'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer(), primary_key=True)
     email = db.Column(db.String(100), index=True, unique=True)
-    firstname = db.Column(db.String(100), index=True, unique=True)
-    lastname = db.Column(db.String(100), index=True, unique=True)
-    title = db.Column(db.String(15), index=True, unique=True)
+    password = db.Column(db.String(50), index=True)
+    firstname = db.Column(db.String(100), index=True)
+    lastname = db.Column(db.String(100), index=True)
+    title = db.Column(db.String(15), index=True)
     #phonenumber = db.Column(db.Integer, index=True, unique=True)
-    phonenumber = db.Column(db.String(15), index=True, unique=True)
-    role = db.Column(db.SmallInteger, default=3)
+    phonenumber = db.Column(db.String(15), index=True)
+    role = db.Column(db.SmallInteger(), default=3)
+    times_signed_in = db.Column(db.Integer(), default=0)
 
-    def __init__(self, email=None, firstname=None, lastname=None, title=None, phonenumber=None, role=3):
+    def __init__(self, email=None, password=None, firstname=None, lastname=None, title=None, phonenumber=None, role=3, times_signed_in=0):
         self.email = email
+        self.password = password
         self.firstname = firstname
         self.lastname = lastname
         self.title = title
         self.phonenumber = phonenumber
         self.role = role
+        self.times_signed_in = times_signed_in
 
     def __repr__(self):
         return 'The user named %s %s has title %s' % (self.firstname, self.lastname, self.title)
 
-waeggen_user = Users('jwanglof@gmail.com', 'Johan', 'Wanglof', 'WebmastAH', '0046708601911', 1)
-simba_user = Users('simis.linden@gmail.com', 'Simon', 'Linden', 'WebmastAH', '0046735026994', 1)
 
 '''class StudentPoll(db.Model):
     __tablename__ = 'student_poll'
