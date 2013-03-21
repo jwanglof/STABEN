@@ -4,6 +4,46 @@
 		"selected_items":
 		[
 			[
+				"profile",
+				"profile"
+			],
+			[
+				"user",
+				"user_page"
+			],
+			[
+				"sess",
+				"session"
+			],
+			[
+				"db_",
+				"db_user_email"
+			],
+			[
+				"db",
+				"db_pass"
+			],
+			[
+				"db_us",
+				"db_user_password"
+			],
+			[
+				"show",
+				"show_page"
+			],
+			[
+				"retur",
+				"return_text"
+			],
+			[
+				"wa",
+				"waeggen_user"
+			],
+			[
+				"admin",
+				"admin_users"
+			],
+			[
 				"nav",
 				"nav_menu"
 			],
@@ -14,10 +54,6 @@
 			[
 				"SQL",
 				"SQLAlchemy"
-			],
-			[
-				"db",
-				"dbname"
 			],
 			[
 				"sql",
@@ -35,15 +71,15 @@
 			"file": "/home/johan/Git/STABEN/staben.py",
 			"settings":
 			{
-				"buffer_size": 776,
+				"buffer_size": 1702,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "/home/johan/Git/STABEN/model.py",
+			"file": "/home/johan/Git/STABEN/templates/profile.html",
 			"settings":
 			{
-				"buffer_size": 4123,
+				"buffer_size": 186,
 				"line_ending": "Unix"
 			}
 		},
@@ -51,7 +87,7 @@
 			"file": "/home/johan/Git/STABEN/config.py",
 			"settings":
 			{
-				"buffer_size": 621,
+				"buffer_size": 869,
 				"line_ending": "Unix"
 			}
 		},
@@ -59,15 +95,7 @@
 			"file": "/home/johan/Git/STABEN/dev/db_commands.py",
 			"settings":
 			{
-				"buffer_size": 352,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/home/johan/Git/STABEN/templates/index.html",
-			"settings":
-			{
-				"buffer_size": 483,
+				"buffer_size": 1264,
 				"line_ending": "Unix"
 			}
 		},
@@ -75,15 +103,15 @@
 			"file": "/home/johan/Git/STABEN/templates/template.html",
 			"settings":
 			{
-				"buffer_size": 2295,
+				"buffer_size": 3716,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "/home/johan/Git/STABEN/templates/contact.html",
+			"file": "/home/johan/Git/STABEN/model.py",
 			"settings":
 			{
-				"buffer_size": 1163,
+				"buffer_size": 4016,
 				"line_ending": "Unix"
 			}
 		}
@@ -132,7 +160,13 @@
 	},
 	"file_history":
 	[
+		"/home/johan/Git/STABEN/README.md",
+		"/home/johan/Git/STABEN/templates/login.html",
+		"/home/johan/Git/STABEN/templates/index.html",
+		"/home/johan/Git/STABEN/model.py",
+		"/home/johan/Git/STABEN/templates/contact.html",
 		"/home/johan/.config/sublime-text-2/Packages/User/Default (Linux).sublime-keymap",
+		"/home/johan/Git/STABEN/templates/prices.html",
 		"/home/johan/Git/TDP022-Mockup/index.html",
 		"/home/johan/Git/STABEN/templates/student_poll.html",
 		"/home/johan/Git/STABEN/templates/schedule.html",
@@ -140,7 +174,6 @@
 		"/home/johan/Git/STABEN/templates/blog.html",
 		"/home/johan/Git/STABEN/static/js/scripts.js",
 		"/home/johan/Git/STABEN/static/js/jquery.min.js",
-		"/home/johan/Git/STABEN/templates/contact.html",
 		"/home/johan/Git/STABEN/static/bla",
 		"/home/johan/Git/STABEN/dev/__init__.py",
 		"/home/johan/Git/TDP022-Mockup/js/settings.js"
@@ -161,13 +194,16 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"config.render_template",
+			"Text"
 		],
 		"highlight": true,
-		"in_selection": false,
+		"in_selection": true,
 		"preserve_case": false,
 		"regex": false,
 		"replace_history":
 		[
+			"render",
 			"active",
 			"\")"
 		],
@@ -180,7 +216,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 2,
 			"sheets":
 			[
 				{
@@ -188,15 +224,15 @@
 					"file": "/home/johan/Git/STABEN/staben.py",
 					"settings":
 					{
-						"buffer_size": 776,
+						"buffer_size": 1702,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								632,
-								632
+								1481,
+								1481
 							]
 						],
 						"settings":
@@ -204,35 +240,35 @@
 							"syntax": "Packages/Python/Python.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 576.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "/home/johan/Git/STABEN/model.py",
+					"file": "/home/johan/Git/STABEN/templates/profile.html",
 					"settings":
 					{
-						"buffer_size": 4123,
+						"buffer_size": 186,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1147,
-								1147
+								119,
+								119
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Python/Python.tmLanguage",
+							"syntax": "Packages/Jinja2/Syntaxes/HTML (Jinja Templates).tmLanguage",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 240.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -242,15 +278,15 @@
 					"file": "/home/johan/Git/STABEN/config.py",
 					"settings":
 					{
-						"buffer_size": 621,
+						"buffer_size": 869,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								428,
-								428
+								869,
+								869
 							]
 						],
 						"settings":
@@ -268,15 +304,15 @@
 					"file": "/home/johan/Git/STABEN/dev/db_commands.py",
 					"settings":
 					{
-						"buffer_size": 352,
+						"buffer_size": 1264,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								230,
-								230
+								1238,
+								1238
 							]
 						],
 						"settings":
@@ -284,25 +320,25 @@
 							"syntax": "Packages/Python/Python.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 48.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 4,
-					"file": "/home/johan/Git/STABEN/templates/index.html",
+					"file": "/home/johan/Git/STABEN/templates/template.html",
 					"settings":
 					{
-						"buffer_size": 483,
+						"buffer_size": 3716,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								51,
-								51
+								1942,
+								1942
 							]
 						],
 						"settings":
@@ -312,63 +348,35 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 152.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 5,
-					"file": "/home/johan/Git/STABEN/templates/template.html",
+					"file": "/home/johan/Git/STABEN/model.py",
 					"settings":
 					{
-						"buffer_size": 2295,
+						"buffer_size": 4016,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1565,
-								1565
+								3691,
+								3691
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"syntax": "Packages/Python/Python.tmLanguage",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 192.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "/home/johan/Git/STABEN/templates/contact.html",
-					"settings":
-					{
-						"buffer_size": 1163,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/HTML/HTML.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 768.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -409,7 +417,7 @@
 	"menu_visible": true,
 	"replace":
 	{
-		"height": 0.0
+		"height": 66.0
 	},
 	"save_all_on_build": true,
 	"select_file":
