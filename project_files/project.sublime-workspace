@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"backgr",
+				"background-color"
+			],
+			[
 				"profile",
 				"profile"
 			],
@@ -71,7 +75,7 @@
 			"file": "/home/johan/Git/STABEN/staben.py",
 			"settings":
 			{
-				"buffer_size": 1702,
+				"buffer_size": 2524,
 				"line_ending": "Unix"
 			}
 		},
@@ -79,7 +83,7 @@
 			"file": "/home/johan/Git/STABEN/templates/profile.html",
 			"settings":
 			{
-				"buffer_size": 186,
+				"buffer_size": 225,
 				"line_ending": "Unix"
 			}
 		},
@@ -87,7 +91,7 @@
 			"file": "/home/johan/Git/STABEN/config.py",
 			"settings":
 			{
-				"buffer_size": 869,
+				"buffer_size": 999,
 				"line_ending": "Unix"
 			}
 		},
@@ -95,7 +99,7 @@
 			"file": "/home/johan/Git/STABEN/dev/db_commands.py",
 			"settings":
 			{
-				"buffer_size": 1264,
+				"buffer_size": 2063,
 				"line_ending": "Unix"
 			}
 		},
@@ -103,7 +107,7 @@
 			"file": "/home/johan/Git/STABEN/templates/template.html",
 			"settings":
 			{
-				"buffer_size": 3716,
+				"buffer_size": 4252,
 				"line_ending": "Unix"
 			}
 		},
@@ -111,7 +115,39 @@
 			"file": "/home/johan/Git/STABEN/model.py",
 			"settings":
 			{
-				"buffer_size": 4016,
+				"buffer_size": 5133,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/johan/Git/STABEN/templates/index.html",
+			"settings":
+			{
+				"buffer_size": 641,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/johan/Git/STABEN/templates/profile_edit.html",
+			"settings":
+			{
+				"buffer_size": 1956,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/johan/Git/STABEN/static/js/scripts.js",
+			"settings":
+			{
+				"buffer_size": 285,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/johan/Git/STABEN/README.md",
+			"settings":
+			{
+				"buffer_size": 1380,
 				"line_ending": "Unix"
 			}
 		}
@@ -160,7 +196,10 @@
 	},
 	"file_history":
 	[
+		"/home/johan/Git/STABEN/static/css/style.css",
+		"/home/johan/Git/STABEN/static/js/jquery.validate.js",
 		"/home/johan/Git/STABEN/README.md",
+		"/home/johan/Git/STABEN/templates/profie_edit.html",
 		"/home/johan/Git/STABEN/templates/login.html",
 		"/home/johan/Git/STABEN/templates/index.html",
 		"/home/johan/Git/STABEN/model.py",
@@ -216,7 +255,7 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 7,
 			"sheets":
 			[
 				{
@@ -224,23 +263,24 @@
 					"file": "/home/johan/Git/STABEN/staben.py",
 					"settings":
 					{
-						"buffer_size": 1702,
+						"buffer_size": 2524,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1481,
-								1481
+								1795,
+								1795
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Python/Python.tmLanguage"
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 576.0,
+						"translation.y": 1008.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -250,15 +290,15 @@
 					"file": "/home/johan/Git/STABEN/templates/profile.html",
 					"settings":
 					{
-						"buffer_size": 186,
+						"buffer_size": 225,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								119,
-								119
+								210,
+								210
 							]
 						],
 						"settings":
@@ -278,15 +318,15 @@
 					"file": "/home/johan/Git/STABEN/config.py",
 					"settings":
 					{
-						"buffer_size": 869,
+						"buffer_size": 999,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								869,
-								869
+								893,
+								893
 							]
 						],
 						"settings":
@@ -304,23 +344,24 @@
 					"file": "/home/johan/Git/STABEN/dev/db_commands.py",
 					"settings":
 					{
-						"buffer_size": 1264,
+						"buffer_size": 2063,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1238,
-								1238
+								1952,
+								1952
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Python/Python.tmLanguage"
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 48.0,
+						"translation.y": 720.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -330,15 +371,15 @@
 					"file": "/home/johan/Git/STABEN/templates/template.html",
 					"settings":
 					{
-						"buffer_size": 3716,
+						"buffer_size": 4252,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1942,
-								1942
+								395,
+								395
 							]
 						],
 						"settings":
@@ -348,7 +389,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 152.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -358,15 +399,15 @@
 					"file": "/home/johan/Git/STABEN/model.py",
 					"settings":
 					{
-						"buffer_size": 4016,
+						"buffer_size": 5133,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3691,
-								3691
+								3779,
+								3779
 							]
 						],
 						"settings":
@@ -376,7 +417,114 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 768.0,
+						"translation.y": 1152.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "/home/johan/Git/STABEN/templates/index.html",
+					"settings":
+					{
+						"buffer_size": 641,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								113,
+								113
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "/home/johan/Git/STABEN/templates/profile_edit.html",
+					"settings":
+					{
+						"buffer_size": 1956,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								992,
+								992
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "/home/johan/Git/STABEN/static/js/scripts.js",
+					"settings":
+					{
+						"buffer_size": 285,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								171,
+								171
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "/home/johan/Git/STABEN/README.md",
+					"settings":
+					{
+						"buffer_size": 1380,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1345,
+								1345
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Markdown/Markdown.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 576.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -390,7 +538,7 @@
 	},
 	"input":
 	{
-		"height": 0.0
+		"height": 32.0
 	},
 	"layout":
 	{
