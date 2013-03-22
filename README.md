@@ -19,6 +19,7 @@ TODO (x == finished)
 		<dd>[-] Contact information</dd>
 		<dd>[ ] Sponsors</dd>
 		<dd>[ ] Daily secret</dd>
+		<dd>[ ] Nolleportalen</dd>
 </dl>
 
 <dl>
@@ -53,3 +54,14 @@ REQUIREMENTS
 [in pip] flask-bcrypt (https://github.com/maxcountryman/flask-bcrypt)
 [in pip] flask-sqlalchemy
 [in pip] sqlalchemy-migrate
+
+PROFILE PAGE
+======
+Nolleportalen
+Info:
+	Vart man bor
+	Ålder
+	Bild
+	Fejjan
+	Klass
+	Kommer ifrån
