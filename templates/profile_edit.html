@@ -1,0 +1,44 @@
+{% extends "template.html" %}
+{% block active_profile%}active{% endblock %}
+{% block content %}
+<h1>Redigera profil</h1>
+<form method='post' action='/user/edit/save' id='profile_edit'>
+	<h4>Användaruppgifter</h4>
+	Namn * <br />
+	<input type='text' id='firstname' name='firstname' value='{{ user_info.firstname }}' title='BAAAAJS' /> <br />
+	<input type='text' id='lastname' name='lastname' value='{{ user_info.lastname }}' title='BAAAAJSAAAAA' /> <br />
+	Telefonnummer <br />
+	<input type='text' name='phonenumber' value='{{ user_info.phonenumber }}' /> <br />
+	Ålder <br />
+	<input type='text' name='phonenumber' value='{{ user_info.age}}' /> <br />
+	Facebook länk <br />
+	<input type='text' name='phonenumber' value='{{ user_info.facebook_link }}' /> <br />
+	Var bor du? <br />
+	<input type='text' name='phonenumber' value='{{ user_info.current_city }}' /> <br />
+	Var kommer du ifrån? <br />
+	<input type='text' name='phonenumber' value='{{ user_info.where_from }}' /> <br />
+	Klass <br />
+	<input type='text' name='phonenumber' value='{{ user_info.school_class }}' /> <br />
+	
+	<h5>Dessa kan du inte ändra, kontakta webmaster vid önskad ändring!</h5>
+	Email
+	<br />
+	<input type='text' id='email' name='email' value='{{ user_info.email }}' disabled />
+	<br />
+	Titel
+	<br />
+	<input type='text' name='title' value='{{ user_info.title }}' disabled />
+	<br />
+	<button type='submit' class='btn'>Spara</button> <input type='reset' value='Återställ' class='btn' />
+</form>
+
+<form method='post' action='/user/edit/save/password' id='profile_password'>
+	<h4>Lösenord</h4>
+	<input type='password' name='current_password' placeholder='Nuvarande lösenord' />
+	<br />
+	<input type='password' name='new_password' placeholder='Nytt lösenord' />
+	<input type='password' name='new_password' placeholder='Repetera lösenord' />
+	<br />
+	<button type='submit' class='btn'>Byt lösenord</button> <input type='reset' value='Återställ' class='btn' />
+</form>
+{% endblock %}
