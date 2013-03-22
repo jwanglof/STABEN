@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 import config
 #import model
 from dev import db_commands
@@ -18,7 +21,7 @@ def db_admins():
 
 @app.route('/')
 def index():
-	return render('index.html')
+	return render('index.html', session=config.session, bla=config.user_roles)
 
 @app.route('/prices')
 def prices():
@@ -49,17 +52,40 @@ def contact(show_page='contact'):
 def login():
 	if get_form.form['email'] not in config.session:
 		if config.request.method == 'POST':
-			if (db_commands.get_db_user(get_form.form['email'],get_form.form['password']) == "TRUE"):
-				return render('profile.html', user_email=config.session['email'])
+			user_info = db_commands.get_db_user(get_form.form['email'],get_form.form['password'])
+			if (user_info):
+				return render('profile.html', user_info=user_info, user_role=config.user_roles[user_info.role])
+			else:
+				return render('login.html', login=False)
 	else:
-		return render('profile.html', user_email=config.session['email'])
+		return render('profile.html', user_info=user_info, user_role=config.user_roles[user_info.role])
 	return render('login.html', login=False)
 
 @app.route('/user/profile')
 def profile():
-	user_info = db_commands.get_db_user(config.session['email'])
-	#print user_info.email
-	return render('profile.html', user_info=user_info)
+	if config.session:
+		user_info = db_commands.get_db_user(config.session['email'])
+		return render('profile.html', user_info=user_info, user_role=config.user_roles[user_info.role])
+	else:
+		return render('login.html', login=False)
+
+@app.route('/user/edit')
+def edit():
+	if config.session:
+		user_info = db_commands.get_db_user(config.session['email'])
+		return render('profile_edit.html', user_info=user_info)
+	else:
+		return render('login.html', login=False)
+
+@app.route('/user/edit/save', methods=['POST'])
+def edit_user():
+	print db_commands.update_db_user(config.session['email'], get_form.form)
+	return config.redirect(url_for('profile'))
+	
+
+@app.route('/user/edit/save/password', methods=['POST'])
+def edit_password():
+	return 'bajsa'
 
 @app.route('/user/signout')
 def signout():

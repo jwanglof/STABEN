@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 # http://www.capsunlock.net/2011/05/coding-with-flask-and-sqlalchemy.html
 # Why UNIQUE=TRUE: http://stackoverflow.com/questions/707874/differences-between-index-primary-unique-fulltext-in-mysql
 # 
@@ -72,37 +75,58 @@ class BlogComments(db.Model):
 
 '''
     Users will represent:
-    * STABEN (admins)                                  (role=1)
-    * Faddrar (Oeverfaddrar, Faddrar)       (role=2)
-    * Klassfoerestandare                                (role=3)
-    * Andra                                                        (role=4)
+    * STABEN (admins)                                  (role=0)
+    * Överfadder                                         (role=1)
+    * Fadder                                                    (role=2)
+    * Klassföreståndare                              (role=3)
+    * Användare                                                        (role=4)
 '''
 class Users(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer(), primary_key=True)
     email = db.Column(db.String(100), index=True, unique=True)
     password = db.Column(db.String(50), index=True)
+    title = db.Column(db.String(15), index=True)
+    role = db.Column(db.SmallInteger(), default=4)
+    #information = db.relationship('UserInformation', backref='users', lazy='dynamic')
     firstname = db.Column(db.String(100), index=True)
     lastname = db.Column(db.String(100), index=True)
-    title = db.Column(db.String(15), index=True)
-    #phonenumber = db.Column(db.Integer, index=True, unique=True)
     phonenumber = db.Column(db.String(15), index=True)
-    role = db.Column(db.SmallInteger(), default=3)
+    age = db.Column(db.Integer(3), index=True)
+    facebook_link = db.Column(db.String(100), index=True)
+    school_class = db.Column(db.String(15), index=True)
+    current_city = db.Column(db.String(100), index=True)
+    where_from = db.Column(db.String(100), index=True)
     times_signed_in = db.Column(db.Integer(), default=0)
 
-    def __init__(self, email=None, password=None, firstname=None, lastname=None, title=None, phonenumber=None, role=3, times_signed_in=0):
+    def __init__(self, email=None, password=None, title=None, role=3, firstname=None, lastname=None, phonenumber=None):
         self.email = email
         self.password = password
+        self.title = title
+        self.role = role
         self.firstname = firstname
         self.lastname = lastname
-        self.title = title
         self.phonenumber = phonenumber
-        self.role = role
-        self.times_signed_in = times_signed_in
 
     def __repr__(self):
         return 'The user named %s %s has title %s' % (self.firstname, self.lastname, self.title)
 
+'''class UserInformation(db.Model):
+    __tablename__ = 'userInformation'
+    id = db.Column(db.Integer(), primary_key=True)
+    firstname = db.Column(db.String(100), index=True)
+    lastname = db.Column(db.String(100), index=True)
+    phonenumber = db.Column(db.String(15), index=True)
+    age = db.Column(db.Integer(3), index=True)
+    facebook_link = db.Column(db.String(100), index=True)
+    school_class = db.Column(db.String(15), index=True)
+    current_city = db.Column(db.String(100), index=True)
+    where_from = db.Column(db.String(100), index=True)
+    times_signed_in = db.Column(db.Integer(), default=0)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+    def __init__(self, firstname=None):
+        self.firstname = firstname'''
 
 '''class StudentPoll(db.Model):
     __tablename__ = 'student_poll'

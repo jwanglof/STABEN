@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 from flask import Flask, request, session, g, redirect, url_for, render_template
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.bcrypt import Bcrypt
@@ -21,6 +24,8 @@ app.secret_key = SECRET_KEY
 bcrypt = Bcrypt(app)
 app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
 db = SQLAlchemy(app)
+
+user_roles = [u'Admin', u'Överfadder', u'Fadder', u'Klassföreståndare', u'Användare']
 
 # TODO
 # Fix DB migration!
