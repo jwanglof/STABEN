@@ -2,7 +2,7 @@
 {% block active_profile%}active{% endblock %}
 {% block content %}
 <h1>Redigera profil</h1>
-<form method='post' action='/user/edit/save' id='profile_edit'>
+<form method='post' action='/profile/{{ session['email'] }}/save' id='profile_edit'>
 	<h4>Användaruppgifter</h4>
 	Namn * <br />
 	<input type='text' id='firstname' name='firstname' value='{{ user_info.firstname }}' title='BAAAAJS' /> <br />
@@ -10,15 +10,21 @@
 	Telefonnummer <br />
 	<input type='text' name='phonenumber' value='{{ user_info.phonenumber }}' /> <br />
 	Ålder <br />
-	<input type='text' name='phonenumber' value='{{ user_info.age}}' /> <br />
+	<input type='text' name='age' value='{{ user_info.age}}' /> <br />
 	Facebook länk <br />
-	<input type='text' name='phonenumber' value='{{ user_info.facebook_link }}' /> <br />
+	<input type='text' name='facebook_link' value='{{ user_info.facebook_link }}' /> <br />
 	Var bor du? <br />
-	<input type='text' name='phonenumber' value='{{ user_info.current_city }}' /> <br />
+	<input type='text' name='current_city' value='{{ user_info.current_city }}' /> <br />
 	Var kommer du ifrån? <br />
-	<input type='text' name='phonenumber' value='{{ user_info.where_from }}' /> <br />
+	<input type='text' name='where_from' value='{{ user_info.where_from }}' /> <br />
 	Klass <br />
-	<input type='text' name='phonenumber' value='{{ user_info.school_class }}' /> <br />
+	<select name='school_class'>
+		{%- for classes in school_classes %}
+		<option value='{{ classes.id }}' {%- if school_class == classes.id -%}selected{%- endif %}>
+			{{ classes.name }} ({{ classes.abbreviation }})
+		</option>
+		{%- endfor %}
+	</select>
 	
 	<h5>Dessa kan du inte ändra, kontakta webmaster vid önskad ändring!</h5>
 	Email
