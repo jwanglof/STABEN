@@ -18,6 +18,9 @@ def db_create():
 @app.route('/db_admins')
 def db_admins():
 	return db_commands.create_admin_users()
+@app.route('/db_school')
+def db_school():
+	return db_commands.create_school_classes()
 
 @app.route('/')
 def index():
@@ -48,12 +51,14 @@ def blog():
 def contact(show_page='contact'):
 	return render('contact.html', show=show_page)
 
+
 @app.route('/user/login', methods=['POST'])
 def login():
 	if get_form.form['email'] not in config.session:
 		if config.request.method == 'POST':
 			user_info = db_commands.get_db_user(get_form.form['email'],get_form.form['password'])
 			if (user_info):
+				db_commands.user_signed_in(user_info.email)
 				return render('profile.html', user_info=user_info, user_role=config.user_roles[user_info.role])
 			else:
 				return render('login.html', login=False)
@@ -61,7 +66,36 @@ def login():
 		return render('profile.html', user_info=user_info, user_role=config.user_roles[user_info.role])
 	return render('login.html', login=False)
 
-@app.route('/user/profile')
+@app.route('/profile/', defaults={'user_email': ''})
+@app.route('/profile/<user_email>')
+def profile(user_email):
+	if config.session and user_email == config.session['email']:
+		user_info = db_commands.get_db_user(config.session['email'])
+		return render('profile.html', user_info=user_info, user_role=config.user_roles[user_info.role])
+	else:
+		return render('login.html', login=False)
+
+@app.route('/profile/<user_email>/edit', defaults={'user_email': ''})
+@app.route('/profile/<user_email>/edit')
+def profile_edit(user_email):
+	if config.session and user_email == config.session['email']:
+		user_info = db_commands.get_db_user(config.session['email'])
+		classes = db_commands.get_school_classes()
+		return render('profile_edit.html', user_info=user_info, school_classes=classes, school_class=int(user_info.school_class))
+	else:
+		return render('login.html', login=False)
+
+@app.route('/profile/<user_email>/save', defaults={'user_email': ''})
+@app.route('/profile/<user_email>/save', methods=['POST'])
+def profile_save(user_email):
+	if config.session and user_email == config.session['email']:
+		print('/save - HEJENSA')
+		db_commands.update_db_user(user_email, get_form.form)
+		return config.redirect(url_for('profile', user_email=user_email))
+	else:
+		return render('login.html', login=False)
+
+'''@app.route('/user/profile')
 def profile():
 	if config.session:
 		user_info = db_commands.get_db_user(config.session['email'])
@@ -69,23 +103,25 @@ def profile():
 	else:
 		return render('login.html', login=False)
 
-@app.route('/user/edit')
-def edit():
+@app.route('/user/edit/<path:save>', methods=['GET','POST'])
+def edit(save):
+	print(save)
 	if config.session:
 		user_info = db_commands.get_db_user(config.session['email'])
-		return render('profile_edit.html', user_info=user_info)
+		classes = db_commands.get_school_classes()
+		return render('profile_edit.html', user_info=user_info, school_classes=classes)
 	else:
 		return render('login.html', login=False)
 
 @app.route('/user/edit/save', methods=['POST'])
 def edit_user():
 	print db_commands.update_db_user(config.session['email'], get_form.form)
-	return config.redirect(url_for('profile'))
+	#return config.redirect(url_for('profile'))
 	
 
 @app.route('/user/edit/save/password', methods=['POST'])
 def edit_password():
-	return 'bajsa'
+	return 'bajsa'''
 
 @app.route('/user/signout')
 def signout():
