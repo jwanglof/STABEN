@@ -4,16 +4,20 @@
 		"selected_items":
 		[
 			[
+				"user",
+				"user_email"
+			],
+			[
+				"sule",
+				"schedule"
+			],
+			[
 				"backgr",
 				"background-color"
 			],
 			[
 				"profile",
 				"profile"
-			],
-			[
-				"user",
-				"user_page"
 			],
 			[
 				"sess",
@@ -69,95 +73,16 @@
 			]
 		]
 	},
-	"buffers":
-	[
-		{
-			"file": "/home/johan/Git/STABEN/staben.py",
-			"settings":
-			{
-				"buffer_size": 2524,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/home/johan/Git/STABEN/templates/profile.html",
-			"settings":
-			{
-				"buffer_size": 225,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/home/johan/Git/STABEN/config.py",
-			"settings":
-			{
-				"buffer_size": 999,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/home/johan/Git/STABEN/dev/db_commands.py",
-			"settings":
-			{
-				"buffer_size": 2063,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/home/johan/Git/STABEN/templates/template.html",
-			"settings":
-			{
-				"buffer_size": 4252,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/home/johan/Git/STABEN/model.py",
-			"settings":
-			{
-				"buffer_size": 5133,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/home/johan/Git/STABEN/templates/index.html",
-			"settings":
-			{
-				"buffer_size": 641,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/home/johan/Git/STABEN/templates/profile_edit.html",
-			"settings":
-			{
-				"buffer_size": 1956,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/home/johan/Git/STABEN/static/js/scripts.js",
-			"settings":
-			{
-				"buffer_size": 285,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/home/johan/Git/STABEN/README.md",
-			"settings":
-			{
-				"buffer_size": 1380,
-				"line_ending": "Unix"
-			}
-		}
-	],
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 58.0,
+		"height": 298.0,
 		"selected_items":
 		[
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			],
 			[
 				"insta",
 				"Package Control: Install Package"
@@ -196,6 +121,8 @@
 	},
 	"file_history":
 	[
+		"/home/johan/.config/sublime-text-2/Packages/User/Preferences.sublime-settings",
+		"/home/johan/.config/sublime-text-2/Packages/Default/Preferences.sublime-settings",
 		"/home/johan/Git/STABEN/static/css/style.css",
 		"/home/johan/Git/STABEN/static/js/jquery.validate.js",
 		"/home/johan/Git/STABEN/README.md",
@@ -233,11 +160,12 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"hot_",
 			"config.render_template",
 			"Text"
 		],
 		"highlight": true,
-		"in_selection": true,
+		"in_selection": false,
 		"preserve_case": false,
 		"regex": false,
 		"replace_history":
@@ -252,286 +180,6 @@
 		"whole_word": false,
 		"wrap": true
 	},
-	"groups":
-	[
-		{
-			"selected": 7,
-			"sheets":
-			[
-				{
-					"buffer": 0,
-					"file": "/home/johan/Git/STABEN/staben.py",
-					"settings":
-					{
-						"buffer_size": 2524,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1795,
-								1795
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 1008.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "/home/johan/Git/STABEN/templates/profile.html",
-					"settings":
-					{
-						"buffer_size": 225,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								210,
-								210
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Jinja2/Syntaxes/HTML (Jinja Templates).tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "/home/johan/Git/STABEN/config.py",
-					"settings":
-					{
-						"buffer_size": 999,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								893,
-								893
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "/home/johan/Git/STABEN/dev/db_commands.py",
-					"settings":
-					{
-						"buffer_size": 2063,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1952,
-								1952
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 720.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "/home/johan/Git/STABEN/templates/template.html",
-					"settings":
-					{
-						"buffer_size": 4252,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								395,
-								395
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/HTML/HTML.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "/home/johan/Git/STABEN/model.py",
-					"settings":
-					{
-						"buffer_size": 5133,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3779,
-								3779
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1152.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "/home/johan/Git/STABEN/templates/index.html",
-					"settings":
-					{
-						"buffer_size": 641,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								113,
-								113
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/HTML/HTML.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "/home/johan/Git/STABEN/templates/profile_edit.html",
-					"settings":
-					{
-						"buffer_size": 1956,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								992,
-								992
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/HTML/HTML.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "/home/johan/Git/STABEN/static/js/scripts.js",
-					"settings":
-					{
-						"buffer_size": 285,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								171,
-								171
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 9,
-					"file": "/home/johan/Git/STABEN/README.md",
-					"settings":
-					{
-						"buffer_size": 1380,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1345,
-								1345
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Markdown/Markdown.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 576.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				}
-			]
-		}
-	],
 	"incremental_find":
 	{
 		"height": 34.0
