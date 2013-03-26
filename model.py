@@ -111,6 +111,21 @@ class Users(db.Model):
     def __repr__(self):
         return 'The user named %s %s has title %s' % (self.firstname, self.lastname, self.title)
 
+class SchoolClasses(db.Model):
+    __tablename__ = 'school_classes'
+    id = db.Column(db.Integer(), primary_key=True)
+    abbreviation = db.Column(db.String(5), index=True, unique=True)
+    name = db.Column(db.String(100), index=True, unique=True)
+    schedule = db.Column(db.String(254), index=True)
+
+    def __init__(self, abbreviation=None, name=None, schedule=None):
+        self.abbreviation = abbreviation
+        self.name = name
+        self.schedule = schedule
+
+    def __repr__(self):
+        return 'Bajs osv'
+
 '''class UserInformation(db.Model):
     __tablename__ = 'userInformation'
     id = db.Column(db.Integer(), primary_key=True)
