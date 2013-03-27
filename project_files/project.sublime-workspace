@@ -4,6 +4,22 @@
 		"selected_items":
 		[
 			[
+				"Text",
+				"UnicodeText"
+			],
+			[
+				"phon",
+				"phonenumber_vis"
+			],
+			[
+				"shoo",
+				"school_mates_info"
+			],
+			[
+				"schoo",
+				"school_mates_info"
+			],
+			[
 				"user",
 				"user_email"
 			],
@@ -121,11 +137,14 @@
 	},
 	"file_history":
 	[
+		"/home/johan/Git/STABEN/static/css/style.css",
+		"/home/johan/Git/STABEN/static/js/scripts.js",
+		"/home/johan/Git/STABEN/README.md",
+		"/home/johan/Git/STABEN/templates/profile_edit.html",
+		"/home/johan/Git/STABEN/templates/blog.html",
 		"/home/johan/.config/sublime-text-2/Packages/User/Preferences.sublime-settings",
 		"/home/johan/.config/sublime-text-2/Packages/Default/Preferences.sublime-settings",
-		"/home/johan/Git/STABEN/static/css/style.css",
 		"/home/johan/Git/STABEN/static/js/jquery.validate.js",
-		"/home/johan/Git/STABEN/README.md",
 		"/home/johan/Git/STABEN/templates/profie_edit.html",
 		"/home/johan/Git/STABEN/templates/login.html",
 		"/home/johan/Git/STABEN/templates/index.html",
@@ -137,8 +156,6 @@
 		"/home/johan/Git/STABEN/templates/student_poll.html",
 		"/home/johan/Git/STABEN/templates/schedule.html",
 		"/home/johan/Git/STABEN/templates/gallery.html",
-		"/home/johan/Git/STABEN/templates/blog.html",
-		"/home/johan/Git/STABEN/static/js/scripts.js",
 		"/home/johan/Git/STABEN/static/js/jquery.min.js",
 		"/home/johan/Git/STABEN/static/bla",
 		"/home/johan/Git/STABEN/dev/__init__.py",
@@ -160,6 +177,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"get_form",
 			"hot_",
 			"config.render_template",
 			"Text"
@@ -170,6 +188,7 @@
 		"regex": false,
 		"replace_history":
 		[
+			"request",
 			"render",
 			"active",
 			"\")"
@@ -236,6 +255,6 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 150.0,
+	"side_bar_width": 186.0,
 	"status_bar_visible": true
 }
