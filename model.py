@@ -92,14 +92,16 @@ class Users(db.Model):
     firstname = db.Column(db.String(100), index=True)
     lastname = db.Column(db.String(100), index=True)
     phonenumber = db.Column(db.String(15), index=True)
-    age = db.Column(db.Integer(3), index=True)
-    facebook_link = db.Column(db.String(100), index=True)
-    school_class = db.Column(db.String(15), index=True)
+    phonenumber_vis = db.Column(db.SmallInteger, index=True, default=0)
+    age = db.Column(db.Integer(3), index=True, default=0)
+    facebook_url = db.Column(db.String(100), index=True)
+    school_class = db.Column(db.SmallInteger, index=True, default=0)
     current_city = db.Column(db.String(100), index=True)
     where_from = db.Column(db.String(100), index=True)
+    presentation = db.Column(db.UnicodeText())
     times_signed_in = db.Column(db.Integer(), default=0)
 
-    def __init__(self, email=None, password=None, title=None, role=3, firstname=None, lastname=None, phonenumber=None):
+    def __init__(self, email=None, password=None, title=None, role=3, firstname=None, lastname=None, phonenumber=None, phonenumber_vis=None):
         self.email = email
         self.password = password
         self.title = title
@@ -107,6 +109,7 @@ class Users(db.Model):
         self.firstname = firstname
         self.lastname = lastname
         self.phonenumber = phonenumber
+        self.phonenumber_vis = phonenumber_vis
 
     def __repr__(self):
         return 'The user named %s %s has title %s' % (self.firstname, self.lastname, self.title)
