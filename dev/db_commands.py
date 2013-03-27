@@ -9,8 +9,8 @@ app = config.app
 
 # initial users
 admin_users = []
-admin_users.append(model.Users('jwanglof@gmail.com', 'tmppass', 'WebmastAH', 0, 'Johan', 'Wanglof', '0046708601911'))
-admin_users.append(model.Users('simis.linden@gmail.com', 'tmppass', 'WebmastAH', 0, 'Simon', 'Linden', '0046735026994'))
+admin_users.append(model.Users('jwanglof@gmail.com', 'tmppass', 'WebmastAH', 0, 'Johan', 'Wanglof', '0046708601911', 0))
+admin_users.append(model.Users('simis.linden@gmail.com', 'tmppass', 'WebmastAH', 0, 'Simon', 'Linden', '0046735026994', 0))
 
 school_classes = []
 school_classes.append(model.SchoolClasses('D', 'Datateknik'))
@@ -23,7 +23,7 @@ def create_app():
 	#db.init_app(app)
 	#with app.test_request_context():
 	db.create_all()
-	return "Done"
+	return "DB creation done"
 
 def create_admin_users():
 	for admin in admin_users:
@@ -64,32 +64,36 @@ def get_db_user(db_user_email,db_user_password=None):
 	else:
 		return False
 
-def update_db_user(db_user_email, db_user_dict):
-	print('update_db_user - 1')
+def update_db_user(db_user_email, db_user_dict, phonenumber_vis):
+	print(db_user_dict, phonenumber_vis)
+
+	print(1)
 	db_user = model.Users.query.filter_by(email=db_user_email).first()
-	print('update_db_user - 2')
+	print(2)
 	db_user.firstname = db_user_dict['firstname']
-	print('update_db_user - 3')
+	print(3)
 	db_user.lastname = db_user_dict['lastname']
-	print('update_db_user - 4')
+	print(4)
 	db_user.phonenumber = db_user_dict['phonenumber']
-	print('update_db_user - 5')
+	print(5)
+	db_user.phonenumber_vis = phonenumber_vis
+	print(6)
 	db_user.age = db_user_dict['age']
-	print('update_db_user - 6')
-	db_user.facebook_link = db_user_dict['facebook_link']
-	print('update_db_user - 7')
+	print(7)
+	db_user.facebook_url = db_user_dict['facebook_url']
+	print(8)
 	db_user.school_class = db_user_dict['school_class']
-	print('update_db_user - 8')
+	print(9)
 	db_user.current_city = db_user_dict['current_city']
-	print('update_db_user - 9')
+	print(0)
 	db_user.where_from = db_user_dict['where_from']
-	print('update_db_user - 0')
+	db_user.presentation = db_user_dict['presentation']
+	print(1)
 	db.session.commit()
-	print('asddwqasd')
 	# for key,value in db_user_dict.iteritems():
 	# 	db_user.key = value
 	# Doesnt work.....
-	return "DWQDWQD"
+	return True
 
 def user_signed_in(db_user_email):
 	#model.Users.query.filter_by(email=db_user_email).first().update({times_signed_in: times_signed_in+1})
@@ -98,7 +102,16 @@ def user_signed_in(db_user_email):
 	db_user = model.Users.query.filter_by(email=db_user_email).first()
 	db_user.times_signed_in = db_user.times_signed_in+1
 	db.session.commit()
-	print("BAAAAAJS")
 
 def get_school_classes():
 	return model.SchoolClasses.query
+
+def get_class_mates(db_user_email):
+	db_user = model.Users.query.filter_by(email=db_user_email).first()
+	class_mates = model.Users.query.filter_by(school_class=db_user.school_class).all()
+	return class_mates
+
+def get_school_class(db_user_email):
+	db_user = model.Users.query.filter_by(email=db_user_email).first()
+	school_class = model.SchoolClasses.query.filter_by(id=db_user.school_class).first()
+	return school_class.abbreviation
