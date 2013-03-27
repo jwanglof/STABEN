@@ -7,7 +7,7 @@ from dev import db_commands
 
 app = config.app
 render = config.render_template
-get_form = config.request
+request = config.request
 url_for = config.url_for
 
 # DEV OPTIONS
@@ -54,20 +54,22 @@ def contact(show_page='contact'):
 
 @app.route('/user/login', methods=['POST'])
 def login():
-	if get_form.form['email'] not in config.session:
+	if request.form['email'] not in config.session:
 		if config.request.method == 'POST':
-			user_info = db_commands.get_db_user(get_form.form['email'],get_form.form['password'])
+			user_info = db_commands.get_db_user(request.form['email'],request.form['password'])
 			if (user_info):
 				db_commands.user_signed_in(user_info.email)
-				return render('profile.html', user_info=user_info, user_role=config.user_roles[user_info.role])
+				return config.redirect(url_for('profile', user_email=user_info.email))
+				# return render('profile.html', user_info=user_info, user_role=config.user_roles[user_info.role])
 			else:
 				return render('login.html', login=False)
 	else:
-		return render('profile.html', user_info=user_info, user_role=config.user_roles[user_info.role])
+		# return render('profile.html', user_info=user_info, user_role=config.user_roles[user_info.role])
+		return config.redirect(url_for('profile', user_email=user_info.email))
 	return render('login.html', login=False)
 
 @app.route('/profile/', defaults={'user_email': ''})
-@app.route('/profile/<user_email>')
+@app.route('/profile/<user_email>/')
 def profile(user_email):
 	if config.session and user_email == config.session['email']:
 		user_info = db_commands.get_db_user(config.session['email'])
@@ -75,8 +77,8 @@ def profile(user_email):
 	else:
 		return render('login.html', login=False)
 
-@app.route('/profile/<user_email>/edit', defaults={'user_email': ''})
-@app.route('/profile/<user_email>/edit')
+#@app.route('/profile/<user_email>/edit', defaults={'user_email': ''})
+@app.route('/profile/<user_email>/edit/')
 def profile_edit(user_email):
 	if config.session and user_email == config.session['email']:
 		user_info = db_commands.get_db_user(config.session['email'])
@@ -85,13 +87,28 @@ def profile_edit(user_email):
 	else:
 		return render('login.html', login=False)
 
-@app.route('/profile/<user_email>/save', defaults={'user_email': ''})
-@app.route('/profile/<user_email>/save', methods=['POST'])
+# @app.route('/profile/<user_email>/save', defaults={'user_email': ''})
+@app.route('/profile/<user_email>/save/', methods=['POST'])
 def profile_save(user_email):
 	if config.session and user_email == config.session['email']:
-		print('/save - HEJENSA')
-		db_commands.update_db_user(user_email, get_form.form)
+		'''
+			Need this check since checkboxes doesn't return anything if it's unchecked!
+		'''
+		phonenumber_vis = 0
+		if 'phonenumber_vis' in request.form:
+			phonenumber_vis = 1
+
+		db_commands.update_db_user(user_email, request.form, phonenumber_vis)
 		return config.redirect(url_for('profile', user_email=user_email))
+	else:
+		return render('login.html', login=False)
+
+@app.route('/profile/<user_email>/class/')
+def profile_class(user_email):
+	if config.session and user_email == config.session['email']:
+		class_mates = db_commands.get_class_mates(user_email)
+		school_class = db_commands.get_school_class(user_email)
+		return render('profile_class.html', class_mates=class_mates, school_class=school_class)
 	else:
 		return render('login.html', login=False)
 
@@ -115,7 +132,7 @@ def edit(save):
 
 @app.route('/user/edit/save', methods=['POST'])
 def edit_user():
-	print db_commands.update_db_user(config.session['email'], get_form.form)
+	print db_commands.update_db_user(config.session['email'], request.form)
 	#return config.redirect(url_for('profile'))
 	
 
