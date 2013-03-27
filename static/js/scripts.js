@@ -13,5 +13,18 @@ $(document).ready(function() {
 			form.submit()
 		}
 	});
+
+	$('.school_mate').click(function() {
+		var id = $(this).attr('id');
+		var div = $('#' + id + '.school_mate_info');
+		if ($(div).is(":visible")) {
+			$(div).hide();
+			$('#collapsed' + id).text('Tryck för mer info');
+		}
+		else {
+			$(div).show();
+			$('#collapsed' + id).text('Tryck för att dölja info');
+		}
+	});
 });
 

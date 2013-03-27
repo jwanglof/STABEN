@@ -3,14 +3,14 @@
 <head>
     <meta charset="utf-8">
     <title>STABEN</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}" />
     <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/jquery.validate.js') }}"></script>
     <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
 
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
 </head>
 
 <body>
@@ -42,6 +42,7 @@
                             <ul class='dropdown-menu'>
                                 <li><a href="/profile/{{ session['email'] }}">Se profil</a></li>
                                 <li><a href="/profile/{{ session['email'] }}/edit">Redigera</a></li>
+                                <li><a href="/profile/{{ session['email'] }}/class">Min skolklass</a></li>
                                 {% if session.role == 0 %}
                                     <br />
                                     <span class="help-block">Admin verktyg</span>

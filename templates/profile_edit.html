@@ -1,18 +1,19 @@
 {% extends "template.html" %}
-{% block active_profile%}active{% endblock %}
+{% block active_profile %}active{% endblock %}
 {% block content %}
 <h1>Redigera profil</h1>
-<form method='post' action='/profile/{{ session['email'] }}/save' id='profile_edit'>
+<form method='post' action='/profile/{{ session['email'] }}/save/' id='profile_edit'>
 	<h4>Användaruppgifter</h4>
 	Namn * <br />
 	<input type='text' id='firstname' name='firstname' value='{{ user_info.firstname }}' title='BAAAAJS' /> <br />
 	<input type='text' id='lastname' name='lastname' value='{{ user_info.lastname }}' title='BAAAAJSAAAAA' /> <br />
 	Telefonnummer <br />
 	<input type='text' name='phonenumber' value='{{ user_info.phonenumber }}' /> <br />
+	<input type='checkbox' name='phonenumber_vis' value='1' {% if user_info.phonenumber_vis == 1 %}checked='checked'{% endif %} /> Visa mitt telefonnummer på min profil <br /> <br />
 	Ålder <br />
 	<input type='text' name='age' value='{{ user_info.age}}' /> <br />
 	Facebook länk <br />
-	<input type='text' name='facebook_link' value='{{ user_info.facebook_link }}' /> <br />
+	<input type='text' name='facebook_url' value='{{ user_info.facebook_url }}' /> <br />
 	Var bor du? <br />
 	<input type='text' name='current_city' value='{{ user_info.current_city }}' /> <br />
 	Var kommer du ifrån? <br />
@@ -25,6 +26,9 @@
 		</option>
 		{%- endfor %}
 	</select>
+	<p>
+		<textarea rows='10' name='presentation'>{{ user_info.presentation }}</textarea>
+	</p>
 	
 	<h5>Dessa kan du inte ändra, kontakta webmaster vid önskad ändring!</h5>
 	Email
