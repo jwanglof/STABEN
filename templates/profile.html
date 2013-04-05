@@ -3,8 +3,8 @@
 {% block content %}
     <h1>
     	Välkommen 
-    	{% if user_info.times_signed_in > 1 %}tillbaka{% endif %}
-    	{{ user_info.firstname + " " + user_info.lastname }}
     </h1>
-    <h3> {{ user_role }}</h3>
+    {% for info in user_info %}
+		<h3>{{ info.firstname }} {{ info.lastname }}</h3>
+    {% endfor %}
 {% endblock %}

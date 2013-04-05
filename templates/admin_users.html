@@ -1,0 +1,7 @@
+{% extends "template.html" %}
+{% block active_profile %}active{% endblock %}
+{% block content %}
+{% for user in users %}
+	{{ user }} <br />
+{% endfor %}
+{% endblock %}

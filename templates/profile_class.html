@@ -12,7 +12,9 @@
 			{% if mate.phonenumber_vis %}
 				Telefonnummer: {{ mate.phonenumber }} <br />
 			{% endif %}
+			{% if mate.facebook_url %}
 			<a href='{{ mate.facebook_url }}' target='_blank'>Facebook</a> <br />
+			{% endif %}
 			<br />
 			Från: {{ mate.where_from }} <br />
 			Bor: {{ mate.current_city }} <br />
