@@ -6,6 +6,14 @@
 # 
 
 '''
+To clear users and userInformation
+SET FOREIGN_KEY_CHECKS=0;
+TRUNCATE users;
+TRUNCATE userInformation;
+SET FOREIGN_KEY_CHECKS=1;
+'''
+
+'''
 * IMPORTANT!
 * The database MUST be created before the script can create the models!
 '''
@@ -75,44 +83,50 @@ class BlogComments(db.Model):
 
 '''
     Users will represent:
-    * STABEN (admins)                                  (role=0)
-    * Överfadder                                         (role=1)
-    * Fadder                                                    (role=2)
-    * Klassföreståndare                              (role=3)
-    * Användare                                                        (role=4)
+    * STABEN (admins)                          (ROLE_ADMIN)
+    * Överfadder                               (role=1)
+    * Fadder                                   (role=2)
+    * Klassföreståndare                        (role=3)
+    * Användare                                (ROLE_USER)
 '''
 class Users(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer(), primary_key=True)
     email = db.Column(db.String(100), index=True, unique=True)
     password = db.Column(db.String(50), index=True)
+    role = db.Column(db.SmallInteger(), default=ROLE_USER)
+    information = db.relationship('UserInformation', uselist=False, backref='users')
+
+    def __init__(self, email=None, password=None, role=ROLE_USER):
+        self.email = email
+        self.password = password
+        self.role = role
+
+    def __repr__(self):
+        return 'Email %s has %s as role' % (self.email, self.role)
+
+class UserInformation(db.Model):
+    __tablename__ = 'userInformation'
+    id = db.Column(db.Integer(), primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     title = db.Column(db.String(15), index=True)
-    role = db.Column(db.SmallInteger(), default=4)
-    #information = db.relationship('UserInformation', backref='users', lazy='dynamic')
     firstname = db.Column(db.String(100), index=True)
     lastname = db.Column(db.String(100), index=True)
     phonenumber = db.Column(db.String(15), index=True)
     phonenumber_vis = db.Column(db.SmallInteger, index=True, default=0)
-    age = db.Column(db.Integer(3), index=True, default=0)
+    age = db.Column(db.SmallInteger(), index=True)
     facebook_url = db.Column(db.String(100), index=True)
-    school_class = db.Column(db.SmallInteger, index=True, default=0)
+    school_class = db.Column(db.SmallInteger(), index=True)
     current_city = db.Column(db.String(100), index=True)
     where_from = db.Column(db.String(100), index=True)
     presentation = db.Column(db.UnicodeText())
     times_signed_in = db.Column(db.Integer(), default=0)
 
-    def __init__(self, email=None, password=None, title=None, role=3, firstname=None, lastname=None, phonenumber=None, phonenumber_vis=None):
-        self.email = email
-        self.password = password
-        self.title = title
-        self.role = role
+    def __init__(self, firstname=None):
         self.firstname = firstname
-        self.lastname = lastname
-        self.phonenumber = phonenumber
-        self.phonenumber_vis = phonenumber_vis
 
     def __repr__(self):
-        return 'The user named %s %s has title %s' % (self.firstname, self.lastname, self.title)
+        return 'Hejsan %s' % (self.firstname)
 
 class SchoolClasses(db.Model):
     __tablename__ = 'school_classes'
@@ -128,23 +142,6 @@ class SchoolClasses(db.Model):
 
     def __repr__(self):
         return 'Bajs osv'
-
-'''class UserInformation(db.Model):
-    __tablename__ = 'userInformation'
-    id = db.Column(db.Integer(), primary_key=True)
-    firstname = db.Column(db.String(100), index=True)
-    lastname = db.Column(db.String(100), index=True)
-    phonenumber = db.Column(db.String(15), index=True)
-    age = db.Column(db.Integer(3), index=True)
-    facebook_link = db.Column(db.String(100), index=True)
-    school_class = db.Column(db.String(15), index=True)
-    current_city = db.Column(db.String(100), index=True)
-    where_from = db.Column(db.String(100), index=True)
-    times_signed_in = db.Column(db.Integer(), default=0)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-
-    def __init__(self, firstname=None):
-        self.firstname = firstname'''
 
 '''class StudentPoll(db.Model):
     __tablename__ = 'student_poll'

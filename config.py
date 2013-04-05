@@ -5,6 +5,7 @@ from flask import Flask, request, session, g, redirect, url_for, render_template
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.bcrypt import Bcrypt
 from sqlalchemy import Table, Column, Integer, String, Date, Time, Text, create_engine
+from sqlalchemy.orm import relationship, backref
 
 dbhost = 'localhost'
 dbuser = 'STABEN'
