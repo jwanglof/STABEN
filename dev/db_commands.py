@@ -71,7 +71,6 @@ def get_db_user(db_user_email,db_user_password=None):
 		return False
 
 def update_db_user(db_user_email, db_user_dict, phonenumber_vis):
-	# Need to check if a password changes!!!!
 	db_user = model.Users.query.filter_by(email=db_user_email).first()
 
 	model.UserInformation.query.filter_by(user_id=db_user.id).update(db_user_dict)
@@ -94,14 +93,12 @@ def get_class_mates(db_user_email):
 	db_user = model.Users.query.filter_by(email=db_user_email).first()
 	user_info = model.UserInformation.query.filter_by(user_id=db_user.id).first()
 	class_mates = model.UserInformation.query.filter_by(school_class=user_info.school_class).all()
-
 	return class_mates
 
 def get_school_class(db_user_email):
 	db_user = model.Users.query.filter_by(email=db_user_email).first()
 	user_info = model.UserInformation.query.filter_by(user_id=db_user.id).first()
 	school_class = model.SchoolClasses.query.filter_by(id=user_info.school_class).first()
-	
 	return school_class.abbreviation
 
 def update_db_pw(db_user_email, db_user_dict):
@@ -120,3 +117,12 @@ def admin_check(db_user_email):
 
 def admin_users():
 	return model.Users.query.all()
+
+def register_user(db_user_dict):
+	# model.UserInformation.query.filter_by(user_id=db_user.id).update(db_user_dict)
+	# model.UserInformation.query.filter_by(user_id=db_user.id).update({'phonenumber_vis': phonenumber_vis})
+	# db.session.add(db_user_dict)
+	print(db_user_dict)
+	db.session.commit()
+
+	return True

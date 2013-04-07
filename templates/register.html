@@ -1,0 +1,62 @@
+{% extends "template.html" %}
+{% block active_register %}active{% endblock %}
+{% block content %}
+
+<form method='post' action='{{ url_for('register') }}' class='stabForm'>
+	<fieldset>
+		<ol>
+			<li>
+				<label for="firstname">Förnamn</label>
+				<input type="text" name="firstname" id="regFirstname" placeholder="Firstname" autofocus="autofocus" />
+			</li>
+			<li>
+				<label for="lastname">Efternamn</label>
+				<input type="text" name="lastname" id="regSurname" placeholder="Surname" />
+			</li>
+			<li>
+				<label for="phonenumber">Telefonnummer (detta kan du välja att visa under din Profil)</label>
+				<input type="text" name="phonenumber" id="regPhonenumber" placeholder="Telefonnummer" />
+			</li>
+			<li>
+				<label for="age">Ålder</label>
+				<input type="text" name="age" id="regAge" placeholder="Ålder" />
+			</li>
+			<li>
+				<label for="facebook_url">Facebooklänk</label>
+				<input type="text" name="facebook_url" id="regFacebook" placeholder="Facebooklänk" />
+			</li>
+			<li>
+				<label for="where_from">Var kommer du ifrån?</label>
+				<input type="text" name="where_from" id="regWhere_from" placeholder="Var kommer du ifrån?" />
+			</li>
+			<li>
+				<label for="current_city">Var bor du?</label>
+				<input type="text" name="current_city" id="regCurrent_city" placeholder="Var bor du?" />
+			</li>
+			<li>
+				Klass <br />
+				<select name='school_class'>
+					{%- for class in classes %}
+					<option value='{{ classes.id }}'>
+						{{ class.name }} ({{ class.abbreviation }})
+					</option>
+					{%- endfor %}
+				</select>
+			</li>
+			<li>
+				Presentation
+				<br />
+				<textarea rows='10' name='presentation'></textarea>
+			</li>
+			<li>
+				<label for="code">Aktiveringskod</label>
+				<input type="text" name="code" id="regCode" placeholder="Aktiveringskod" />
+			</li>
+			<li>
+				<button type="submit" class="btn">Registrera</button>
+			</li>
+		</ol>
+	</fieldset>
+</form>
+
+{% endblock %}

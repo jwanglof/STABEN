@@ -1,0 +1,35 @@
+form.stabForm fieldset {
+
+}
+
+form.stabForm fieldset ol {
+		margin: 0px;
+		padding: 0px;
+}
+
+form.stabForm fieldset li {
+		list-style: none;
+		margin: 0px;
+		padding: 5px;
+}
+
+form.stabForm legend {
+		padding: 0px 2px;
+		font-weight: bold;
+}
+
+form.stabForm label {
+		display: inline-block;
+		line-height: 1.8px;
+		width: 150px;
+}
+
+form.stabForm label.error {
+		margin-left: 20px;
+		width: 400px;
+}
+
+input { border: 1px solid #000000; }
+
+input:focus { border: 1px dotted #000000; }
+input.error { border: 1px dotted #ff0000; }

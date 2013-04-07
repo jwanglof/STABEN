@@ -109,8 +109,8 @@ class UserInformation(db.Model):
     __tablename__ = 'userInformation'
     id = db.Column(db.Integer(), primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    title = db.Column(db.String(15), index=True)
-    firstname = db.Column(db.String(100), index=True)
+    title = db.Column(db.String(15), index=True, default='Användare')
+    firstname = db.Column(db.String(100), index=True, default='')
     lastname = db.Column(db.String(100), index=True)
     phonenumber = db.Column(db.String(15), index=True)
     phonenumber_vis = db.Column(db.SmallInteger, index=True, default=0)
@@ -121,6 +121,7 @@ class UserInformation(db.Model):
     where_from = db.Column(db.String(100), index=True)
     presentation = db.Column(db.UnicodeText())
     times_signed_in = db.Column(db.Integer(), default=0)
+    poll_done = db.Column(db.SmallInteger(), default=0)
 
     def __init__(self, firstname=None):
         self.firstname = firstname
@@ -142,6 +143,17 @@ class SchoolClasses(db.Model):
 
     def __repr__(self):
         return 'Bajs osv'
+
+class RegisterCode(db.Model):
+    __tablename__ = 'register_code'
+    id = db.Column(db.Integer(), primary_key=True)
+    code = db.Column(db.String(10), index=True, unique=True)
+
+    def __init__(self, code=None):
+        self.code = code
+
+    def __repr__(self):
+        return 'Le kod iz: %s' % (self.code)
 
 '''class StudentPoll(db.Model):
     __tablename__ = 'student_poll'
