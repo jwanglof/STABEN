@@ -100,7 +100,6 @@ class Users(db.Model):
     def __init__(self, email=None, password=None, role=ROLE_USER):
         self.email = email
         self.password = password
-        self.role = role
 
     def __repr__(self):
         return 'Email %s has %s as role' % (self.email, self.role)
@@ -120,10 +119,11 @@ class UserInformation(db.Model):
     current_city = db.Column(db.String(100), index=True)
     where_from = db.Column(db.String(100), index=True)
     presentation = db.Column(db.UnicodeText())
-    times_signed_in = db.Column(db.Integer(), default=0)
+    login_count = db.Column(db.Integer(), default=0)
     poll_done = db.Column(db.SmallInteger(), default=0)
 
-    def __init__(self, firstname=None):
+    def __init__(self, firstname=None, user_id=None):
+        self.user_id = user_id
         self.firstname = firstname
 
     def __repr__(self):

@@ -61,7 +61,7 @@ def login():
 			if (user):
 				# user_info['user'] contains email, password and role (from the table users)
 				# user_info['info'] contains all the user's information (from the table userInformation)
-				db_commands.user_signed_in(request.form['email'])
+				db_commands.login_count(request.form['email'])
 				return config.redirect(url_for('profile', user_email=request.form['email']))
 			else:
 				return render('login.html', login=False)
@@ -85,6 +85,7 @@ def profile(user_email):
 def profile_edit(user_email):
 	if session and user_email == session['email']:
 		user = db_commands.get_db_user(session['email'])
+		classes = db_commands.get_school_classes()
 		return render('profile_edit.html', user=user['user'], user_info=user['info'], school_classes=classes)
 	else:
 		return render('login.html', login=False)
@@ -96,7 +97,6 @@ def profile_save(user_email):
 		'''
 			Need this check since checkboxes doesn't return anything if it's unchecked!
 		'''
-
 		phonenumber_vis = 0
 		if 'phonenumber_vis' in request.form:
 			phonenumber_vis = 1
@@ -118,7 +118,8 @@ def profile_password(user_email):
 
 @app.route('/profile/<user_email>/class/')
 def profile_class(user_email):
-	if session and user_email == session['email']:
+	if (session and \
+		user_email == session['email']):
 		class_mates = db_commands.get_class_mates(user_email)
 		school_class = db_commands.get_school_class(user_email)
 		return render('profile_class.html', class_mates=class_mates, school_class=school_class)
@@ -132,8 +133,18 @@ def signout():
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
-	if request.method == 'POST':
-		db_commands.register_user(request.form)
+	if (request.method == 'POST'):
+		if (request.form['firstname'] != '' and \
+			request.form['lastname'] != '' and \
+			request.form['email'] != '' and \
+			request.form['regCode'] == u'asd'):
+			print db_commands.register_user(request.form)
+			'''if (db_commands.register_user(request.form)):
+				return 'Successfull'
+			else:
+				return 'Unsuccessfull'''
+		else:
+			return 'Du måste ange ditt förnamn, efternamn, e-mail och registreringskod!'
 	else:
 		classes = db_commands.get_school_classes()
 		return render('register.html', classes=classes)
