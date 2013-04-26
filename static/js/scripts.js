@@ -1,4 +1,6 @@
 $(document).ready(function() {
+	$('#errorMessages').hide();
+
 	$('#profile_edit').validate({
 		rules: {
 			firstname: 'required',
@@ -11,6 +13,25 @@ $(document).ready(function() {
 		},
 		submitHandler: function(form) {
 			form.submit()
+		}
+	});
+
+	$('#register_form').validate({
+		errorLabelContainer: $("#errorMessages"),
+		rules: {
+			firstname: 'required',
+			lastname: 'required',
+			email: {
+				required: true,
+				email: true
+			},
+			regCode: 'required'
+		},
+		messages: {
+			firstname: 'Ditt förnamn är obligatoriskt.',
+			lastname: 'Ditt efternamn är obligatoriskt.',
+			email: 'Din e-mail är obligatoriskt och måste vara korrekt.',
+			regCode: 'Din unika registreringskod måste skrivas in. Denna ska du ha fått i posten.'
 		}
 	});
 

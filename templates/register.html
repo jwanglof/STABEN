@@ -2,19 +2,25 @@
 {% block active_register %}active{% endblock %}
 {% block content %}
 
-<form method='post' action='{{ url_for('register') }}' class='stabForm'>
+<div id='errorMessages'></div>
+<form method='post' action='{{ url_for('register') }}' class='stabForm' id='register_form'>
 	<fieldset>
 		<ol>
-			<li>
-				<label for="firstname">Förnamn</label>
-				<input type="text" name="firstname" id="regFirstname" placeholder="Firstname" autofocus="autofocus" />
+			<li>Din e-mail måste vara giltig eftersom du kommer få ditt lösenord skickat till den du anger.</li>
+			<!--<li>
+				<label for="firstname">Förnamn *</label>
+				<input type="text" name="firstname" id="regFirstname" placeholder="Förnamn" autofocus="autofocus" />
 			</li>
 			<li>
-				<label for="lastname">Efternamn</label>
-				<input type="text" name="lastname" id="regSurname" placeholder="Surname" />
-			</li>
+				<label for="lastname">Efternamn *</label>
+				<input type="text" name="lastname" id="regLastname" placeholder="Efternamn" />
+			</li>/-->
 			<li>
-				<label for="phonenumber">Telefonnummer (detta kan du välja att visa under din Profil)</label>
+				<label for="lastname">E-mail *</label>
+				<input type="text" name="email" id="regEmail" placeholder="E-mail" />
+			</li>
+			<!--<li>
+				<label for="phonenumber">Telefonnummer</label>
 				<input type="text" name="phonenumber" id="regPhonenumber" placeholder="Telefonnummer" />
 			</li>
 			<li>
@@ -34,7 +40,7 @@
 				<input type="text" name="current_city" id="regCurrent_city" placeholder="Var bor du?" />
 			</li>
 			<li>
-				Klass <br />
+				<label for='school_class'>Klass</label>
 				<select name='school_class'>
 					{%- for class in classes %}
 					<option value='{{ classes.id }}'>
@@ -44,13 +50,12 @@
 				</select>
 			</li>
 			<li>
-				Presentation
-				<br />
+				<label for='presentation'>Presentation</label>
 				<textarea rows='10' name='presentation'></textarea>
-			</li>
+			</li>/-->
 			<li>
-				<label for="code">Aktiveringskod</label>
-				<input type="text" name="code" id="regCode" placeholder="Aktiveringskod" />
+				<label for="code">Registreringskod *</label>
+				<input type="text" name="regCode" id="regCode" placeholder="Registreringskod" />
 			</li>
 			<li>
 				<button type="submit" class="btn">Registrera</button>
