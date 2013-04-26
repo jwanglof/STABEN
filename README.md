@@ -20,6 +20,7 @@ TODO (x == finished)
 		<dd>[ ] Sponsors</dd>
 		<dd>[ ] Daily secret</dd>
 		<dd>[ ] Nolleportalen</dd>
+		<dd>[ ] Register</dd>
 </dl>
 
 <dl>
