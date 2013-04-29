@@ -5,6 +5,7 @@
     <title>STABEN</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style_form.css') }}" />
     <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/jquery.validate.js') }}"></script>
@@ -69,6 +70,7 @@
                                 </form>
                             </ul>
                         </li>
+                        <li class='{% block active_register %}{% endblock %}'><a href="{{ url_for('register') }}">Registrera</a></li>
                         {% endif %}
                     </ul>
                 </div>

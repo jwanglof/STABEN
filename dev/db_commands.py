@@ -8,9 +8,9 @@ db = config.db
 app = config.app
 
 # initial users
-admin_users = []
-admin_users.append(model.Users('jwanglof@gmail.com', 'tmppass', 0))
-admin_users.append(model.Users('simis.linden@gmail.com', 'tmppass', 0))
+admin_users2 = []
+admin_users2.append(model.Users('jwanglof@gmail.com', 'tmppass'))
+admin_users2.append(model.Users('simis.linden@gmail.com', 'tmppass'))
 
 admin_users_info = []
 admin_users_info.append(model.UserInformation('Johan'))
@@ -30,11 +30,11 @@ def create_db():
 	return "DB creation done"
 
 def create_admin_users():
-	for admin in admin_users:
+	for admin in admin_users2:
 		db.session.add(admin)
 
-	for admin_info in admin_users_info:
-		db.session.add(admin_info)
+	'''for admin_info in admin_users_info:
+		db.session.add(admin_info)'''
 
 	db.session.commit()
 	return "Admin users added"
@@ -71,7 +71,6 @@ def get_db_user(db_user_email,db_user_password=None):
 		return False
 
 def update_db_user(db_user_email, db_user_dict, phonenumber_vis):
-	# Need to check if a password changes!!!!
 	db_user = model.Users.query.filter_by(email=db_user_email).first()
 
 	model.UserInformation.query.filter_by(user_id=db_user.id).update(db_user_dict)
@@ -81,10 +80,11 @@ def update_db_user(db_user_email, db_user_dict, phonenumber_vis):
 
 	return True
 
-def user_signed_in(db_user_email):
+def login_count(db_user_email):
 	db_user = model.Users.query.filter_by(email=db_user_email).first()
 	user_info = model.UserInformation.query.filter_by(user_id=db_user.id).first()
-	user_info.times_signed_in = user_info.times_signed_in+1
+	user_info.login_count = user_info.login_count+1
+
 	db.session.commit()
 
 def get_school_classes():
@@ -93,15 +93,14 @@ def get_school_classes():
 def get_class_mates(db_user_email):
 	db_user = model.Users.query.filter_by(email=db_user_email).first()
 	user_info = model.UserInformation.query.filter_by(user_id=db_user.id).first()
+	print user_info
 	class_mates = model.UserInformation.query.filter_by(school_class=user_info.school_class).all()
-
 	return class_mates
 
 def get_school_class(db_user_email):
 	db_user = model.Users.query.filter_by(email=db_user_email).first()
 	user_info = model.UserInformation.query.filter_by(user_id=db_user.id).first()
 	school_class = model.SchoolClasses.query.filter_by(id=user_info.school_class).first()
-
 	return school_class.abbreviation
 
 def update_db_pw(db_user_email, db_user_dict):
@@ -120,3 +119,11 @@ def admin_check(db_user_email):
 
 def admin_users():
 	return model.Users.query.all()
+
+def register_user(db_user_dict):
+	# model.UserInformation.query.filter_by(user_id=db_user.id).update(db_user_dict)
+	# model.UserInformation.query.filter_by(user_id=db_user.id).update({'phonenumber_vis': phonenumber_vis})
+	db.session.add(model.Users(db_user_dict['email'], 'asdasd'))
+	# print(db_user_dict)
+	
+	return db.session.commit()
