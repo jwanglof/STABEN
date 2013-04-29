@@ -5315,7 +5315,6 @@ button.close {
   body {
     padding-left: 20px;
     padding-right: 20px;
-    padding-top: 0;
   }
   .navbar-fixed-top,
   .navbar-fixed-bottom,
@@ -6301,9 +6300,6 @@ button.close {
   }
 }
 @media (min-width: 980px) {
-    body{
-        padding-top: 40px;
-    }
   .nav-collapse.collapse {
     height: auto !important;
     overflow: visible !important;

@@ -18,7 +18,7 @@ admin_users_info.append(model.UserInformation('Simon'))
 
 school_classes = []
 school_classes.append(model.SchoolClasses('D', 'Datateknik'))
-school_classes.append(model.SchoolClasses('IT', 'Informations Teknologi'))
+school_classes.append(model.SchoolClasses('IT', 'Informationsteknologi'))
 school_classes.append(model.SchoolClasses('IP', 'Innovativ Programmering'))
 school_classes.append(model.SchoolClasses('U', 'Mjukvaruteknik'))
 
@@ -101,7 +101,7 @@ def get_school_class(db_user_email):
 	db_user = model.Users.query.filter_by(email=db_user_email).first()
 	user_info = model.UserInformation.query.filter_by(user_id=db_user.id).first()
 	school_class = model.SchoolClasses.query.filter_by(id=user_info.school_class).first()
-	
+
 	return school_class.abbreviation
 
 def update_db_pw(db_user_email, db_user_dict):

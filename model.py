@@ -98,6 +98,7 @@ class Users(db.Model):
     information = db.relationship('UserInformation', uselist=False, backref='users')
 
     def __init__(self, email=None, password=None, role=ROLE_USER):
+        print 'du är nu i model'
         self.email = email
         self.password = password
         self.role = role

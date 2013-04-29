@@ -7,7 +7,7 @@ from flask.ext.bcrypt import Bcrypt
 from sqlalchemy import Table, Column, Integer, String, Date, Time, Text, create_engine
 from sqlalchemy.orm import relationship, backref
 
-dbhost = 'localhost'
+dbhost = '127.0.0.1'
 dbuser = 'STABEN'
 dbpass = 'generalhenrik'
 dbname = 'STABEN'
