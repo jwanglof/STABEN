@@ -87,7 +87,8 @@ class BlogComments(db.Model):
     * Överfadder                               (role=1)
     * Fadder                                   (role=2)
     * Klassföreståndare                        (role=3)
-    * Användare                                (ROLE_USER)
+    * Studievägledning                         (role=4)
+    * Nollan                                   (ROLE_USER)
 '''
 class Users(db.Model):
     __tablename__ = 'users'
@@ -107,7 +108,7 @@ class Users(db.Model):
 class UserInformation(db.Model):
     __tablename__ = 'userInformation'
     id = db.Column(db.Integer(), primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    fk_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     title = db.Column(db.String(15), index=True, default='Användare')
     firstname = db.Column(db.String(100), index=True, default='')
     lastname = db.Column(db.String(100), index=True)
@@ -155,12 +156,88 @@ class RegisterCode(db.Model):
     def __repr__(self):
         return 'Le kod iz: %s' % (self.code)
 
-'''class StudentPoll(db.Model):
+'''
+class StudentPollResult(db.Model):
     __tablename__ = 'student_poll'
+    id = db.Column(db.Integer, primary_key=True)
+    fk_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+    def __init__(self):
+        return
+
+    def __repr__(self):
+        return;
+
+class StudentPollQuestions(db.Model):
+    __tablename__ = 'student_poll_questions'
     id = db.Column(db.Integer, primary_key=True)
 
     def __init__(self):
         return
 
     def __repr__(self):
-        return;'''
+        return;
+
+class StudentRights(db.Model):
+    __tablename__ = 'student_rights'
+    fk_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    fk_student_group = db.Column(db.Integer, db.ForeignKey('studendgroups.id'))
+
+    def __init__(self):
+        return
+
+    def __repr__(self):
+        return;
+    
+class StudentGroups(db.Model):
+    __tablename__ = 'student_groups'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), index=True, unique=True)
+
+    def __init__(self):
+        return
+
+    def __repr__(self):
+        return;
+
+class Prices(db.Model):
+    __tablename__ = 'student_groups'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), index=True, unique=True)
+    information = db.Column(db.UnicodeText())
+    price = db.Column(db.Integer)
+
+    def __init__(self):
+        return
+
+    def __repr__(self):
+        return;
+
+class ScheduleDate(db.Model):
+    __tablename__ = 'schedule_date'
+    id = db.Column(db.Integer, primary_key=True)
+    weekday = db.Column(db.String(10), index=True)
+    date = db.Column(db.String(100), index=True, unique=True)
+
+    def __init__(self):
+        return
+
+    def __repr__(self):
+        return;
+
+class ScheduleDateInformation(db.Model):
+    __tablename__ = 'schedule_date'
+    id = db.Column(db.Integer, primary_key=True)
+    fk_schedule_date = db.Column(db.Integer, db.ForeignKey('schedule_date.id'))
+    icon_url = db.Column(db.String(254), index=True)
+    time = db.Column(db.String(10), index=True)
+    place = db.Column(db.String(50), index=True)
+    activity_name = db.Column(db.String(50), index=True)
+    activity_information = db.Column(db.UnicodeText())
+
+    def __init__(self):
+        return
+
+    def __repr__(self):
+        return;
+'''

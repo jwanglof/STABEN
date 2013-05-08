@@ -30,6 +30,7 @@ def create_db():
 	return "DB creation done"
 
 def create_admin_users():
+	# TODO: Call to register_user instead with a dict!!
 	for admin in admin_users2:
 		db.session.add(admin)
 
@@ -121,9 +122,6 @@ def admin_users():
 	return model.Users.query.all()
 
 def register_user(db_user_dict):
-	# model.UserInformation.query.filter_by(user_id=db_user.id).update(db_user_dict)
-	# model.UserInformation.query.filter_by(user_id=db_user.id).update({'phonenumber_vis': phonenumber_vis})
 	db.session.add(model.Users(db_user_dict['email'], 'asdasd'))
-	# print(db_user_dict)
-	
+	# TODO: Need to get the added user's ID and add another row to userInformation	
 	return db.session.commit()
