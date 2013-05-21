@@ -123,5 +123,5 @@ def admin_users():
 
 def register_user(db_user_dict):
 	db.session.add(model.Users(db_user_dict['email'], 'asdasd'))
-	# TODO: Need to get the added user's ID and add another row to userInformation	
+	# TODO: Need to get the added user's ID and add another row to userInformation
 	return db.session.commit()
