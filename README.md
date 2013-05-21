@@ -43,7 +43,21 @@ Info:
 
 'NOLLEENKÄT'
 ======
-Danne kontaktar över möte. Kommer mer info sen.
+Danne fixar frågor till databasen.
+Måste kunna dela upp på prioritet.
+Måste kunna dela upp så att minst (helst) 3 pers från samma klass är i samma grupp.
+Alla grupper kommer minst ha 9 pers.
+
+KRAV FÖR 'NOLLEENKÄT'
+======
+Script som plockar ut nollan till olika grupper.
+Den som har minst antal 5:or ska ha först prio på de grupper nollan har valt 5:a på, måste ta till hänsyn att det ska vara minst 3 nollor från samma klass i samma grupp.
+Om det blir en ensam nolla från en klass i en grupp ska denna plockas ur och sättas in i en annan grupp, helst via hemsidan, om det skiter sig kan man göra det manuellt.
+Ska visa all information på en speciell sida på hemsidan så man ser exakt vart han kan placeras om något skiter sig, ska kunnas skrivas ut enkelt.
+Ska kunna välja hur många från varje klass ska vara i en grupp.
+Ska kunna via en sida där det finns en massa options kunna välja en massa grejjer, resultatet kommer fram på sidan. Spara ner denna lista i en view så vi kan ändra däri.
+Man ska kunna markera en grupp klar, och då ska den inte komma med i kommande 'körningar'.
+Ska kunna ändra grupper på användare på sidan.
 
 TODO
 ======
