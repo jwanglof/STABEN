@@ -71,3 +71,7 @@ TODO
 	<dd>[ ] (NEW BRANCH) Fixa alla DB tabeller</dd>
 	<dd>[ ] Lägg till kommentarer lite här och var</dd>
 </dl>
+
+EER
+======
+http://www.databasteknik.se/webbkursen/er/
