@@ -168,18 +168,21 @@ def admin_pages():
 
 @app.route('/admin/addcontact', methods=['GET', 'POST'])
 def admin_addcontact():
-	if request.method == 'POST':
-		result = db_commands.add_contact(request.form['name'], request.form['phonenumber'],
-										 request.form['email'],request.form['role'],
-										 request.form['school_class'], request.form['studie_link'])
-		return render('admin_addcontact.html', result=result)
-	elif request.method == 'GET':
-		return render('admin_addcontact.html')
+	if db_commands.admin_check(session['email']) is 0:
+		if request.method == 'POST':
+			result = db_commands.add_contact(request.form['name'], request.form['phonenumber'],
+											 request.form['email'],request.form['role'],
+											 request.form['school_class'], request.form['studie_link'])
+			return render('admin_addcontact.html', result=result)
+		elif request.method == 'GET':
+			return render('admin_addcontact.html')
+	else:
+		return render('admin_fail.html')
 
 @app.route('/admin/users')
 def admin_users():
 	# Need to check that the user is signed in and is an admin
-	if (db_commands.admin_check(session['email']) == 0):
+	if db_commands.admin_check(session['email']) is 0:
 		users = db_commands.admin_users()
 		return render('admin_users.html', users=users)
 	else:
