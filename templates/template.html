@@ -12,25 +12,25 @@
 
 <body>
 
-    <div class="navbar navbar-static-top">
-        <div class="navbar-inner">
-            <div class="container">
-                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </a>
-                <a class="brand" href="{{ url_for('index') }}">STABEN</a>
-                <div class="nav-collapse">
-                    <ul class="nav" id="nav_menu">
-                        <li class='{% block active_index %}{% endblock %}'><a href="{{ url_for('index') }}">Start</a></li>
-                        <li class='{% block active_prices %}{% endblock %}'><a href="{{ url_for('prices') }}">Priser</a></li>
-                        <li class='{% block active_schedule %}{% endblock %}'><a href="{{ url_for('schedule') }}">Schema</a></li>
-                        <li class='{% block active_student_poll %}{% endblock %}'><a href="{{ url_for('student_poll') }}">Enkät</a></li>
-                        <li class='{% block active_gallery %}{% endblock %}'><a href="{{ url_for('gallery') }}">Galleri</a></li>
-                        <li class='{% block active_blog %}{% endblock %}'><a href="{{ url_for('blog') }}">Blogg</a></li>
-                        <li class='{% block active_contact %}{% endblock %}'><a href="{{ url_for('contact') }}">Kontakt</a></li>
-                        {% if session %}
+<div class="navbar navbar-static-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <a class="brand" href="{{ url_for('index') }}">STABEN</a>
+            <div class="nav-collapse collapse">
+                <ul class="nav" id="nav_menu">
+                    <li class='{% block active_index %}{% endblock %}'><a href="{{ url_for('index') }}">Start</a></li>
+                    <li class='{% block active_prices %}{% endblock %}'><a href="{{ url_for('prices') }}">Priser</a></li>
+                    <li class='{% block active_schedule %}{% endblock %}'><a href="{{ url_for('schedule') }}">Schema</a></li>
+                    <li class='{% block active_student_poll %}{% endblock %}'><a href="{{ url_for('student_poll') }}">Enkät</a></li>
+                    <li class='{% block active_gallery %}{% endblock %}'><a href="{{ url_for('gallery') }}">Galleri</a></li>
+                    <li class='{% block active_blog %}{% endblock %}'><a href="{{ url_for('blog') }}">Blogg</a></li>
+                    <li class='{% block active_contact %}{% endblock %}'><a href="{{ url_for('contact') }}">Kontakt</a></li>
+                    {% if session %}
                         <li class='dropdown'>
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 Profil
@@ -50,7 +50,7 @@
                             </ul>
                         </li>
                         <li><a href="{{ url_for('signout') }}">Logga ut</a></li>
-                        {% else %}
+                    {% else %}
                         <li class='dropdown'>
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 Logga in
@@ -68,25 +68,25 @@
                             </ul>
                         </li>
                         <li class='{% block active_register %}{% endblock %}'><a href="{{ url_for('register') }}">Registrera</a></li>
-                        {% endif %}
-                    </ul>
-                </div>
+                    {% endif %}
+                </ul>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="container content">
-        <div class="row">
-            {% block content %}{% endblock %}
-        </div>
+<div class="container content">
+    <div class="row">
+        {% block content %}{% endblock %}
     </div>
+</div>
 
-    <!-- Le javascript
-    ==============================-->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/jquery.validate.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+<!-- Le javascript
+==============================-->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery.validate.js') }}"></script>
+<script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
 </body>
 </html>

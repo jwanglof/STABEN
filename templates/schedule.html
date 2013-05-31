@@ -1,4 +1,208 @@
 {% extends "template.html" %}
 {% block active_schedule %}active{% endblock %}
 {% block content %}
+    <h1>Här kan <sub>minus</sub> läsa sitt schema över nolle-p.</h1>
+    <br>
+    <div class="span8">
+    <h3 style="display: inline">Ange vecka </h3>
+    <div class="pagination" style="display: inline">
+        <ul>
+            {%  if week == '1' %}
+                <li class="active">
+                    {% else %}
+                <li>
+            {% endif %}
+            <a href="{{ url_for('schedule') }}/1">1</a>
+            </li>
+            {%  if week == '2' %}
+                <li class="active">
+                    {% else %}
+                <li>
+            {% endif %}
+            <a href="{{ url_for('schedule') }}/2">2</a>
+            </li>
+            {%  if week == '3' %}
+                <li class="active">
+                    {% else %}
+                <li>
+            {% endif %}
+            <a href="{{ url_for('schedule') }}/3">3</a>
+            </li>
+        </ul>
+    </div>
+    <br>
+    <br>
+    <div class="tabbable tabs-left">
+        <ul class="nav nav-tabs">
+            {% if week == '1' %}
+                <li class="active">
+                    <a href="#1a" data-toggle="tab">Tisdag 20/8</a>
+                </li>
+                <li>
+                    <a href="#2a" data-toggle="tab">Onsdag 21/8</a>
+                </li>
+                <li>
+                    <a href="#3a" data-toggle="tab">Torsdag 22/8</a>
+                </li>
+                <li>
+                    <a href="#4a" data-toggle="tab">Fredag 23/8</a>
+                </li>
+                <li>
+                    <a href="#5a" data-toggle="tab">Lördag 24/8</a>
+                </li>
+                <li>
+                    <a href="#6a" data-toggle="tab">Söndag 25/8</a>
+                </li>
+            {% elif week == '2' %}
+                <li class="active">
+                    <a href="#1b" data-toggle="tab">Måndag 26/8</a>
+                </li>
+                <li>
+                    <a href="#2b" data-toggle="tab">Tisdag 27/8</a>
+                </li>
+                <li>
+                    <a href="#3b" data-toggle="tab">Onsdag 28/8</a>
+                </li>
+            {% elif week == '3' %}
+                <li class="active">
+                    <a href="#1c" data-toggle="tab">Måndag 2/9</a>
+                </li>
+                <li>
+                    <a href="#2c" data-toggle="tab">Tisdag 3/9</a>
+                </li>
+                <li>
+                    <a href="#3c" data-toggle="tab">Onsdag 4/9</a>
+                </li>
+            {% endif %}
+        </ul>
+        <div class="tab-content">
+            {% if week == '1' %}
+                <div class="tab-pane active" id="1a">
+                    <p><b>Tid:</b> 07.00 - 18.00. <b>Plats: </b>Folkets park, Campushallen, universitetet.</p>
+                    <p>
+                        Idag är det dags för minus att träffa andra minus och faddrar på parkeringen
+                        till Folkets park <b>kl 7.00</b>. Här kommer minus träffa D-group och CC som kommer
+                        lära minus att sjunga sin nollesång på yppersta och fagraste sätt.
+                        Däreft er kommer minus att tåga vidare till Campushallen för att bli underhållna och se
+                        <span class="stabenfont">STABEN</span>.
+                        Superskojsigt,  minus!
+                    </p><p>Däreft er kommer  minus att vandra mot universitetet.
+                    Därför är det dumt om minus har sin cykel med sig, då minus inte kommer att cykla.
+                    <span class="stabenfont">STABEN</span> rekommenderar därför att minus lämnar cykeln hemma.
+                    Resten av dagen kommer minus att bli uppropad, indelad, tilldelad, föreläst för och utfrågad.
+                    Uppropad för att universitetet ska se så att minus är där minus bör vara, Linkeboda ju,
+                    indelad för att minus ska få en klass, föreläst för att minus ska lära sig saker och
+                    utfrågad för att minus ska ha det roligt i nolle-p. Minus har en lång dag framför sig,
+                    så minus bör vara väl utvilad och dessutom ta med sig en frukt eller smörgås.
+                </p>
+                    <img src="../static/img/schedule_tisdag20_tmp.PNG">
+                </div>
+                <div class="tab-pane" id="2a">
+                    <p><b>Tid: </b> 08:00 - 01:00. <b>Plats: </b>universitetet, Viagraparken, Kårallen</p>
+                    <p>
+                        Idag kommer minus att få en nollegrupp och träffa
+                        sina toksnälla faddrar. Eft er lunchen kommer
+                        minus att lära sig att hitta på universitetet. Minus bör
+                        inte gå vilse ju! När minus har lärt sig var man
+                        inte ska vara så är det dags att bege sig till där minus
+                        bör vara.
+                    </p><p>Aristocats har då sin första av tre föreläsningar.
+                    I kursen TAEN33 Caps kommer Aristocats
+                    lära minus konsten att capsa – att kasta prick med
+                    små runda objekt. Aristocats kommer att berätta
+                    allt  minus behöver veta, forskningen, reglerna och
+                    rekorden. När minus har lärt sig hur man capsar är
+                    det dags att testa sina nyvunna kunskaper i kursen.
+                    Detta sker genom del två: TAEN33 Caps – en praktisk
+                    laboration. Efter minus är godkänd på laborationen
+                    kan minus fortsätta det roliga i det kejserliga palatset
+                    Kårallen. Där kan minus skaka sina lurviga!
+                </p>
+                    <img src="../static/img/schedule_onsdag21_tmp.PNG">
+                </div>
+                <div class="tab-pane" id="3a">
+                    <p><b>Tid:</b> 08:00 - 21:00. <b>Plats:</b> Universitetet, fotbollsplan vid B-huset.</p>
+                    <p>
+                        Idag kommer D-minus att lära sig att räkna och IT-minus lära sig att lära på rätt sätt.
+                        Under lunchen kommer Ling-sektionen att hålla sin lunchtävling Packling.
+                    </p><p>
+                    Sedan återkommer Aristocats med en föreläsning, på
+                    denna får minus lära sig allt om öl och häfv. När minus
+                    kan allt har minus ett ypperligt tillfälle att umgås med
+                    sina nollegrupper för att med faddrar planera inför
+                    minus nolleuppdrag. Om minus känner sig förberedd
+                    nog kan minus möta upp andra minus för brännboll och mat ju.
+                </p>
+                    <img src="../static/img/schedule_torsdag22_tmp.PNG">
+                </div>
+                <div class="tab-pane" id="4a">
+                    <p><b>Tid:</b> 08:00 - 21:00. <b>Plats:</b> Universitetet</p>
+                    <p>
+                        Idag är det fredag...
+                    </p>
+                    <img src="../static/img/schedule_torsdag22_tmp.PNG">
+                </div>
+                <div class="tab-pane" id="5a">
+                    <p><b>Tid:</b> 10:00 - 01:00. <b>Plats:</b> Svartån (eller vad det nu heter)</p>
+                    <p>
+                        HAJK!!!
+                    </p>
+                    <img src="../static/img/schedule_torsdag22_tmp.PNG">
+                </div>
+                <div class="tab-pane" id="6a">
+                    <p><b>Tid:</b> 08:00 - . <b>Plats:</b> Hemma.</p>
+                    <p>
+                        Sova?
+                    </p>
+                    <img src="../static/img/schedule_torsdag22_tmp.PNG">
+                </div>
+            {% elif week == '2' %}
+                <div class="tab-pane active" id="1b">
+                    <p>
+                        Detta är <sub>minus</sub> sjunde dag.
+                        <br>
+                        Idag får <sub>minus</sub> gå på <span class="stabenfont">STABEN</span>s superskojsiga disco.
+                    </p>
+                </div>
+                <div class="tab-pane" id="2b">
+                    <p>
+                        Detta är <sub>minus</sub> åttonde dag.
+                        <br>
+                        Idag kan <sub>minus</sub> kolla på cool tävling i Märkesbacken.
+                    </p>
+                </div>
+                <div class="tab-pane" id="3b">
+                    <p>
+                        Detta är <sub>minus</sub> nionde dag.
+                        <br>
+                        Idag kan <sub>minus</sub> gå på München Hoben, superskojsigt.
+                    </p>
+                </div>
+            {% elif week == '3' %}
+                <div class="tab-pane active" id="1c">
+                    <p>
+                        Detta är <sub>minus</sub> fjortonde dag.
+                        <br>
+                        Idag får <sub>minus</sub> gå på <span class="stabenfont">STABEN</span>s all-star möte.
+                        Där kan <sub>minus</sub> träffa <span class="stabenfont">STABEN STAB, STABEN STABEN STAB</span> osv.
+                    </p>
+                </div>
+                <div class="tab-pane" id="2c">
+                    <p>
+                        Detta är <sub>minus</sub> femtonde dag.
+                        <br>
+                        Idag ska några <sub>minus</sub> redovisa sina nolleuppdrag, missa inte detta.
+                    </p>
+                </div>
+                <div class="tab-pane" id="3c">
+                    <p>
+                        Detta är <sub>minus</sub> sextonde dag.
+                        <br>
+                        Idag kan <sub>minus</sub> gå på Kalasmottagningen.
+                    </p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    </div>
 {% endblock %}

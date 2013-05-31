@@ -32,8 +32,10 @@ def prices():
 	return render('prices.html')
 
 @app.route('/schedule')
-def schedule():
-	return render('schedule.html')
+@app.route('/schedule/<show_week>')
+def schedule(show_week='1'):
+	#TODO Get schedule from database and forward with render
+	return render('schedule.html', week=show_week)
 
 @app.route('/student_poll')
 def student_poll():
@@ -114,7 +116,7 @@ def profile_save(user_email):
 @app.route('/profile/<user_email>/save/password', methods=['POST'])
 def profile_password(user_email):
 	if session and user_email == session['email']:
-		if (db_commands.update_db_pw(user_email, request.form)):
+		if db_commands.update_db_pw(user_email, request.form):
 			return config.redirect(url_for('profile', user_email=user_email))
 		else:
 			return "Not updated"
@@ -161,7 +163,7 @@ def register():
 @app.route('/admin/pages')
 def admin_pages():
 	# Need to check that the user is signed in and is an admin
-	if (db_commands.admin_check(session['email']) == 0):
+	if db_commands.admin_check(session['email']) == 0:
 		return render('admin_pages.html')
 	else:
 		return render('admin_fail.html')
