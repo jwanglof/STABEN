@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from flask import Flask, request, session, g, redirect, url_for, render_template
+from flask import Flask, request, session, g, redirect, url_for, render_template, flash
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.bcrypt import Bcrypt
 from sqlalchemy import Table, Column, Integer, String, Date, Time, Text, create_engine
