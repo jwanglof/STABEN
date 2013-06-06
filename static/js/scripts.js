@@ -1,5 +1,6 @@
 $(document).ready(function() {
 	$('#errorMessages').hide();
+	$('.no_javascript').hide();
 
 	$('#profile_edit').validate({
 		rules: {
@@ -19,18 +20,24 @@ $(document).ready(function() {
 	$('#register_form').validate({
 		errorLabelContainer: $("#errorMessages"),
 		rules: {
-			firstname: 'required',
-			lastname: 'required',
+			// firstname: 'required',
+			// lastname: 'required',
 			email: {
 				required: true,
 				email: true
 			},
+			password: 'required',
+			rep_password: {
+				equalTo: '#password'
+			},
 			regCode: 'required'
 		},
 		messages: {
-			firstname: 'Ditt förnamn är obligatoriskt.',
-			lastname: 'Ditt efternamn är obligatoriskt.',
+			// firstname: 'Ditt förnamn är obligatoriskt.',
+			// lastname: 'Ditt efternamn är obligatoriskt.',
 			email: 'Din e-mail är obligatoriskt och måste vara korrekt.',
+			password: 'Ange ditt lösenord',
+			rep_password: 'Lösenorden matchar inte',
 			regCode: 'Din unika registreringskod måste skrivas in. Denna ska du ha fått i posten.'
 		}
 	});
