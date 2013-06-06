@@ -10,6 +10,22 @@ render = config.render_template
 request = config.request
 url_for = config.url_for
 session = config.session
+flash = config.flash
+
+nollan = 'minus'
+
+def login_user(user_email, user_password):
+	user = db_commands.get_db_user(user_email, user_password)
+
+	if user:
+		# user_info['user'] contains email, password and role (from the table users)
+		# user_info['info'] contains all the user's information (from the table userInformation)
+		db_commands.login_count(request.form['email'])
+		
+		return user
+	else:
+		# return render('login.html', login=False)
+		return False
 
 # DEV OPTIONS
 # NEEDS TO BE REMOVED IN PRODUCTION MODE
@@ -25,7 +41,7 @@ def db_school():
 
 @app.route('/')
 def index():
-	return render('index.html', session=session, bla=config.user_roles)
+	return render('index.html', session=session, bla=config.user_roles, nollan=nollan)
 
 @app.route('/prices')
 def prices():
@@ -59,18 +75,7 @@ def contact(show_page='contact'):
 @app.route('/user/login', methods=['POST'])
 def login():
 	if request.form['email'] not in session:
-		if request.method == 'POST':
-			user = db_commands.get_db_user(request.form['email'], request.form['password'])
-
-			if user:
-				# user_info['user'] contains email, password and role (from the table users)
-				# user_info['info'] contains all the user's information (from the table userInformation)
-				db_commands.login_count(request.form['email'])
-				return config.redirect(url_for('profile', user_email=request.form['email']))
-			else:
-				return render('login.html', login=False)
-		else:
-			# return render('profile.html', user_info=user_info, user_role=config.user_roles[user_info.role])
+		if request.method == 'POST' and login_user(request.form['email'], request.form['password']):
 			return config.redirect(url_for('profile', user_email=request.form['email']))
 	return render('login.html', login=False)
 
@@ -138,20 +143,31 @@ def signout():
 @app.route('/register', methods=['POST', 'GET'])
 def register():
 	if request.method == 'POST':
-		if (request.form['firstname'] != '' and
-			request.form['lastname'] != '' and
-			request.form['email'] != '' and
+		if (request.form['email'] != '' and
 			request.form['regCode'] == u'asd'):
-			print db_commands.register_user(request.form)
-			'''if (db_commands.register_user(request.form)):
-				return 'Successfull'
+			if (request.form['password'] == request.form['rep_password']):
+				# print db_commands.register_user(request.form)
+				if db_commands.register_user(request.form):
+					user = login_user(request.form['email'], request.form['password'])
+					if user:
+						db_commands.add_user_information(user.id)
+						return config.redirect(url_for('profile_edit', user_email=user.email))
+					else:
+						print 'asdas'
+				else:
+					print 'Unsuccessfull'
 			else:
-				return 'Unsuccessfull'''
+				flash(u'Du måste ange samma lösenord i båda rutorna.')
 		else:
-			return 'Du måste ange ditt förnamn, efternamn, e-mail och registreringskod!'
-	else:
-		classes = db_commands.get_school_classes()
-		return render('register.html', classes=classes)
+			flash(u'Du måste ange din e-mail och registreringskod!')
+	return render('register.html')
+	# 	classes = db_commands.get_school_classes()
+	# 	return render('register.html', classes=classes)
+
+@app.route('/register/userInformation')
+def register_userInformation():
+	pass
+
 
 '''
 	*
