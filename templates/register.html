@@ -1,8 +1,15 @@
 {% extends "template.html" %}
 {% block active_register %}active{% endblock %}
 {% block content %}
-
-<div id='errorMessages'></div>
+<div id='errorMessages'>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+{% for message in messages %}
+{{ message }}
+{% endfor %}
+{% endif %}
+{% endwith %}
+</div>
 <form method='post' action='{{ url_for('register') }}' class='stabForm' id='register_form'>
 	<fieldset>
 		<ol>
@@ -16,8 +23,16 @@
 				<input type="text" name="lastname" id="regLastname" placeholder="Efternamn" />
 			</li>/-->
 			<li>
-				<label for="lastname">E-mail *</label>
-				<input type="text" name="email" id="regEmail" placeholder="E-mail" />
+				<label for="lastname">E-post *</label>
+				<input type="email" name="email" id="email" placeholder="E-mail" />
+			</li>
+			<li>
+				<label for="lastname">Lösenord *</label>
+				<input type="password" name="password" id="password" placeholder="Lösenord" />
+			</li>
+			<li>
+				<label for="lastname">Upprepa lösenord *</label>
+				<input type="password" name="rep_password" id="rep_password" placeholder="Upprepa lösenord" />
 			</li>
 			<!--<li>
 				<label for="phonenumber">Telefonnummer</label>

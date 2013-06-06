@@ -33,14 +33,10 @@
 		<textarea rows='10' name='presentation'>{{ user_info.presentation }}</textarea>
 	</p>
 	
-	<h5>Dessa kan du inte ändra, kontakta webmaster vid önskad ändring!</h5>
-	Email
+	<h5>Du kan inte ändra din e-post, kontakta webmaster vid önskad ändring!</h5>
+	E-post
 	<br />
 	<input type='text' id='email' name='email' value='{{ user.email }}' disabled />
-	<br />
-	Titel
-	<br />
-	<input type='text' name='title' value='{{ user_info.title }}' disabled />
 	<br />
 	<button type='submit' class='btn'>Spara</button> <input type='reset' value='Återställ' class='btn' />
 </form>
