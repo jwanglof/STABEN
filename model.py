@@ -94,7 +94,7 @@ class Users(db.Model):
 	__tablename__ = 'users'
 	id = db.Column(db.Integer(), primary_key=True)
 	email = db.Column(db.String(100), index=True, unique=True)
-	password = db.Column(db.String(50), index=True)
+	password = db.Column(db.String(150), index=True)
 	role = db.Column(db.SmallInteger(), default=ROLE_USER)
 	information = db.relationship('UserInformation', uselist=False, backref='users')
 
@@ -110,23 +110,21 @@ class UserInformation(db.Model):
 	__tablename__ = 'userInformation'
 	id = db.Column(db.Integer(), primary_key=True)
 	user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-	title = db.Column(db.String(15), index=True, default='Användare')
 	firstname = db.Column(db.String(100), index=True, default='')
-	lastname = db.Column(db.String(100), index=True)
-	phonenumber = db.Column(db.String(15), index=True)
+	lastname = db.Column(db.String(100), index=True, default='')
+	phonenumber = db.Column(db.String(15), index=True, default='')
 	phonenumber_vis = db.Column(db.SmallInteger, index=True, default=0)
-	age = db.Column(db.SmallInteger(), index=True)
-	facebook_url = db.Column(db.String(100), index=True)
-	school_class = db.Column(db.SmallInteger(), index=True)
-	current_city = db.Column(db.String(100), index=True)
-	where_from = db.Column(db.String(100), index=True)
-	presentation = db.Column(db.UnicodeText())
+	age = db.Column(db.SmallInteger(), index=True, default=0)
+	facebook_url = db.Column(db.String(100), index=True, default='')
+	school_class = db.Column(db.SmallInteger(), index=True, default=0)
+	current_city = db.Column(db.String(100), index=True, default='')
+	where_from = db.Column(db.String(100), index=True, default='')
+	presentation = db.Column(db.UnicodeText(), default=u'')
 	login_count = db.Column(db.Integer(), default=0)
 	poll_done = db.Column(db.SmallInteger(), default=0)
 
-	def __init__(self, firstname=None, user_id=None):
+	def __init__(self, user_id=None):
 		self.user_id = user_id
-		self.firstname = firstname
 
 	def __repr__(self):
 		return 'Hejsan %s' % (self.firstname)
