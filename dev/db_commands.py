@@ -9,8 +9,8 @@ app = config.app
 
 # initial users
 admin_users2 = []
-admin_users2.append(model.Users('jwanglof@gmail.com', 'tmppass'))
-admin_users2.append(model.Users('simis.linden@gmail.com', 'tmppass'))
+admin_users2.append(model.Users('jwanglof@gmail.com', 'tmppass', 0))
+admin_users2.append(model.Users('simis.linden@gmail.com', 'tmppass', 0))
 
 admin_users_info = []
 admin_users_info.append(model.UserInformation('Johan'))
@@ -21,6 +21,12 @@ school_classes.append(model.SchoolClasses('D', 'Datateknik'))
 school_classes.append(model.SchoolClasses('IT', 'Informationsteknologi'))
 school_classes.append(model.SchoolClasses('IP', 'Innovativ Programmering'))
 school_classes.append(model.SchoolClasses('U', 'Mjukvaruteknik'))
+
+def generate_password(user_password):
+	return 
+
+def check_password(user_password):
+	return 
 
 # Should check if the DB is created successfully or not!
 def create_db():
@@ -46,11 +52,7 @@ def create_school_classes():
 	db.session.commit()
 	return "School classes added"
 
-def gen_pw(clear_pw):
-	return config.bcrypt.generate_password_hash(clear_pw)
-
 def get_db_user(db_user_email,db_user_password=None):
-
 	db_user = model.Users.query.filter_by(email=db_user_email).first()
 	if db_user is not None:
 		db_user_info = {'user': db_user, 'info': model.UserInformation.query.filter_by(user_id=db_user.id)}
@@ -59,7 +61,7 @@ def get_db_user(db_user_email,db_user_password=None):
 		#
 		# A user wants to sign in
 		if db_user_password is not None:
-			if db_user_password == db_user.password:
+			if config.bcrypt.check_password_hash(db_user.password, db_user_password):
 				config.session['email'] = db_user_email
 				config.session['role'] = db_user.role
 
@@ -130,9 +132,17 @@ def admin_users():
 	return model.Users.query.all()
 
 def register_user(db_user_dict):
-	db.session.add(model.Users(db_user_dict['email'], 'asdasd'))
-	# TODO: Need to get the added user's ID and add another row to userInformation	
-	return db.session.commit()
+	try:
+		db.session.add(model.Users(db_user_dict['email'], config.bcrypt.generate_password_hash(db_user_dict['password'])))
+		db.session.commit()
+		return True
+	except:
+		return False
+
+def add_user_information(db_user_id):
+	db.session.add(model.UserInformation(db_user_id))
+	db.session.commit()
+	return True
 
 def get_contacts(role):
 	if role is 0:
