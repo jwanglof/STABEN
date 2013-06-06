@@ -45,7 +45,7 @@
             <li><b>Klass: </b>{{ klassfor.school_class }}</li>
             <li><b>Namn: </b>{{ klassfor.name }}</li>
             <li><b>Telefon: </b>{{ klassfor.phone }}</li>
-            <li><b>E-post: </b>{{ klassfor.email }}</li>
+            <li><b>E-post: </b><a href="mailto:{{ klassfor.email }}">{{ klassfor.email }}</a></li>
             <br>
             {% endfor %}
         </ul>
@@ -56,7 +56,7 @@
             {% for studie in studievagledning %}
             <li><b>Studievägledare: </b>{{ studie.name }}</li>
             <li><b>Telefon: </b>{{ studie.phone }}</li>
-            <li><b>E-post: </b>{{ studie.email }}</li>
+            <li><b>E-post: </b><a href="mailto:{{ studie.email }}">{{ studie.email }}</a></li>
             <li><b>Länk: </b><a href="{{ studie.link }}" target="_blank">LiU:s kontaktsida för {{ studie.name }}</a></li>
             {% endfor %}
         </ul>

@@ -38,6 +38,9 @@ def db_admins():
 @app.route('/db_school')
 def db_school():
 	return db_commands.create_school_classes()
+@app.route('/db_contacts')
+def db_contacts():
+	return db_commands.create_contacts()
 
 @app.route('/')
 def index():
