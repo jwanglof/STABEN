@@ -50,7 +50,11 @@ def blog():
 @app.route('/contact')
 @app.route('/contact/<show_page>')
 def contact(show_page='contact'):
-	return render('contact.html', show=show_page)
+	role_klass = 0
+	role_studie = 1
+	klassforestandare = db_commands.get_contacts(role_klass)
+	studievagledning = db_commands.get_contacts(role_studie)
+	return render('contact.html', show=show_page, klassforestandare=klassforestandare, studievagledning=studievagledning)
 
 @app.route('/user/login', methods=['POST'])
 def login():
@@ -58,7 +62,7 @@ def login():
 		if request.method == 'POST':
 			user = db_commands.get_db_user(request.form['email'], request.form['password'])
 
-			if (user):
+			if user:
 				# user_info['user'] contains email, password and role (from the table users)
 				# user_info['info'] contains all the user's information (from the table userInformation)
 				db_commands.login_count(request.form['email'])
@@ -85,6 +89,7 @@ def profile(user_email):
 def profile_edit(user_email):
 	if session and user_email == session['email']:
 		user = db_commands.get_db_user(session['email'])
+		#user_info = db_commands.get_user_info()
 		classes = db_commands.get_school_classes()
 		return render('profile_edit.html', user=user['user'], user_info=user['info'], school_classes=classes)
 	else:
@@ -118,8 +123,7 @@ def profile_password(user_email):
 
 @app.route('/profile/<user_email>/class/')
 def profile_class(user_email):
-	if (session and \
-		user_email == session['email']):
+	if session and	user_email == session['email']:
 		class_mates = db_commands.get_class_mates(user_email)
 		school_class = db_commands.get_school_class(user_email)
 		return render('profile_class.html', class_mates=class_mates, school_class=school_class)
@@ -133,10 +137,10 @@ def signout():
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
-	if (request.method == 'POST'):
-		if (request.form['firstname'] != '' and \
-			request.form['lastname'] != '' and \
-			request.form['email'] != '' and \
+	if request.method == 'POST':
+		if (request.form['firstname'] != '' and
+			request.form['lastname'] != '' and
+			request.form['email'] != '' and
 			request.form['regCode'] == u'asd'):
 			print db_commands.register_user(request.form)
 			'''if (db_commands.register_user(request.form)):
@@ -162,10 +166,23 @@ def admin_pages():
 	else:
 		return render('admin_fail.html')
 
+@app.route('/admin/addcontact', methods=['GET', 'POST'])
+def admin_addcontact():
+	if db_commands.admin_check(session['email']) is 0:
+		if request.method == 'POST':
+			result = db_commands.add_contact(request.form['name'], request.form['phonenumber'],
+											 request.form['email'],request.form['role'],
+											 request.form['school_class'], request.form['studie_link'])
+			return render('admin_addcontact.html', result=result)
+		elif request.method == 'GET':
+			return render('admin_addcontact.html')
+	else:
+		return render('admin_fail.html')
+
 @app.route('/admin/users')
 def admin_users():
 	# Need to check that the user is signed in and is an admin
-	if (db_commands.admin_check(session['email']) == 0):
+	if db_commands.admin_check(session['email']) is 0:
 		users = db_commands.admin_users()
 		return render('admin_users.html', users=users)
 	else:

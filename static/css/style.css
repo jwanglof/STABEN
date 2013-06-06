@@ -25,3 +25,13 @@
 	padding-right: 10px;
 	font-style: italic;
 }
+
+@font-face {
+    font-family: staben_font;
+    src: local(staben_font), url('../Rocky.ttf') format('opentype');
+}
+
+span.stabenfont {
+    font-family: "staben_font",serif;
+    color: #ff0000;
+}

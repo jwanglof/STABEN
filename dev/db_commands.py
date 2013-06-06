@@ -50,20 +50,20 @@ def gen_pw(clear_pw):
 	return config.bcrypt.generate_password_hash(clear_pw)
 
 def get_db_user(db_user_email,db_user_password=None):
-	db_user = model.Users.query.filter_by(email=db_user_email).first()
 
-	if db_user != None:
+	db_user = model.Users.query.filter_by(email=db_user_email).first()
+	if db_user is not None:
 		db_user_info = {'user': db_user, 'info': model.UserInformation.query.filter_by(user_id=db_user.id)}
 
 		# Check to see if a user is signing in
 		#
 		# A user wants to sign in
-		if db_user_password != None:
+		if db_user_password is not None:
 			if db_user_password == db_user.password:
 				config.session['email'] = db_user_email
 				config.session['role'] = db_user.role
 
-				return db_user_info
+				return db_user
 			else:
 				return False
 		else:
@@ -82,9 +82,9 @@ def update_db_user(db_user_email, db_user_dict, phonenumber_vis):
 	return True
 
 def login_count(db_user_email):
-	db_user = model.Users.query.filter_by(email=db_user_email).first()
-	user_info = model.UserInformation.query.filter_by(user_id=db_user.id).first()
-	user_info.login_count = user_info.login_count+1
+	#db_user = model.Users.query.filter_by(email=db_user_email).first()
+	#user_info = model.UserInformation.query.filter_by(user_id=db_user.id).first()
+	#user_info.login_count += 1
 
 	db.session.commit()
 
@@ -113,6 +113,14 @@ def update_db_pw(db_user_email, db_user_dict):
 	else:
 		return False
 
+
+def add_contact(name, phonenumber, email, role, school_class, link):
+	contact = model.Contact(name, phonenumber, email, role, school_class, link)
+	db.session.add(contact)
+	db.session.commit()
+	return 'success'
+
+
 def admin_check(db_user_email):
 	# Check only role!
 	user_info = model.Users.query.filter_by(email=db_user_email).first()
@@ -123,5 +131,12 @@ def admin_users():
 
 def register_user(db_user_dict):
 	db.session.add(model.Users(db_user_dict['email'], 'asdasd'))
-	# TODO: Need to get the added user's ID and add another row to userInformation
+	# TODO: Need to get the added user's ID and add another row to userInformation	
 	return db.session.commit()
+
+def get_contacts(role):
+	if role is 0:
+		contacts = model.Contact.query.filter_by(role=role).order_by(model.Contact.school_class).all()
+	else:
+		contacts = model.Contact.query.filter_by(role=role).all()
+	return contacts
