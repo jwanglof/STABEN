@@ -172,7 +172,7 @@ class SchoolClasses(db.Model):
 class RegisterCode(db.Model):
 	__tablename__ = 'register_code'
 	id = db.Column(db.Integer(), primary_key=True)
-	code = db.Column(db.String(10), index=True, unique=True, default='two_weevil')
+	code = db.Column(db.String(10), index=True, unique=True)
 
 	def __init__(self, code=None):
 		self.code = code
