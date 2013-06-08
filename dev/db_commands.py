@@ -22,6 +22,15 @@ school_classes.append(model.SchoolClasses('IT', 'Informationsteknologi'))
 school_classes.append(model.SchoolClasses('IP', 'Innovativ Programmering'))
 school_classes.append(model.SchoolClasses('U', 'Mjukvaruteknik'))
 
+contacts = []
+contacts.append(model.Contact('Patrik Hillgren', '070-0434527', 'pathi747@student.liu.se', 0, 'IT0',''))
+contacts.append(model.Contact('Alicia Tonolli', '070-4237004', 'alito938@student.liu.se', 0, 'D0a',''))
+contacts.append(model.Contact('Johan Falk', '070-8468608', 'johfa808@student.liu.se', 0, 'D0b',''))
+contacts.append(model.Contact('Tony Fredriksson', '070-6745520', 'tonfr314@student.liu.se', 0, 'D0c',''))
+contacts.append(model.Contact('Gustav Bylund', '073-0262686', 'gusby403@student.liu.se', 0, 'IP0',''))
+contacts.append(model.Contact('Alex Telon', '070-2647531', 'alete471@student.liu.se', 0, 'U0',''))
+contacts.append(model.Contact('Siv Söderlund', '013-282836', 'siv.soderlund@liu.se', 1, '', 'http://www.liu.se/personal/tfk/sivso41?l=sv'))
+
 # Should check if the DB is created successfully or not!
 def create_db():
 	#db.init_app(app)
@@ -50,6 +59,12 @@ def create_school_classes():
 		db.session.add(classes)
 	db.session.commit()
 	return "School classes added"
+
+def create_contacts():
+	for contact in contacts:
+		db.session.add(contact)
+	db.session.commit()
+	return "Contacts added"
 
 def get_db_user(db_user_email,db_user_password=None):
 	db_user = model.Users.query.filter_by(email=db_user_email).first()
