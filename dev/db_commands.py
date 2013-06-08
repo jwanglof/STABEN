@@ -22,12 +22,6 @@ school_classes.append(model.SchoolClasses('IT', 'Informationsteknologi'))
 school_classes.append(model.SchoolClasses('IP', 'Innovativ Programmering'))
 school_classes.append(model.SchoolClasses('U', 'Mjukvaruteknik'))
 
-def generate_password(user_password):
-	return 
-
-def check_password(user_password):
-	return 
-
 # Should check if the DB is created successfully or not!
 def create_db():
 	#db.init_app(app)
@@ -45,6 +39,11 @@ def create_admin_users():
 
 	db.session.commit()
 	return "Admin users added"
+
+def create_secret_code:
+	pass
+	# Add the secret code to the DB!
+	# two_weevil
 
 def create_school_classes():
 	for classes in school_classes:
@@ -87,7 +86,6 @@ def login_count(db_user_email):
 	#db_user = model.Users.query.filter_by(email=db_user_email).first()
 	#user_info = model.UserInformation.query.filter_by(user_id=db_user.id).first()
 	#user_info.login_count += 1
-
 	db.session.commit()
 
 def get_school_classes():
@@ -150,3 +148,6 @@ def get_contacts(role):
 	else:
 		contacts = model.Contact.query.filter_by(role=role).all()
 	return contacts
+
+def get_register_code():
+	return model.RegisterCode.query.first()
