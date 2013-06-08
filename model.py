@@ -88,6 +88,8 @@ class BlogComments(db.Model):
 	* Fadder                                   (role=2)
 	* Klassföreståndare                        (role=3)
 	* Studievägledning                         (role=4)
+	* Gallerinollan							   (role=5)
+	* Bloggnollan							   (role=6)
 	* Nollan                                   (ROLE_USER)
 '''
 class Users(db.Model):
