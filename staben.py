@@ -144,7 +144,7 @@ def signout():
 def register():
 	if request.method == 'POST':
 		if (request.form['email'] != '' and
-			request.form['regCode'] == u'asd'):
+			request.form['regCode'] == db_commands.get_register_code()):
 			if (request.form['password'] == request.form['rep_password']):
 				# print db_commands.register_user(request.form)
 				if db_commands.register_user(request.form):
