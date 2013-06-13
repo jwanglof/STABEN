@@ -34,11 +34,12 @@
 
 span.stabenfont {
     font-family: "staben_font",serif;
+    font-size: 150%;
     color: #ff0000;
 }
 
 span.nollanfont {
-	font-size: 80%;
+	font-size: 70%;
 	font-weight: bolder;
 }
 

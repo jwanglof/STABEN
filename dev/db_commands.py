@@ -49,7 +49,7 @@ def create_admin_users():
 	db.session.commit()
 	return "Admin users added"
 
-def create_secret_code:
+def create_secret_code():
 	pass
 	# Add the secret code to the DB!
 	# two_weevil
