@@ -51,8 +51,10 @@ def prices():
 	return render('prices.html')
 
 @app.route('/schedule')
-def schedule():
-	return render('schedule.html')
+@app.route('/schedule/<show_week>')
+def schedule(show_week='1'):
+	schedule_date = db_commands.get_schedule(show_week)
+	return render('schedule.html', week=show_week, schedule=schedule_date)
 
 @app.route('/student_poll')
 def student_poll():
@@ -78,7 +80,18 @@ def contact(show_page='contact'):
 @app.route('/user/login', methods=['POST'])
 def login():
 	if request.form['email'] not in session:
-		if request.method == 'POST' and login_user(request.form['email'], request.form['password']):
+		if request.method == 'POST':
+			user = db_commands.get_db_user(request.form['email'], request.form['password'])
+
+			if user:
+				# user_info['user'] contains email, password and role (from the table users)
+				# user_info['info'] contains all the user's information (from the table userInformation)
+				db_commands.login_count(request.form['email'])
+				return config.redirect(url_for('profile', user_email=request.form['email']))
+			else:
+				return render('login.html', login=False)
+		else:
+			# return render('profile.html', user_info=user_info, user_role=config.user_roles[user_info.role])
 			return config.redirect(url_for('profile', user_email=request.form['email']))
 	return render('login.html', login=False)
 
@@ -122,7 +135,7 @@ def profile_save(user_email):
 @app.route('/profile/<user_email>/save/password', methods=['POST'])
 def profile_password(user_email):
 	if session and user_email == session['email']:
-		if (db_commands.update_db_pw(user_email, request.form)):
+		if db_commands.update_db_pw(user_email, request.form):
 			return config.redirect(url_for('profile', user_email=user_email))
 		else:
 			return "Not updated"
@@ -180,7 +193,7 @@ def register_userInformation():
 @app.route('/admin/pages')
 def admin_pages():
 	# Need to check that the user is signed in and is an admin
-	if (db_commands.admin_check(session['email']) == 0):
+	if db_commands.admin_check(session['email']) == 0:
 		return render('admin_pages.html')
 	else:
 		return render('admin_fail.html')

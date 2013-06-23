@@ -1,4 +1,74 @@
 {% extends "template.html" %}
 {% block active_schedule %}active{% endblock %}
 {% block content %}
+    <h1>Här kan <span class="nollanfont">minus</span> läsa sitt schema över nolle-p.</h1>
+    <br>
+    <div class="span8">
+        <h3 style="display: inline">Ange vecka </h3>
+        <div class="pagination" style="display: inline">
+            <ul>
+                {% if week == '1' %}
+                    <li class="active">
+                        {% else %}
+                    <li>
+                {% endif %}
+                <a href="{{ url_for('schedule') }}/1">1</a>
+                </li>
+                {% if week == '2' %}
+                    <li class="active">
+                        {% else %}
+                    <li>
+                {% endif %}
+                <a href="{{ url_for('schedule') }}/2">2</a>
+                </li>
+                {% if week == '3' %}
+                    <li class="active">
+                        {% else %}
+                    <li>
+                {% endif %}
+                <a href="{{ url_for('schedule') }}/3">3</a>
+                </li>
+            </ul>
+        </div>
+        <br>
+        <br>
+
+        <div class="tabbable tabs-left">
+            <ul class="nav nav-tabs">
+                {% for schedule_tab in schedule %}
+                    {% if schedule_tab.href_div_id == '1a' or
+                    schedule_tab.href_div_id == '2a' or
+                    schedule_tab.href_div_id == '3a' %}
+                        <li class="active">
+                            {% else %}
+                        <li>
+                    {% endif %}
+                <a href="#{{ schedule_tab.href_div_id }}" data-toggle="tab">{{ schedule_tab.weekday }} {{ schedule_tab.date }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+
+            <div class="tab-content">
+                {% for schedule_info in schedule %}
+                    <div class="tab-pane
+                    {% if schedule_info.href_div_id == '1a' or
+                    schedule_info.href_div_id == '2a' or
+                    schedule_info.href_div_id == '3a' %}
+                    active
+                    {% endif %}"
+                         id="{{ schedule_info.href_div_id }}">
+                        <p>
+                            <b>Tid:</b> {{ schedule_info.time }}. <b>Plats: </b>{{ schedule_info.place }}.</p>
+                        <p>
+                            {{ schedule_info.activity_info_day }}
+                        </p>
+                        <p>
+                            {{ schedule_info.activity_info_evening }}
+                        </p>
+                        <img src="{{ schedule_info.img_url }}">
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 {% endblock %}

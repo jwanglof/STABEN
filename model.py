@@ -202,9 +202,45 @@ class RegisterCode(db.Model):
         """The constructor"""
         self.code = code
 
+<<<<<<< HEAD
     def __repr__(self):
         """Get values from the table in an own-formatted output"""
         return 'Le kod iz: %s' % (self.code)
+=======
+class ScheduleDate(db.Model):
+	__tablename__ = 'schedule_date'
+	id = db.Column(db.Integer, primary_key=True)
+	week = db.Column(db.Integer, index=True)
+	date = db.Column(db.String(6), index=True, unique=True)
+	weekday = db.Column(db.String(10), index=True)
+	href_div_id = db.Column(db.String(4), index=True)
+	img_url = db.Column(db.String(254), index=True)
+	time = db.Column(db.String(20), index=True)
+	place = db.Column(db.String(100), index=True)
+	href_div_id = db.Column(db.String(4), index=True)
+	# Two different for two paragrahps
+	activity_info_day = db.Column(db.String(800), index=True)
+	activity_info_evening = db.Column(db.String(800), index=True)
+
+	def __init__(self, week=None, date=None, weekday=None, href_div_id=None,
+				 img_url=None, time=None, place=None, activity_info_day=None, activity_info_evening=None):
+		self.week = week
+		self.date = date
+		self.weekday = weekday
+		self.href_div_id = href_div_id
+		self.img_url = img_url
+		self.time = time
+		self.place = place
+		self.activity_info_day = activity_info_day
+		self.activity_info_evening = activity_info_evening
+		return
+
+'''
+class StudentPollResult(db.Model):
+	__tablename__ = 'student_poll'
+	id = db.Column(db.Integer, primary_key=True)
+	fk_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+>>>>>>> db71101f5e71cca64c3c72c9b2502c271b97fd62
 
 ''' 
 class StudentPollResult(db.Model):
@@ -303,6 +339,7 @@ class Prices(db.Model):
         """Get values from the table in an own-formatted output"""
         return;
 
+<<<<<<< HEAD
 class ScheduleDate(db.Model):
     """Schedule date-table
 
@@ -344,4 +381,6 @@ class ScheduleDateInformation(db.Model):
     def __repr__(self):
         """Get values from the table in an own-formatted output"""
         return;
+=======
+>>>>>>> db71101f5e71cca64c3c72c9b2502c271b97fd62
 '''
