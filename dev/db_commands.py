@@ -154,12 +154,15 @@ def admin_users():
 	return model.Users.query.all()
 
 def register_user(db_user_dict):
-	try:
-		db.session.add(model.Users(db_user_dict['email'], config.bcrypt.generate_password_hash(db_user_dict['password'])))
-		db.session.commit()
-		return True
-	except:
-		return False
+	db.session.add(model.Users(db_user_dict['email'], config.bcrypt.generate_password_hash(db_user_dict['password'])))
+	db.session.commit()
+	return True
+	# try:
+	# 	db.session.add(model.Users(db_user_dict['email'], config.bcrypt.generate_password_hash(db_user_dict['password'])))
+	# 	db.session.commit()
+	# 	return True
+	# except:
+	# 	return False
 
 def add_user_information(db_user_id):
 	db.session.add(model.UserInformation(db_user_id))
