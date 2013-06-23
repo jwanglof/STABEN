@@ -31,6 +31,12 @@ contacts.append(model.Contact('Gustav Bylund', '073-0262686', 'gusby403@student.
 contacts.append(model.Contact('Alex Telon', '070-2647531', 'alete471@student.liu.se', 0, 'U0',''))
 contacts.append(model.Contact('Siv Söderlund', '013-282836', 'siv.soderlund@liu.se', 1, '', 'http://www.liu.se/personal/tfk/sivso41?l=sv'))
 
+schedule_date = []
+schedule_date.append(model.ScheduleDate('1', '20/8', 'Tisdag', '1a', '../static/img/schedule_tisdag20_tmp.PNG',
+										'07:00 - 18:00', 'Folkets park, Campushallen, universitetet',
+										'Idag är det dags för minus att träffa andra minus och faddrar på parkeringen till Folkets park kl 7.00. Här kommer minus träffa D-group och CC som kommer lära minus att sjunga sin nollesång på yppersta och fagraste sätt.Därefter kommer minus att tåga vidare till Campushallen för att bli underhållna och se STABEN. Superskojsigt,  minus!',
+										'Därefter kommer minus att vandra mot universitetet. Därför är det dumt om minus har sin cykel med sig, då minus inte kommer att cykla. STABEN rekommenderar därför att minus lämnar cykeln hemma. Resten av dagen kommer minus att bli uppropad, indelad, tilldelad, föreläst för och utfrågad. Uppropad för att universitetet ska se så att minus är där minus bör vara, Linkeboda ju, indelad för att minus ska få en klass, föreläst för att minus ska lära sig saker och utfrågad för att minus ska ha det roligt i nolle-p. Minus har en lång dag framför sig, så minus bör vara väl utvilad och dessutom ta med sig en frukt eller smörgås.'))
+
 # Should check if the DB is created successfully or not!
 def create_db():
 	#db.init_app(app)
@@ -65,6 +71,9 @@ def create_contacts():
 		db.session.add(contact)
 	db.session.commit()
 	return "Contacts added"
+
+def gen_pw(clear_pw):
+	return config.bcrypt.generate_password_hash(clear_pw)
 
 def get_db_user(db_user_email,db_user_password=None):
 	db_user = model.Users.query.filter_by(email=db_user_email).first()
@@ -163,6 +172,10 @@ def get_contacts(role):
 	else:
 		contacts = model.Contact.query.filter_by(role=role).all()
 	return contacts
+
+def get_schedule(week):
+	schedule = model.ScheduleDate.query.filter_by(week=week).order_by(model.ScheduleDate.week).all()
+	return schedule
 
 def get_register_code():
 	return model.RegisterCode.query.first()

@@ -180,6 +180,34 @@ class RegisterCode(db.Model):
 	def __repr__(self):
 		return 'Le kod iz: %s' % (self.code)
 
+class ScheduleDate(db.Model):
+	__tablename__ = 'schedule_date'
+	id = db.Column(db.Integer, primary_key=True)
+	week = db.Column(db.Integer, index=True)
+	date = db.Column(db.String(6), index=True, unique=True)
+	weekday = db.Column(db.String(10), index=True)
+	href_div_id = db.Column(db.String(4), index=True)
+	img_url = db.Column(db.String(254), index=True)
+	time = db.Column(db.String(20), index=True)
+	place = db.Column(db.String(100), index=True)
+	href_div_id = db.Column(db.String(4), index=True)
+	# Two different for two paragrahps
+	activity_info_day = db.Column(db.String(800), index=True)
+	activity_info_evening = db.Column(db.String(800), index=True)
+
+	def __init__(self, week=None, date=None, weekday=None, href_div_id=None,
+				 img_url=None, time=None, place=None, activity_info_day=None, activity_info_evening=None):
+		self.week = week
+		self.date = date
+		self.weekday = weekday
+		self.href_div_id = href_div_id
+		self.img_url = img_url
+		self.time = time
+		self.place = place
+		self.activity_info_day = activity_info_day
+		self.activity_info_evening = activity_info_evening
+		return
+
 '''
 class StudentPollResult(db.Model):
 	__tablename__ = 'student_poll'
@@ -237,31 +265,4 @@ class Prices(db.Model):
 	def __repr__(self):
 		return;
 
-class ScheduleDate(db.Model):
-	__tablename__ = 'schedule_date'
-	id = db.Column(db.Integer, primary_key=True)
-	weekday = db.Column(db.String(10), index=True)
-	date = db.Column(db.String(100), index=True, unique=True)
-
-	def __init__(self):
-		return
-
-	def __repr__(self):
-		return;
-
-class ScheduleDateInformation(db.Model):
-	__tablename__ = 'schedule_date'
-	id = db.Column(db.Integer, primary_key=True)
-	fk_schedule_date = db.Column(db.Integer, db.ForeignKey('schedule_date.id'))
-	icon_url = db.Column(db.String(254), index=True)
-	time = db.Column(db.String(10), index=True)
-	place = db.Column(db.String(50), index=True)
-	activity_name = db.Column(db.String(50), index=True)
-	activity_information = db.Column(db.UnicodeText())
-
-	def __init__(self):
-		return
-
-	def __repr__(self):
-		return;
 '''
