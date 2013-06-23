@@ -237,7 +237,7 @@ class RegisterCode(db.Model):
 
 	def __repr__(self):
 		"""Get values from the table in an own-formatted output"""
-		return 'Le kod iz: %s' % (self.code)
+		return '%s' % (self.code)
 
 class ScheduleDate(db.Model):
 	"""Schedule date-table
