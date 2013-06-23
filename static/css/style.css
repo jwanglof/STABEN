@@ -1,0 +1,49 @@
+.content {
+	padding-top: 20px;
+}
+
+.school_mate {
+	display: block;
+	border: 1px solid #000;
+	border-radius: 5px;
+
+	padding-left: 10px;
+	margin-bottom: 10px;
+}
+
+.school_mate_info {
+	display: none;
+}
+
+.school_mate_info p {
+	font-style: italic;
+	font-weight: bolder;
+}
+
+.school_mate_collapse {
+	float: right;
+	padding-right: 10px;
+	font-style: italic;
+}
+
+@font-face {
+    font-family: staben_font;
+    src: url('../fonts/Rocky.ttf'),
+         url('../fonts/Rocky.eot'); /*IE 9*/
+}
+
+span.stabenfont {
+    font-family: "staben_font",serif;
+    font-size: 150%;
+    color: #ff0000;
+}
+
+span.nollanfont {
+	font-size: 70%;
+	font-weight: bolder;
+}
+
+p.no_javascript {
+	font-size: 130%;
+	text-decoration: underline;
+}

@@ -1,0 +1,260 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"Text",
+				"UnicodeText"
+			],
+			[
+				"phon",
+				"phonenumber_vis"
+			],
+			[
+				"shoo",
+				"school_mates_info"
+			],
+			[
+				"schoo",
+				"school_mates_info"
+			],
+			[
+				"user",
+				"user_email"
+			],
+			[
+				"sule",
+				"schedule"
+			],
+			[
+				"backgr",
+				"background-color"
+			],
+			[
+				"profile",
+				"profile"
+			],
+			[
+				"sess",
+				"session"
+			],
+			[
+				"db_",
+				"db_user_email"
+			],
+			[
+				"db",
+				"db_pass"
+			],
+			[
+				"db_us",
+				"db_user_password"
+			],
+			[
+				"show",
+				"show_page"
+			],
+			[
+				"retur",
+				"return_text"
+			],
+			[
+				"wa",
+				"waeggen_user"
+			],
+			[
+				"admin",
+				"admin_users"
+			],
+			[
+				"nav",
+				"nav_menu"
+			],
+			[
+				"na",
+				"nav_menu"
+			],
+			[
+				"SQL",
+				"SQLAlchemy"
+			],
+			[
+				"sql",
+				"sql_engine"
+			],
+			[
+				"SQ",
+				"SQLALCHEMY_DATABASE_URI"
+			]
+		]
+	},
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 298.0,
+		"selected_items":
+		[
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"inst",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: in",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: ins",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 400.0
+	},
+	"console":
+	{
+		"height": 146.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/home/johan/Git/STABEN/static/css/style.css",
+		"/home/johan/Git/STABEN/static/js/scripts.js",
+		"/home/johan/Git/STABEN/README.md",
+		"/home/johan/Git/STABEN/templates/profile_edit.html",
+		"/home/johan/Git/STABEN/templates/blog.html",
+		"/home/johan/.config/sublime-text-2/Packages/User/Preferences.sublime-settings",
+		"/home/johan/.config/sublime-text-2/Packages/Default/Preferences.sublime-settings",
+		"/home/johan/Git/STABEN/static/js/jquery.validate.js",
+		"/home/johan/Git/STABEN/templates/profie_edit.html",
+		"/home/johan/Git/STABEN/templates/login.html",
+		"/home/johan/Git/STABEN/templates/index.html",
+		"/home/johan/Git/STABEN/model.py",
+		"/home/johan/Git/STABEN/templates/contact.html",
+		"/home/johan/.config/sublime-text-2/Packages/User/Default (Linux).sublime-keymap",
+		"/home/johan/Git/STABEN/templates/prices.html",
+		"/home/johan/Git/TDP022-Mockup/index.html",
+		"/home/johan/Git/STABEN/templates/student_poll.html",
+		"/home/johan/Git/STABEN/templates/schedule.html",
+		"/home/johan/Git/STABEN/templates/gallery.html",
+		"/home/johan/Git/STABEN/static/js/jquery.min.js",
+		"/home/johan/Git/STABEN/static/bla",
+		"/home/johan/Git/STABEN/dev/__init__.py",
+		"/home/johan/Git/TDP022-Mockup/js/settings.js"
+	],
+	"find":
+	{
+		"height": 36.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"get_form",
+			"hot_",
+			"config.render_template",
+			"Text"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"request",
+			"render",
+			"active",
+			"\")"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"incremental_find":
+	{
+		"height": 34.0
+	},
+	"input":
+	{
+		"height": 32.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"replace":
+	{
+		"height": 66.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 186.0,
+	"status_bar_visible": true
+}

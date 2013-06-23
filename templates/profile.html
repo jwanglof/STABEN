@@ -1,0 +1,10 @@
+{% extends "template.html" %}
+{% block active_profile%}active{% endblock %}
+{% block content %}
+    <h1>
+    	Välkommen 
+    </h1>
+    {% for info in user_info %}
+		<h3>{{ info.firstname }} {{ info.lastname }}</h3>
+    {% endfor %}
+{% endblock %}

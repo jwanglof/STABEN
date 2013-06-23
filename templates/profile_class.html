@@ -1,0 +1,28 @@
+{% extends "template.html" %}
+{% block active_profile%}active{% endblock %}
+{% block content %}
+<h1>Min skolklass ({{ school_class }})</h1>
+{% for mate in class_mates %}
+	<div class='school_mate' id='{{ mate.id }}'>
+		<b>{{ mate.firstname + ' ' + mate.lastname }}</b>
+		<div class='school_mate_collapse' id='collapsed{{ mate.id }}'>Tryck för mer info</div>
+
+		<div class='school_mate_info' id='{{ mate.id }}'>
+			Ålder: {{ mate.age }} <br />
+			{% if mate.phonenumber_vis %}
+				Telefonnummer: {{ mate.phonenumber }} <br />
+			{% endif %}
+			{% if mate.facebook_url %}
+			<a href='{{ mate.facebook_url }}' target='_blank'>Facebook</a> <br />
+			{% endif %}
+			<br />
+			Från: {{ mate.where_from }} <br />
+			Bor: {{ mate.current_city }} <br />
+			<br />
+			<p>
+				{{ mate.presentation }}
+			</p>
+		</div>
+	</div>
+{% endfor %}
+{% endblock %}

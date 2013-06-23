@@ -1,0 +1,34 @@
+{% extends "template.html" %}
+{% block active_profile %}active{% endblock %}
+{% block content %}
+    {% if result %}
+        <div class="alert alert-success">
+            <a class="close" data-dismiss="alert">×</a>
+            <strong>Succé!</strong> Kontakten är ny tillagd.
+        </div>
+    {% endif %}
+    <h1>Lägg till användare</h1>
+    <form method='post' action='/admin/addcontact' id='addcontact'>
+    <h3>Namn</h3>
+    <input type="text" id="name" name="name" size="100">
+    <br />
+    <h3>Telefonnummer</h3>
+    <input type="text" id="phonenumber" name="phonenumber" size="100">
+    <br />
+    <h3>Email</h3>
+    <input type="email" id="email" name="email" size="100">
+    <br />
+    <h3>Användarroll</h3>
+    <input type="radio" id="klassforestandare" name="role" value="0"> Klassföreståndare
+    <br />
+    <input type="radio" id="studievagledning" name="role" value="1"> Studievägledning
+    <br />
+    <h3>Om klassföreståndare, ange klass</h3>
+    <input type="text" id="school_class" name="school_class" size="5">
+    <h3>Om studievägledning, ange länk till LiU-sida</h3>
+    <input type="text" id="studie_link" name="studie_link" size="30">
+    <br />
+    <button type="submit" class="btn">Lägg till kontakt</button>
+
+    </form>
+{% endblock %}

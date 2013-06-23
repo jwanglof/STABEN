@@ -1,0 +1,66 @@
+{% extends "template.html" %}
+{% block active_contact %}active{% endblock %}
+{% block content %}
+{% if show == 'admins' %}
+<div class="row">
+    <div class="span4">
+        <h2>Webmasters</h2>
+        <ul>
+            <li><b>Namn: </b>Johan</li>
+            <li><b>Telefon: </b>Hemligt</li>
+            <li><b>E-post: </b>Hemligt</li>
+            <br>
+            <li><b>Namn: </b>Simon</li>
+            <li><b>Telefon: </b>Hemligt</li>
+            <li><b>E-post: </b>Hemligt</li>
+        </ul>
+    </div>
+    <div class="span8">
+        <img src="http://i.imgur.com/kZgSuL1.gif" />
+    </div>
+</div>
+{% elif show == 'contact' %}
+<div class="row">
+    <div class="span12">
+        <h1>Kontaktuppgifter</h1>
+        <br>
+        <p>Här kan <sub>minus</sub> hitta hur hen ska kontakta viktiga personer.</p>
+    </div>
+    {#<div class="span4">
+        <h2>Överfaddrar</h2>
+        <ul>
+            <li><b>Namn: </b>Överfadder1</li>
+            <li><b>Telefon: </b>Nummer1</li>
+            <li><b>E-post: </b>Adress1</li>
+            <br>
+            <li><b>Namn: </b>Överfadder2</li>
+            <li><b>Telefon: </b>Nummer2</li>
+            <li><b>E-post: </b>adress2</li>
+        </ul>
+    </div>#}
+    <div class="span6">
+        <h2>Klassföreståndare</h2>
+        <ul>
+            {% for klassfor in klassforestandare %}
+            <li><b>Klass: </b>{{ klassfor.school_class }}</li>
+            <li><b>Namn: </b>{{ klassfor.name }}</li>
+            <li><b>Telefon: </b>{{ klassfor.phone }}</li>
+            <li><b>E-post: </b><a href="mailto:{{ klassfor.email }}">{{ klassfor.email }}</a></li>
+            <br>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="span6">
+        <h2>Studievägledning</h2>
+        <ul>
+            {% for studie in studievagledning %}
+            <li><b>Studievägledare: </b>{{ studie.name }}</li>
+            <li><b>Telefon: </b>{{ studie.phone }}</li>
+            <li><b>E-post: </b><a href="mailto:{{ studie.email }}">{{ studie.email }}</a></li>
+            <li><b>Länk: </b><a href="{{ studie.link }}" target="_blank">LiU:s kontaktsida för {{ studie.name }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
