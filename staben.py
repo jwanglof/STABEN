@@ -193,7 +193,7 @@ def register_userInformation():
 @app.route('/admin/pages')
 def admin_pages():
 	# Need to check that the user is signed in and is an admin
-	if (db_commands.admin_check(session['email']) == 0):
+	if db_commands.admin_check(session['email']) == 0:
 		return render('admin_pages.html')
 	else:
 		return render('admin_fail.html')
