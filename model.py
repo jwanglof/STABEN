@@ -166,6 +166,38 @@ class UserInformation(db.Model):
 		"""Get values from the table in an own-formatted output"""
 		return 'Hejsan %s' % (self.firstname)
 
+class Contact(db.Model):
+	"""Conact-table
+
+	Contains the information for the school personnel that doesn't need a login.
+	"""
+
+	__tablename__ = 'contacts'
+	id = db.Column(db.Integer(), primary_key=True)
+	name = db.Column(db.String(30), index=True, unique=True)
+	phone = db.Column(db.String(30), index=True)
+	email = db.Column(db.String(100), index=True)
+	#role determines if "klassföreståndare" or "studievägledning"
+	#role = 0 "klassföreståndare, role = 1 "studievägledning"
+	role = db.Column(db.SmallInteger)
+	#In case of "klassföreståndare"
+	school_class = db.Column(db.String(4), index=True)
+	#In case of "studievägledning"
+	link = db.Column(db.String(100), index=True)
+
+	def __init__(self, name=None, phone=None, email=None, role=None, school_class=None, link=None):
+		"""The constructor"""
+		self.name = name
+		self.phone = phone
+		self.email = email
+		self.role = role
+		self.school_class = school_class
+		self.link = link
+
+	def __repr__(self):
+		"""Get values from the table in an own-formatted output"""
+		return 'Hejsan %s' % (self.firstname)
+
 class SchoolClasses(db.Model):
 	"""School classes-table
 
