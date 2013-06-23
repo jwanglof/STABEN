@@ -207,6 +207,11 @@ class RegisterCode(db.Model):
         return 'Le kod iz: %s' % (self.code)
 
 class ScheduleDate(db.Model):
+    """Schedule date-table
+
+    Contains which weekday and what date a scheduled event is on
+    """
+    
 	__tablename__ = 'schedule_date'
 	id = db.Column(db.Integer, primary_key=True)
 	week = db.Column(db.Integer, index=True)
@@ -223,6 +228,7 @@ class ScheduleDate(db.Model):
 
 	def __init__(self, week=None, date=None, weekday=None, href_div_id=None,
 				 img_url=None, time=None, place=None, activity_info_day=None, activity_info_evening=None):
+        """The constructor"""
 		self.week = week
 		self.date = date
 		self.weekday = weekday
@@ -233,6 +239,10 @@ class ScheduleDate(db.Model):
 		self.activity_info_day = activity_info_day
 		self.activity_info_evening = activity_info_evening
 		return
+
+    def __repr__(self):
+        """Get values from the table in an own-formatted output"""
+        return;
 
 class StudentPollResult(db.Model):
     """Student poll result-table
@@ -330,24 +340,6 @@ class Prices(db.Model):
         """Get values from the table in an own-formatted output"""
         return;
 
-class ScheduleDate(db.Model):
-    """Schedule date-table
-
-    Contains which weekday and what date a scheduled event is on
-    """
-    
-    __tablename__ = 'schedule_date'
-    id = db.Column(db.Integer, primary_key=True)
-    weekday = db.Column(db.String(10), index=True)
-    date = db.Column(db.String(100), index=True, unique=True)
-
-    def __init__(self):
-        """The constructor"""
-        return
-
-    def __repr__(self):
-        """Get values from the table in an own-formatted output"""
-        return;
 
 class ScheduleDateInformation(db.Model):
     """Schedule date information-table
