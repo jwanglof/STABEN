@@ -13,66 +13,24 @@
 <form method='post' action='{{ url_for('register') }}' class='stabForm' id='register_form'>
 	<fieldset>
 		<ol>
-			<!--<li>
-				<label for="firstname">Förnamn *</label>
-				<input type="text" name="firstname" id="regFirstname" placeholder="Förnamn" autofocus="autofocus" />
-			</li>
 			<li>
-				<label for="lastname">Efternamn *</label>
-				<input type="text" name="lastname" id="regLastname" placeholder="Efternamn" />
-			</li>/-->
-			<li>
-				<label for="lastname">E-post *</label>
+				<label for="email">E-post *</label>
 				<input type="email" name="email" id="email" placeholder="E-post" />
 			</li>
 			<li>
-				<label for="lastname">Lösenord *</label>
+				<label for="password">Lösenord *</label>
 				<input type="password" name="password" id="password" placeholder="Lösenord" />
 			</li>
 			<li>
-				<label for="lastname">Upprepa lösenord *</label>
+				<label for="rep_password">Upprepa lösenord *</label>
 				<input type="password" name="rep_password" id="rep_password" placeholder="Upprepa lösenord" />
 			</li>
-			<!--<li>
-				<label for="phonenumber">Telefonnummer</label>
-				<input type="text" name="phonenumber" id="regPhonenumber" placeholder="Telefonnummer" />
-			</li>
 			<li>
-				<label for="age">Ålder</label>
-				<input type="text" name="age" id="regAge" placeholder="Ålder" />
-			</li>
-			<li>
-				<label for="facebook_url">Facebooklänk</label>
-				<input type="text" name="facebook_url" id="regFacebook" placeholder="Facebooklänk" />
-			</li>
-			<li>
-				<label for="where_from">Var kommer du ifrån?</label>
-				<input type="text" name="where_from" id="regWhere_from" placeholder="Var kommer du ifrån?" />
-			</li>
-			<li>
-				<label for="current_city">Var bor du?</label>
-				<input type="text" name="current_city" id="regCurrent_city" placeholder="Var bor du?" />
-			</li>
-			<li>
-				<label for='school_class'>Klass</label>
-				<select name='school_class'>
-					{%- for class in classes %}
-					<option value='{{ classes.id }}'>
-						{{ class.name }} ({{ class.abbreviation }})
-					</option>
-					{%- endfor %}
-				</select>
-			</li>
-			<li>
-				<label for='presentation'>Presentation</label>
-				<textarea rows='10' name='presentation'></textarea>
-			</li>/-->
-			<li>
-				<label for="code">Registreringskod *</label>
+				<label for="regCode">Registreringskod *</label>
 				<input type="text" name="regCode" id="regCode" placeholder="Registreringskod" />
 			</li>
 			<li>
-				<button type="submit" class="btn">Registrera</button>
+				<button type="submit" class="btn btn-primary">Registrera</button>
 			</li>
 		</ol>
 	</fieldset>

@@ -176,9 +176,10 @@ class RegisterCode(db.Model):
 
 	def __init__(self, code=None):
 		self.code = code
+		return
 
 	def __repr__(self):
-		return 'Le kod iz: %s' % (self.code)
+		return self.code
 
 class ScheduleDate(db.Model):
 	__tablename__ = 'schedule_date'

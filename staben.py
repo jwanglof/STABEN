@@ -20,7 +20,7 @@ def login_user(user_email, user_password):
 	if user:
 		# user_info['user'] contains email, password and role (from the table users)
 		# user_info['info'] contains all the user's information (from the table userInformation)
-		db_commands.login_count(request.form['email'])
+		#db_commands.login_count(request.form['email'])
 		
 		return user
 	else:
@@ -159,9 +159,12 @@ def signout():
 @app.route('/register', methods=['POST', 'GET'])
 def register():
 	if request.method == 'POST':
-		if (request.form['email'] != '' and
-			request.form['regCode'] == db_commands.get_register_code()):
-			if (request.form['password'] == request.form['rep_password']):
+		print 'POST'
+		regCode = request.form['regCode']
+		code = db_commands.get_register_code()
+		if request.form['email'] != '' and str(regCode) == str(code):
+			print 'email och code funkar'
+			if request.form['password'] == request.form['rep_password']:
 				# print db_commands.register_user(request.form)
 				if db_commands.register_user(request.form):
 					user = login_user(request.form['email'], request.form['password'])
@@ -169,21 +172,17 @@ def register():
 						db_commands.add_user_information(user.id)
 						return config.redirect(url_for('profile_edit', user_email=user.email))
 					else:
-						print 'asdas'
+						print 'Unsuccessfull, user is None'
 				else:
-					print 'Unsuccessfull'
+					print 'Unsuccessfull, could not register user'
 			else:
 				flash(u'Du måste ange samma lösenord i båda rutorna.')
 		else:
 			flash(u'Du måste ange din e-mail och registreringskod!')
-	return render('register.html')
+	else:
+		return render('register.html')
 	# 	classes = db_commands.get_school_classes()
 	# 	return render('register.html', classes=classes)
-
-@app.route('/register/userInformation')
-def register_userInformation():
-	pass
-
 
 '''
 	*
