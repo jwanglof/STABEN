@@ -78,7 +78,7 @@ def gen_pw(clear_pw):
 def get_db_user(db_user_email,db_user_password=None):
 	db_user = model.Users.query.filter_by(email=db_user_email).first()
 	if db_user is not None:
-		db_user_info = {'user': db_user, 'info': model.UserInformation.query.filter_by(user_id=db_user.id)}
+		db_user_info = {'user': db_user, 'info': model.UserInformation.query.filter_by(fk_user_id=db_user.id)}
 
 		# Check to see if a user is signing in
 		#
