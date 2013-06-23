@@ -15,7 +15,7 @@ TODO (x == finished)
 		<dd>[-] Home</dd>
 		<dd>[ ] Blog</dd>
 		<dd>[ ] Gallery</dd>
-		<dd>[-] Schedule</dd>
+		<dd>[x] Schedule</dd>
 		<dd>[x] Contact information</dd>
 		<dd>[?] Sponsor-footer</dd>
 		<dd>[/] Daily secret</dd>
@@ -71,9 +71,9 @@ TODO
 	<dd>[ ] (NEW BRANCH) En resultat sida för nolleenkäten, där man ska kunna se statistik över vilka som är med (klass, vad dom önskar göra osv) och kunna flytta nollor kors och tvärs till andra grupper</dd>
 	<dd>[ ] (NEW BRANCH) Fixa alla DB tabeller</dd>
 	<dd>[ ] Lägg till kommentarer lite här och var</dd>
-	<dd>[ ] Fråga Widerberg om en ny startsidebild</dd>
+	<dd>[/] Fråga Widerberg om en ny startsidebild</dd>
 	<dd>[ ] Kolla hur deploy av hemsidan fungerar i Flask!</dd>
-	<dd>[ ] Maila CYD-poolen och kolla om dom kan installera våra 'requirements'</dd>
+	<dd>[x] Maila CYD-poolen och kolla om dom kan installera våra 'requirements'</dd>
 </dl>
 
 EER
