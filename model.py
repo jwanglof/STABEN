@@ -317,6 +317,27 @@ class StudentPollQuestions(db.Model):
 		"""Get values from the table in an own-formatted output"""
 		return;
 
+class Prices(db.Model):
+	"""Prices-table
+
+	Contains all the prices that are used
+	"""
+	
+	__tablename__ = 'prices'
+	id = db.Column(db.Integer, primary_key=True)
+	name = db.Column(db.String(100), index=True, unique=True)
+	information = db.Column(db.UnicodeText())
+	price = db.Column(db.Integer)
+
+	def __init__(self):
+		"""The constructor"""
+		return
+
+	def __repr__(self):
+		"""Get values from the table in an own-formatted output"""
+		return;
+
+'''
 class StudentRights(db.Model):
 	"""Student rights-table
 
@@ -352,23 +373,4 @@ class StudentGroups(db.Model):
 	def __repr__(self):
 		"""Get values from the table in an own-formatted output"""
 		return;
-
-class Prices(db.Model):
-	"""Prices-table
-
-	Contains all the prices that are used
-	"""
-	
-	__tablename__ = 'prices'
-	id = db.Column(db.Integer, primary_key=True)
-	name = db.Column(db.String(100), index=True, unique=True)
-	information = db.Column(db.UnicodeText())
-	price = db.Column(db.Integer)
-
-	def __init__(self):
-		"""The constructor"""
-		return
-
-	def __repr__(self):
-		"""Get values from the table in an own-formatted output"""
-		return;
+'''
