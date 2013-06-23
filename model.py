@@ -202,11 +202,10 @@ class RegisterCode(db.Model):
         """The constructor"""
         self.code = code
 
-<<<<<<< HEAD
     def __repr__(self):
         """Get values from the table in an own-formatted output"""
         return 'Le kod iz: %s' % (self.code)
-=======
+
 class ScheduleDate(db.Model):
 	__tablename__ = 'schedule_date'
 	id = db.Column(db.Integer, primary_key=True)
@@ -235,14 +234,6 @@ class ScheduleDate(db.Model):
 		self.activity_info_evening = activity_info_evening
 		return
 
-'''
-class StudentPollResult(db.Model):
-	__tablename__ = 'student_poll'
-	id = db.Column(db.Integer, primary_key=True)
-	fk_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
->>>>>>> db71101f5e71cca64c3c72c9b2502c271b97fd62
-
-''' 
 class StudentPollResult(db.Model):
     """Student poll result-table
 
@@ -339,7 +330,6 @@ class Prices(db.Model):
         """Get values from the table in an own-formatted output"""
         return;
 
-<<<<<<< HEAD
 class ScheduleDate(db.Model):
     """Schedule date-table
 
@@ -381,6 +371,3 @@ class ScheduleDateInformation(db.Model):
     def __repr__(self):
         """Get values from the table in an own-formatted output"""
         return;
-=======
->>>>>>> db71101f5e71cca64c3c72c9b2502c271b97fd62
-'''
