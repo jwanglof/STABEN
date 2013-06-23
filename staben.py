@@ -159,7 +159,6 @@ def signout():
 @app.route('/register', methods=['POST', 'GET'])
 def register():
 	if request.method == 'POST':
-		print 'POST'
 		regCode = request.form['regCode']
 		code = db_commands.get_register_code()
 		if request.form['email'] != '' and str(regCode) == str(code):
