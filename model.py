@@ -63,7 +63,6 @@ class Blog(db.Model):
 	date = db.Column(db.Date(), index=True, unique=True)
 	time = db.Column(db.Time(), index=True)
 	author = db.Column(db.String(40), index=True)
-	blog_comments = db.relationship('blog_comments', uselist=False, backref='blog')
 
 	def __init__(self, title=None, text=None, date=None, time=None, author=None):
 		"""The constructor"""
@@ -110,6 +109,8 @@ class BlogComments(db.Model):
 	* Fadder                                   (role=2)
 	* Klassföreståndare                        (role=3)
 	* Studievägledning                         (role=4)
+	* Gallerinollan							   (role=5)
+	* Bloggnollan							   (role=6)
 	* Nollan                                   (ROLE_USER)
 '''
 class Users(db.Model):
@@ -123,12 +124,12 @@ class Users(db.Model):
 	email = db.Column(db.String(100), index=True, unique=True)
 	password = db.Column(db.String(50), index=True)
 	role = db.Column(db.SmallInteger(), default=ROLE_USER)
-	user_information = db.relationship('user_information', uselist=False, backref='users')
 
 	def __init__(self, email=None, password=None, role=ROLE_USER):
 		"""The constructor"""
 		self.email = email
 		self.password = password
+		self.role = role
 
 	def __repr__(self):
 		"""Get values from the table in an own-formatted output"""
@@ -285,7 +286,7 @@ class StudentPollResult(db.Model):
 	__tablename__ = 'student_poll'
 	id = db.Column(db.Integer, primary_key=True)
 	fk_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-	dattamaskin(db.SmallInteger())
+	# dattamaskin(db.SmallInteger())
 	# Will contain each answer for fk_user_id
 
 	def __init__(self):
@@ -304,9 +305,9 @@ class StudentPollQuestions(db.Model):
 	
 	__tablename__ = 'student_poll_questions'
 	id = db.Column(db.Integer, primary_key=True)
-	group_name()
-	real_question(String)
-	dattamaskin(db.Integer)
+	# group_name()
+	# real_question(String)
+	# dattamaskin(db.Integer)
 
 	def __init__(self):
 		"""The constructor"""
@@ -323,7 +324,7 @@ class StudentRights(db.Model):
 	"""
 	
 	__tablename__ = 'student_rights'
-	fk_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+	fk_user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
 	fk_student_group = db.Column(db.Integer, db.ForeignKey('studendgroups.id'))
 
 	def __init__(self):
@@ -358,7 +359,7 @@ class Prices(db.Model):
 	Contains all the prices that are used
 	"""
 	
-	__tablename__ = 'student_groups'
+	__tablename__ = 'prices'
 	id = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String(100), index=True, unique=True)
 	information = db.Column(db.UnicodeText())
