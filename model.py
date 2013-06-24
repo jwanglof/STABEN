@@ -6,11 +6,8 @@
 # 
 
 '''
-To clear users and userInformation
-SET FOREIGN_KEY_CHECKS=0;
-TRUNCATE users;
-TRUNCATE userInformation;
-SET FOREIGN_KEY_CHECKS=1;
+To clear users and user_information
+SET FOREIGN_KEY_CHECKS=0;TRUNCATE users;TRUNCATE user_information;SET FOREIGN_KEY_CHECKS=1;
 '''
 
 '''
@@ -122,8 +119,9 @@ class Users(db.Model):
 	__tablename__ = 'users'
 	id = db.Column(db.Integer(), primary_key=True)
 	email = db.Column(db.String(100), index=True, unique=True)
-	password = db.Column(db.String(50), index=True)
+	password = db.Column(db.String(254), index=True)
 	role = db.Column(db.SmallInteger(), default=ROLE_USER)
+	user_information = db.relationship('user_information', uselist=False, backref='users')
 
 	def __init__(self, email=None, password=None, role=ROLE_USER):
 		"""The constructor"""
@@ -144,7 +142,6 @@ class UserInformation(db.Model):
 	__tablename__ = 'user_information'
 	id = db.Column(db.Integer(), primary_key=True)
 	fk_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-	title = db.Column(db.String(15), index=True, default='Användare')
 	firstname = db.Column(db.String(100), index=True, default='')
 	lastname = db.Column(db.String(100), index=True)
 	phonenumber = db.Column(db.String(15), index=True)
