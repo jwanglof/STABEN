@@ -125,9 +125,7 @@ def profile_edit(user_email):
 @app.route('/profile/<user_email>/save/', methods=['POST'])
 def profile_save(user_email):
 	if session and user_email == session['email']:
-		'''
-			Need this check since checkboxes doesn't return anything if it's unchecked!
-		'''
+		# Need this check since checkboxes doesn't return anything if it's unchecked!
 		phonenumber_vis = 0
 		if 'phonenumber_vis' in request.form:
 			phonenumber_vis = 1
