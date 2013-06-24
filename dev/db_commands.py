@@ -139,13 +139,11 @@ def update_db_pw(db_user_email, db_user_dict):
 	else:
 		return False
 
-
 def add_contact(name, phonenumber, email, role, school_class, link):
 	contact = model.Contact(name, phonenumber, email, role, school_class, link)
 	db.session.add(contact)
 	db.session.commit()
 	return 'success'
-
 
 def admin_check(db_user_email):
 	# Check only role!
