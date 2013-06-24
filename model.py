@@ -121,7 +121,7 @@ class Users(db.Model):
 	email = db.Column(db.String(100), index=True, unique=True)
 	password = db.Column(db.String(254), index=True)
 	role = db.Column(db.SmallInteger(), default=ROLE_USER)
-	user_information = db.relationship('user_information', uselist=False, backref='users')
+	user_information = db.relationship('UserInformation', backref='Users', uselist=False)
 
 	def __init__(self, email=None, password=None, role=ROLE_USER):
 		"""The constructor"""
@@ -155,10 +155,9 @@ class UserInformation(db.Model):
 	login_count = db.Column(db.Integer(), default=0)
 	poll_done = db.Column(db.SmallInteger(), default=0)
 
-	def __init__(self, firstname=None, user_id=None):
+	def __init__(self, user_id=None):
 		"""The constructor"""
-		self.user_id = user_id
-		self.firstname = firstname
+		self.fk_user_id = user_id
 
 	def __repr__(self):
 		"""Get values from the table in an own-formatted output"""
