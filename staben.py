@@ -11,6 +11,7 @@ request = config.request
 url_for = config.url_for
 session = config.session
 flash = config.flash
+redirect = config.redirect
 
 nollan = 'minus'
 
@@ -41,6 +42,9 @@ def db_school():
 @app.route('/db_contacts')
 def db_contacts():
 	return db_commands.create_contacts()
+@app.route('/db_code')
+def db_code():
+	return db_commands.create_secret_code()
 
 @app.route('/')
 def index():
@@ -87,12 +91,12 @@ def login():
 				# user_info['user'] contains email, password and role (from the table users)
 				# user_info['info'] contains all the user's information (from the table userInformation)
 				db_commands.login_count(request.form['email'])
-				return config.redirect(url_for('profile', user_email=request.form['email']))
+				return redirect(url_for('profile', user_email=request.form['email']))
 			else:
 				return render('login.html', login=False)
 		else:
 			# return render('profile.html', user_info=user_info, user_role=config.user_roles[user_info.role])
-			return config.redirect(url_for('profile', user_email=request.form['email']))
+			return redirect(url_for('profile', user_email=request.form['email']))
 	return render('login.html', login=False)
 
 @app.route('/profile/', defaults={'user_email': ''})
@@ -110,6 +114,7 @@ def profile(user_email):
 def profile_edit(user_email):
 	if session and user_email == session['email']:
 		user = db_commands.get_db_user(session['email'])
+		print user['user'], user['info']
 		#user_info = db_commands.get_user_info()
 		classes = db_commands.get_school_classes()
 		return render('profile_edit.html', user=user['user'], user_info=user['info'], school_classes=classes)
@@ -128,7 +133,7 @@ def profile_save(user_email):
 			phonenumber_vis = 1
 
 		db_commands.update_db_user(user_email, request.form, phonenumber_vis)
-		return config.redirect(url_for('profile', user_email=user_email))
+		return redirect(url_for('profile', user_email=user_email))
 	else:
 		return render('login.html', login=False)
 
@@ -136,7 +141,7 @@ def profile_save(user_email):
 def profile_password(user_email):
 	if session and user_email == session['email']:
 		if db_commands.update_db_pw(user_email, request.form):
-			return config.redirect(url_for('profile', user_email=user_email))
+			return redirect(url_for('profile', user_email=user_email))
 		else:
 			return "Not updated"
 	else:
@@ -154,30 +159,37 @@ def profile_class(user_email):
 @app.route('/user/signout')
 def signout():
 	session.clear()
-	return config.redirect(url_for('index'))
+	return redirect(url_for('index'))
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
 	if request.method == 'POST':
 		regCode = request.form['regCode']
 		code = db_commands.get_register_code()
+
 		if request.form['email'] != '' and str(regCode) == str(code):
 			print 'email och code funkar'
 			if request.form['password'] == request.form['rep_password']:
-				# print db_commands.register_user(request.form)
+				print '### Password is correct'
 				if db_commands.register_user(request.form):
+					print '### Registration succeeded'
 					user = login_user(request.form['email'], request.form['password'])
+
 					if user:
 						db_commands.add_user_information(user.id)
-						return config.redirect(url_for('profile_edit', user_email=user.email))
+						return redirect(url_for('profile_edit', user_email=user.email))
 					else:
 						print 'Unsuccessfull, user is None'
+						return redirect(url_for('register'))
 				else:
 					print 'Unsuccessfull, could not register user'
+					return redirect(url_for('register'))
 			else:
 				flash(u'Du måste ange samma lösenord i båda rutorna.')
+				return redirect(url_for('register'))
 		else:
 			flash(u'Du måste ange din e-mail och registreringskod!')
+			return redirect(url_for('register'))
 	else:
 		return render('register.html')
 	# 	classes = db_commands.get_school_classes()
