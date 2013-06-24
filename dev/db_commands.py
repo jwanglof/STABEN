@@ -100,9 +100,9 @@ def get_db_user(db_user_email,db_user_password=None):
 
 def update_db_user(db_user_email, db_user_dict, phonenumber_vis):
 	db_user = model.Users.query.filter_by(email=db_user_email).first()
-
-	model.UserInformation.query.filter_by(user_id=db_user.id).update(db_user_dict)
-	model.UserInformation.query.filter_by(user_id=db_user.id).update({'phonenumber_vis': phonenumber_vis})
+	print db_user.id
+	model.UserInformation.query.filter_by(fk_user_id=db_user.id).update(db_user_dict)
+	model.UserInformation.query.filter_by(fk_user_id=db_user.id).update({'phonenumber_vis': phonenumber_vis})
 
 	db.session.commit()
 
@@ -119,14 +119,14 @@ def get_school_classes():
 
 def get_class_mates(db_user_email):
 	db_user = model.Users.query.filter_by(email=db_user_email).first()
-	user_info = model.UserInformation.query.filter_by(user_id=db_user.id).first()
+	user_info = model.UserInformation.query.filter_by(fk_user_id=db_user.id).first()
 	print user_info
 	class_mates = model.UserInformation.query.filter_by(school_class=user_info.school_class).all()
 	return class_mates
 
 def get_school_class(db_user_email):
 	db_user = model.Users.query.filter_by(email=db_user_email).first()
-	user_info = model.UserInformation.query.filter_by(user_id=db_user.id).first()
+	user_info = model.UserInformation.query.filter_by(fk_user_id=db_user.id).first()
 	school_class = model.SchoolClasses.query.filter_by(id=user_info.school_class).first()
 	return school_class.abbreviation
 
