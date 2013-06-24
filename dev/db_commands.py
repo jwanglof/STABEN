@@ -56,7 +56,9 @@ def create_admin_users():
 	return "Admin users added"
 
 def create_secret_code():
-	pass
+	db.session.add(model.RegisterCode('asd'))
+	db.session.commit()
+	return 'Secret code added'
 	# Add the secret code to the DB!
 	# two_weevil
 
@@ -154,9 +156,13 @@ def admin_users():
 	return model.Users.query.all()
 
 def register_user(db_user_dict):
-	db.session.add(model.Users(db_user_dict['email'], config.bcrypt.generate_password_hash(db_user_dict['password'])))
-	db.session.commit()
-	return True
+	try:
+		new_user = model.Users(db_user_dict['email'], config.bcrypt.generate_password_hash(db_user_dict['password']))
+		db.session.add(new_user)
+		db.session.commit()
+		return True
+	except:
+		return False
 	# try:
 	# 	db.session.add(model.Users(db_user_dict['email'], config.bcrypt.generate_password_hash(db_user_dict['password'])))
 	# 	db.session.commit()
