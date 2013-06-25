@@ -95,6 +95,50 @@ def login():
 			return redirect(url_for('profile', user_email=request.form['email']))
 	return render('login.html', login=False)
 
+@app.route('/user/signout')
+def signout():
+	session.clear()
+	return redirect(url_for('index'))
+
+@app.route('/register', methods=['POST', 'GET'])
+def register():
+	if request.method == 'POST':
+		regCode = request.form['regCode']
+		code = db_commands.get_register_code()
+
+		if request.form['email'] != '' and str(regCode) == str(code):
+			print 'email och code funkar'
+			if request.form['password'] == request.form['rep_password']:
+				print '### Password is correct'
+				if db_commands.register_user(request.form):
+					print '### Registration succeeded'
+					user = login_user(request.form['email'], request.form['password'])
+
+					if user:
+						db_commands.add_user_information(user.id)
+						return redirect(url_for('profile_edit', user_email=user.email))
+					else:
+						print 'Unsuccessfull, user is None'
+						return redirect(url_for('register'))
+				else:
+					print 'Unsuccessfull, could not register user'
+					return redirect(url_for('register'))
+			else:
+				flash(u'Du måste ange samma lösenord i båda rutorna.')
+				return redirect(url_for('register'))
+		else:
+			flash(u'Du måste ange din e-mail och registreringskod!')
+			return redirect(url_for('register'))
+	else:
+		return render('register.html')
+	# 	classes = db_commands.get_school_classes()
+	# 	return render('register.html', classes=classes)
+
+'''
+	*
+	* User profile
+	*
+'''
 @app.route('/profile/', defaults={'user_email': ''})
 @app.route('/profile/<user_email>/')
 def profile(user_email):
@@ -156,45 +200,6 @@ def student_poll(user_email):
 		return render('student_poll.html')
 	else:
 		return render('login.html', login=False)
-
-@app.route('/user/signout')
-def signout():
-	session.clear()
-	return redirect(url_for('index'))
-
-@app.route('/register', methods=['POST', 'GET'])
-def register():
-	if request.method == 'POST':
-		regCode = request.form['regCode']
-		code = db_commands.get_register_code()
-
-		if request.form['email'] != '' and str(regCode) == str(code):
-			print 'email och code funkar'
-			if request.form['password'] == request.form['rep_password']:
-				print '### Password is correct'
-				if db_commands.register_user(request.form):
-					print '### Registration succeeded'
-					user = login_user(request.form['email'], request.form['password'])
-
-					if user:
-						db_commands.add_user_information(user.id)
-						return redirect(url_for('profile_edit', user_email=user.email))
-					else:
-						print 'Unsuccessfull, user is None'
-						return redirect(url_for('register'))
-				else:
-					print 'Unsuccessfull, could not register user'
-					return redirect(url_for('register'))
-			else:
-				flash(u'Du måste ange samma lösenord i båda rutorna.')
-				return redirect(url_for('register'))
-		else:
-			flash(u'Du måste ange din e-mail och registreringskod!')
-			return redirect(url_for('register'))
-	else:
-		return render('register.html')
-	# 	classes = db_commands.get_school_classes()
-	# 	return render('register.html', classes=classes)
 
 '''
 	*
