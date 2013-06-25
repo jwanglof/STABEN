@@ -196,7 +196,9 @@ def profile_class(user_email):
 @app.route('/profile/<user_email>/student_poll/')
 def profile_student_poll(user_email):
 	if session and user_email == session['email']:
-		return render('profile_student_poll.html')
+		student_poll_prefixes = db_commands.get_student_poll_prefix()
+		student_poll_question = db_commands.get_student_poll_question()
+		return render('profile_student_poll.html', prefixes=student_poll_prefixes, questions=student_poll_question)
 	else:
 		return render('login.html', login=False)
 
@@ -250,7 +252,7 @@ def admin_student_poll():
 		return render('admin_fail.html')
 
 
-@app.route('/admin/student_poll/save/<command>', methods=['GET', 'POST'])
+@app.route('/admin/student_poll/save/<command>', methods=['POST'])
 def admin_student_poll_save(command):
 	if request.method == 'POST':
 		if command == 'prefix':
@@ -259,11 +261,11 @@ def admin_student_poll_save(command):
 			result = db_commands.add_student_poll_question(request.form)
 
 		if result:
-			return 'Woho'
+			# Perhaps add some kind of alert here to show that the
+			#  prefix/question was successfully added??
+			return redirect(url_for('admin_student_poll'))
 		else:
-			return 'Nooop'
-	else:
-		return 'asd'
+			return 'Couldn\'t add to poll'
 
 if __name__ == '__main__':
 	app.debug = True
