@@ -177,3 +177,32 @@ def get_schedule(week):
 
 def get_register_code():
 	return model.RegisterCode.query.first()
+
+def add_student_poll_prefix(db_student_poll_dict):
+	try:
+		new_prefix = model.StudentPollPrefix(db_student_poll_dict['prefix'])
+		db.session.add(new_prefix)
+		db.session.commit()
+		return True
+	except:
+		return False
+
+def get_student_poll_prefix():
+	return model.StudentPollPrefix.query.all()
+
+def add_student_poll_question(db_student_poll_dict):
+	print db_student_poll_dict
+	try:
+		print 0
+		new_question = model.StudentPollQuestion(db_student_poll_dict['prefix'], db_student_poll_dict['question'])
+		print 1
+		db.session.add(new_question)
+		print 2
+		db.session.commit()
+		print 3
+		return True
+	except:
+		return False
+
+def get_student_poll_question():
+	return model.StudentPollQuestion.query.all()
