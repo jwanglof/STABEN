@@ -1,4 +1,28 @@
 {% extends "template.html" %}
 {% block content %}
-asd
+<form method='post' action='{{ url_for('profile_save_student_poll', user_email=session['email']) }}' class='stabForm' id='student_poll_form'>
+	<fieldset>
+		<ol>
+			<li>
+				<label for="email">E-post *</label>
+				<input type="email" name="email" id="email" placeholder="E-post" />
+			</li>
+			<li>
+				<label for="password">Lösenord *</label>
+				<input type="password" name="password" id="password" placeholder="Lösenord" />
+			</li>
+			<li>
+				<label for="rep_password">Upprepa lösenord *</label>
+				<input type="password" name="rep_password" id="rep_password" placeholder="Upprepa lösenord" />
+			</li>
+			<li>
+				<label for="regCode">Registreringskod *</label>
+				<input type="text" name="regCode" id="regCode" placeholder="Registreringskod" />
+			</li>
+			<li>
+				<button type="submit" class="btn btn-primary">Registrera</button>
+			</li>
+		</ol>
+	</fieldset>
+</form>
 {% endblock %}

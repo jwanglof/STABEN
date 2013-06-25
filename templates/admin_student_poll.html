@@ -1,0 +1,44 @@
+{% extends "template.html" %}
+{% block content %}
+<a href='#'>Lägg till nytt prefix</a> | <a href='#'>Lägg till ny fråga</a>
+<form method='post' action='{{ url_for('admin_student_poll_save', command='prefix') }}' class='stabForm' id='admin_student_poll_form'>
+	<fieldset>
+		<legend>Lägg till nytt prefix</legend>
+		<ol>
+			<li>
+				<label for="prefix">Prefix</label>
+				<input type="text" name="prefix" id="prefix" placeholder="Prefix" />
+			</li>
+			<li>
+				<button type="submit" class="btn btn-primary">Lägg till nytt prefix</button>
+			</li>
+		</ol>
+	</fieldset>
+</form>
+
+<form method='post' action='{{ url_for('admin_student_poll_save', command='question') }}' class='stabForm' id='admin_student_poll_form'>
+	<fieldset>
+		<legend>Lägg till ny fråga</legend>
+		<ol>
+			<li>
+				<label for='prefix'>Prefix</label>
+				<select name='prefix'>
+					{%- for prefix in prefixes %}
+					<option value='{{ prefix.id }}'>
+						{{ prefix.prefix }}
+					</option>
+					{%- endfor %}
+				</select>
+		</ol>
+		<ol>
+			<li>
+				<label for="email">Fråga</label>
+				<input type="text" name="question" id="question" placeholder="Fråga" />
+			</li>
+			<li>
+				<button type="submit" class="btn btn-primary">Lägg till ny fråga</button>
+			</li>
+		</ol>
+	</fieldset>
+</form>
+{% endblock %}
