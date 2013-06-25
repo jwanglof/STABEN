@@ -100,7 +100,6 @@ def get_db_user(db_user_email,db_user_password=None):
 
 def update_db_user(db_user_email, db_user_dict, phonenumber_vis):
 	db_user = model.Users.query.filter_by(email=db_user_email).first()
-	print db_user.id
 	model.UserInformation.query.filter_by(fk_user_id=db_user.id).update(db_user_dict)
 	model.UserInformation.query.filter_by(fk_user_id=db_user.id).update({'phonenumber_vis': phonenumber_vis})
 
@@ -120,7 +119,6 @@ def get_school_classes():
 def get_class_mates(db_user_email):
 	db_user = model.Users.query.filter_by(email=db_user_email).first()
 	user_info = model.UserInformation.query.filter_by(fk_user_id=db_user.id).first()
-	print user_info
 	class_mates = model.UserInformation.query.filter_by(school_class=user_info.school_class).all()
 	return class_mates
 
@@ -161,12 +159,6 @@ def register_user(db_user_dict):
 		return True
 	except:
 		return False
-	# try:
-	# 	db.session.add(model.Users(db_user_dict['email'], config.bcrypt.generate_password_hash(db_user_dict['password'])))
-	# 	db.session.commit()
-	# 	return True
-	# except:
-	# 	return False
 
 def add_user_information(db_user_id):
 	db.session.add(model.UserInformation(db_user_id))
@@ -181,8 +173,7 @@ def get_contacts(role):
 	return contacts
 
 def get_schedule(week):
-	schedule = model.ScheduleDate.query.filter_by(week=week).order_by(model.ScheduleDate.week).all()
-	return schedule
+	return model.ScheduleDate.query.filter_by(week=week).order_by(model.ScheduleDate.week).all()
 
 def get_register_code():
 	return model.RegisterCode.query.first()
