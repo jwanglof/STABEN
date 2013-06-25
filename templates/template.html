@@ -26,7 +26,7 @@
                     <li class='{% block active_index %}{% endblock %}'><a href="{{ url_for('index') }}">Start</a></li>
                     <li class='{% block active_prices %}{% endblock %}'><a href="{{ url_for('prices') }}">Priser</a></li>
                     <li class='{% block active_schedule %}{% endblock %}'><a href="{{ url_for('schedule') }}">Schema</a></li>
-                    <li class='{% block active_student_poll %}{% endblock %}'><a href="{{ url_for('student_poll') }}">Enkät</a></li>
+                    <!--<li class='{% block active_student_poll %}{% endblock %}'><a href="{{ url_for('student_poll') }}">Enkät</a></li>/-->
                     <li class='{% block active_gallery %}{% endblock %}'><a href="{{ url_for('gallery') }}">Galleri</a></li>
                     <li class='{% block active_blog %}{% endblock %}'><a href="{{ url_for('blog') }}">Blogg</a></li>
                     <li class='{% block active_contact %}{% endblock %}'><a href="{{ url_for('contact') }}">Kontakt</a></li>
@@ -40,6 +40,7 @@
                                 <li><a href="/profile/{{ session['email'] }}">Se profil</a></li>
                                 <li><a href="/profile/{{ session['email'] }}/edit">Redigera</a></li>
                                 <li><a href="/profile/{{ session['email'] }}/class">Min skolklass</a></li>
+                                <li><a href="/profile/{{ session['email'] }}/student_poll">Nolleenkät</a></li>
                                 {% if session.role == 0 %}
                                     <br />
                                     <span class="help-block">Admin verktyg</span>
