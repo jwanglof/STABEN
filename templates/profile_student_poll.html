@@ -1,5 +1,6 @@
 {% extends "template.html" %}
 {% block content %}
+{{ prefixes }}
 <form method='post' action='{{ url_for('profile_save_student_poll', user_email=session['email']) }}' class='stabForm' id='student_poll_form'>
 	<fieldset>
 		<ol>
