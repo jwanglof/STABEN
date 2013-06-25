@@ -154,7 +154,6 @@ def profile(user_email):
 def profile_edit(user_email):
 	if session and user_email == session['email']:
 		user = db_commands.get_db_user(session['email'])
-		print user['user'], user['info']
 		#user_info = db_commands.get_user_info()
 		classes = db_commands.get_school_classes()
 		return render('profile_edit.html', user=user['user'], user_info=user['info'], school_classes=classes)
