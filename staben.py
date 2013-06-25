@@ -176,7 +176,7 @@ def profile_save(user_email):
 		return render('login.html', login=False)
 
 @app.route('/profile/<user_email>/save/password', methods=['POST'])
-def profile_password(user_email):
+def profile_save_password(user_email):
 	if session and user_email == session['email']:
 		if db_commands.update_db_pw(user_email, request.form):
 			return redirect(url_for('profile', user_email=user_email))
@@ -195,9 +195,16 @@ def profile_class(user_email):
 		return render('login.html', login=False)
 
 @app.route('/profile/<user_email>/student_poll')
-def student_poll(user_email):
+def profile_student_poll(user_email):
 	if session and user_email == session['email']:
-		return render('student_poll.html')
+		return render('profile_student_poll.html')
+	else:
+		return render('login.html', login=False)
+
+@app.route('/profile/<user_email>/save/student_poll', methods=['POST'])
+def profile_save_student_poll(user_email):
+	if session and user_email == session['email']:
+		return 'woho'
 	else:
 		return render('login.html', login=False)
 
