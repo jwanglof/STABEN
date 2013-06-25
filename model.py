@@ -122,6 +122,7 @@ class Users(db.Model):
 	password = db.Column(db.String(254), index=True)
 	role = db.Column(db.SmallInteger(), default=ROLE_USER)
 	user_information = db.relationship('UserInformation', backref='Users', uselist=False)
+	student_poll = db.relationship('StudentPollAnswer', backref='Users', lazy='dynamic')
 
 	def __init__(self, email=None, password=None, role=ROLE_USER):
 		"""The constructor"""
@@ -273,7 +274,7 @@ class ScheduleDate(db.Model):
 		"""Get values from the table in an own-formatted output"""
 		return;
 
-class StudentPollResult(db.Model):
+'''class StudentPollResult(db.Model):
 	"""Student poll result-table
 
 	Contains the results the student had on the student poll. Connected with Users with fk_user_id
@@ -311,7 +312,7 @@ class StudentPollQuestions(db.Model):
 
 	def __repr__(self):
 		"""Get values from the table in an own-formatted output"""
-		return;
+		return;'''
 
 class Prices(db.Model):
 	"""Prices-table
@@ -324,6 +325,51 @@ class Prices(db.Model):
 	name = db.Column(db.String(100), index=True, unique=True)
 	information = db.Column(db.UnicodeText())
 	price = db.Column(db.Integer)
+
+	def __init__(self):
+		"""The constructor"""
+		return
+
+	def __repr__(self):
+		"""Get values from the table in an own-formatted output"""
+		return;
+
+# user_information = db.relationship('UserInformation', backref='Users', uselist=False)
+# fk_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+class StudentPollPrefix(db.Model):
+	__tablename__ = 'student_poll_prefix'
+	id = db.Column(db.Integer, primary_key=True)
+	name = db.Column(db.String(100), index=True, unique=True)
+	question = db.relationship('StudentPollQuestion', backref='StudentPollPrefix')
+
+	def __init__(self):
+		"""The constructor"""
+		return
+
+	def __repr__(self):
+		"""Get values from the table in an own-formatted output"""
+		return;
+
+class StudentPollQuestion(db.Model):
+	__tablename__ = 'student_poll_question'
+	id = db.Column(db.Integer, primary_key=True)
+	fk_student_poll_prefix_id = db.Column(db.Integer, db.ForeignKey('student_poll_prefix.id'))
+	question = db.Column(db.String(100), index=True, unique=True)
+
+	def __init__(self):
+		"""The constructor"""
+		return
+
+	def __repr__(self):
+		"""Get values from the table in an own-formatted output"""
+		return;
+
+class StudentPollAnswer(db.Model):
+	__tablename__ = 'student_poll_answer'
+	id = db.Column(db.Integer, primary_key=True)
+	fk_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+	fk_student_poll_question_id = db.Column(db.Integer, db.ForeignKey('student_poll_question.id'))
 
 	def __init__(self):
 		"""The constructor"""
