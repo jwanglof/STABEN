@@ -242,6 +242,16 @@ def admin_users():
 	else:
 		return render('admin_fail.html')
 
+@app.route('/admin/student_poll', methods=['GET', 'POST'])
+def admin_student_poll():
+	if db_commands.admin_check(session['email']) is 0:
+		if request.method == 'POST':
+			return 'hej'
+		else:
+			return render('admin_student_poll.html')
+	else:
+		return render('admin_fail.html')
+
 if __name__ == '__main__':
 	app.debug = True
 	app.run()
