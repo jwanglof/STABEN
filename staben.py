@@ -60,10 +60,6 @@ def schedule(show_week='1'):
 	schedule_date = db_commands.get_schedule(show_week)
 	return render('schedule.html', week=show_week, schedule=schedule_date)
 
-@app.route('/student_poll')
-def student_poll():
-	return render('student_poll.html')
-
 @app.route('/gallery')
 def gallery():
 	return render('gallery.html')
@@ -147,10 +143,17 @@ def profile_password(user_email):
 
 @app.route('/profile/<user_email>/class/')
 def profile_class(user_email):
-	if session and	user_email == session['email']:
+	if session and user_email == session['email']:
 		class_mates = db_commands.get_class_mates(user_email)
 		school_class = db_commands.get_school_class(user_email)
 		return render('profile_class.html', class_mates=class_mates, school_class=school_class)
+	else:
+		return render('login.html', login=False)
+
+@app.route('/profile/<user_email>/student_poll')
+def student_poll(user_email):
+	if session and user_email == session['email']:
+		return render('student_poll.html')
 	else:
 		return render('login.html', login=False)
 
