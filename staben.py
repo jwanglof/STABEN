@@ -193,14 +193,14 @@ def profile_class(user_email):
 	else:
 		return render('login.html', login=False)
 
-@app.route('/profile/<user_email>/student_poll')
+@app.route('/profile/<user_email>/student_poll/')
 def profile_student_poll(user_email):
 	if session and user_email == session['email']:
 		return render('profile_student_poll.html')
 	else:
 		return render('login.html', login=False)
 
-@app.route('/profile/<user_email>/save/student_poll', methods=['POST'])
+@app.route('/profile/<user_email>/save/student_poll/', methods=['POST'])
 def profile_save_student_poll(user_email):
 	if session and user_email == session['email']:
 		return 'woho'
@@ -212,7 +212,7 @@ def profile_save_student_poll(user_email):
 	* Admin tools
 	*
 '''
-@app.route('/admin/pages')
+@app.route('/admin/pages/')
 def admin_pages():
 	# Need to check that the user is signed in and is an admin
 	if db_commands.admin_check(session['email']) == 0:
@@ -220,7 +220,7 @@ def admin_pages():
 	else:
 		return render('admin_fail.html')
 
-@app.route('/admin/addcontact', methods=['GET', 'POST'])
+@app.route('/admin/addcontact/', methods=['GET', 'POST'])
 def admin_addcontact():
 	if db_commands.admin_check(session['email']) is 0:
 		if request.method == 'POST':
@@ -233,7 +233,7 @@ def admin_addcontact():
 	else:
 		return render('admin_fail.html')
 
-@app.route('/admin/users')
+@app.route('/admin/users/')
 def admin_users():
 	# Need to check that the user is signed in and is an admin
 	if db_commands.admin_check(session['email']) is 0:
@@ -242,15 +242,28 @@ def admin_users():
 	else:
 		return render('admin_fail.html')
 
-@app.route('/admin/student_poll', methods=['GET', 'POST'])
+@app.route('/admin/student_poll/')
 def admin_student_poll():
 	if db_commands.admin_check(session['email']) is 0:
-		if request.method == 'POST':
-			return 'hej'
-		else:
-			return render('admin_student_poll.html')
+		return render('admin_student_poll.html', prefixes=db_commands.get_student_poll_prefix())
 	else:
 		return render('admin_fail.html')
+
+
+@app.route('/admin/student_poll/save/<command>', methods=['GET', 'POST'])
+def admin_student_poll_save(command):
+	if request.method == 'POST':
+		if command == 'prefix':
+			result = db_commands.add_student_poll_prefix(request.form)
+		elif command == 'question':
+			result = db_commands.add_student_poll_question(request.form)
+
+		if result:
+			return 'Woho'
+		else:
+			return 'Nooop'
+	else:
+		return 'asd'
 
 if __name__ == '__main__':
 	app.debug = True
