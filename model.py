@@ -340,15 +340,17 @@ class Prices(db.Model):
 class StudentPollPrefix(db.Model):
 	__tablename__ = 'student_poll_prefix'
 	id = db.Column(db.Integer, primary_key=True)
-	name = db.Column(db.String(100), index=True, unique=True)
+	prefix = db.Column(db.String(100), index=True, unique=True)
 	question = db.relationship('StudentPollQuestion', backref='StudentPollPrefix')
 
-	def __init__(self):
+	def __init__(self, prefix=None):
 		"""The constructor"""
+		self.prefix = prefix
 		return
 
 	def __repr__(self):
 		"""Get values from the table in an own-formatted output"""
+		return '%s' % (self.prefix)
 		return;
 
 class StudentPollQuestion(db.Model):
@@ -357,12 +359,15 @@ class StudentPollQuestion(db.Model):
 	fk_student_poll_prefix_id = db.Column(db.Integer, db.ForeignKey('student_poll_prefix.id'))
 	question = db.Column(db.String(100), index=True, unique=True)
 
-	def __init__(self):
+	def __init__(self, student_poll_prefix_id=None, question=None):
 		"""The constructor"""
+		self.fk_student_poll_prefix_id = student_poll_prefix_id
+		self.question = question
 		return
 
 	def __repr__(self):
 		"""Get values from the table in an own-formatted output"""
+		return '%s' % (self.question)
 		return;
 
 class StudentPollAnswer(db.Model):
