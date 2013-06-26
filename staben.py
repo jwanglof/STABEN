@@ -198,6 +198,7 @@ def profile_student_poll(user_email):
 	if session and user_email == session['email']:
 		student_poll_prefixes = db_commands.get_student_poll_prefix()
 		student_poll_question = db_commands.get_student_poll_question()
+		print unicode('asd')
 		return render('profile_student_poll.html', prefixes=student_poll_prefixes, questions=student_poll_question)
 	else:
 		return render('login.html', login=False)
