@@ -8,6 +8,9 @@ from sqlalchemy import Table, Column, Integer, String, Date, Time, Text, create_
 from sqlalchemy.orm import relationship, backref, scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
+# Need this to make ImmutableMultiDict's that can be inserted into the database
+from werkzeug.datastructures import ImmutableMultiDict
+
 dbhost = '127.0.0.1'
 dbuser = 'STABEN'
 dbpass = 'generalhenrik'
