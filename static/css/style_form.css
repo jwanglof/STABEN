@@ -37,6 +37,15 @@ div#errorMessages {
 	padding: 0px 15px;
 }
 
+div#flashMessages {
+	/*background-color: #cc0;*/
+	border: 1px solid #cc0;
+	border-radius: 5px;
+	padding: 5px 15px;
+	min-height: 20px;
+	font-size: 200%;
+}
+
 input { border: 1px solid #000000; }
 
 input:focus { border: 1px dotted #000000; }
