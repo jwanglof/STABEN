@@ -6,8 +6,8 @@
 # 
 
 '''
-To clear users and user_information
-SET FOREIGN_KEY_CHECKS=0;TRUNCATE users;TRUNCATE user_information;SET FOREIGN_KEY_CHECKS=1;
+To be able to delete all tables
+SET FOREIGN_KEY_CHECKS=0;TRUNCATE users;TRUNCATE student_poll_prefix;SET FOREIGN_KEY_CHECKS=1;
 '''
 
 '''
@@ -23,31 +23,9 @@ ROLE_USER = 9
 
 db = config.db
 app = config.app
+Base = config.Base
 
-# DB classes
-class Motd(db.Model):
-	"""Message of the Day-table
-
-	Contains several messages that will be chosen randomly
-	"""
-
-	__tablename__ = 'motd'
-	id = db.Column(db.Integer(), primary_key=True)
-	title = db.Column(db.String(100), index=True, unique=True)
-	message = db.Column(db.String(254), index=True)
-	show_on_date = db.Column(db.Date(), index=True, unique=True)
-
-	def __init__(self, title=None, message=None, show_on_date=None):
-		"""The constructor"""
-		self.title = title
-		self.message = message
-		self.show_on_date = show_on_date
-
-	def __repr__(self):
-		"""Get values from the table in an own-formatted output"""
-		return 'MOTD on date %i contains %s' % (self.show_on_date, self.message)
-
-class Blog(db.Model):
+class Blog(Base):
 	"""Blog-table
 
 	Contains the blog entries
@@ -73,7 +51,7 @@ class Blog(db.Model):
 		"""Get values from the table in an own-formatted output"""
 		return 'The blog %s has %s as author!' % (self.title, self.author)
 
-class BlogComments(db.Model):
+class BlogComments(Base):
 	"""Blog comments-table
 
 	Contains the comments to a blog. Connected with Blog with fk_blog_id
@@ -99,73 +77,8 @@ class BlogComments(db.Model):
 		"""Get values from the table in an own-formatted output"""
 		return 'The blog comment belongs to %i, was written by %s and contains %s' % (self.belong_to_id, self.author, self.comment)
 
-'''
-	Role will represent:
-	* STABEN (admins)                          (ROLE_ADMIN)
-	* Överfadder                               (role=1)
-	* Fadder                                   (role=2)
-	* Klassföreståndare                        (role=3)
-	* Studievägledning                         (role=4)
-	* Gallerinollan							   (role=5)
-	* Bloggnollan							   (role=6)
-	* Nollan                                   (ROLE_USER)
-'''
-class Users(db.Model):
-	"""Users-table
-
-	Contains all the registered users
-	"""
-	
-	__tablename__ = 'users'
-	id = db.Column(db.Integer(), primary_key=True)
-	email = db.Column(db.String(100), index=True, unique=True)
-	password = db.Column(db.String(254), index=True)
-	role = db.Column(db.SmallInteger(), default=ROLE_USER)
-	user_information = db.relationship('UserInformation', backref='Users', uselist=False)
-	student_poll = db.relationship('StudentPollAnswer', backref='Users', lazy='dynamic')
-
-	def __init__(self, email=None, password=None, role=ROLE_USER):
-		"""The constructor"""
-		self.email = email
-		self.password = password
-		self.role = role
-
-	def __repr__(self):
-		"""Get values from the table in an own-formatted output"""
-		return 'Email %s has %s as role' % (self.email, self.role)
-
-class UserInformation(db.Model):
-	"""User information-table
-
-	Contains a user's information. Connected with Users with fk_user_id
-	"""
-	
-	__tablename__ = 'user_information'
-	id = db.Column(db.Integer(), primary_key=True)
-	fk_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-	firstname = db.Column(db.String(100), index=True, default='')
-	lastname = db.Column(db.String(100), index=True)
-	phonenumber = db.Column(db.String(15), index=True)
-	phonenumber_vis = db.Column(db.SmallInteger, index=True, default=0)
-	age = db.Column(db.SmallInteger(), index=True)
-	facebook_url = db.Column(db.String(100), index=True)
-	school_class = db.Column(db.SmallInteger(), index=True)
-	current_city = db.Column(db.String(100), index=True)
-	where_from = db.Column(db.String(100), index=True)
-	presentation = db.Column(db.UnicodeText())
-	login_count = db.Column(db.Integer(), default=0)
-	poll_done = db.Column(db.SmallInteger(), default=0)
-
-	def __init__(self, user_id=None):
-		"""The constructor"""
-		self.fk_user_id = user_id
-
-	def __repr__(self):
-		"""Get values from the table in an own-formatted output"""
-		return 'Hejsan %s' % (self.firstname)
-
-class Contact(db.Model):
-	"""Conact-table
+class Contacts(Base):
+	"""Conacts-table
 
 	Contains the information for the school personnel that doesn't need a login.
 	"""
@@ -196,29 +109,49 @@ class Contact(db.Model):
 		"""Get values from the table in an own-formatted output"""
 		return 'Hejsan %s' % (self.firstname)
 
-class SchoolClasses(db.Model):
-	"""School classes-table
+class Motd(Base):
+	"""Message of the Day-table
 
-	Contains the school classes that the student can choose between when register
+	Contains several messages that will be chosen randomly
 	"""
-	
-	__tablename__ = 'school_classes'
-	id = db.Column(db.Integer(), primary_key=True)
-	abbreviation = db.Column(db.String(5), index=True, unique=True)
-	name = db.Column(db.String(100), index=True, unique=True)
-	schedule = db.Column(db.String(254), index=True)
 
-	def __init__(self, abbreviation=None, name=None, schedule=None):
+	__tablename__ = 'motd'
+	id = db.Column(db.Integer(), primary_key=True)
+	title = db.Column(db.String(100), index=True, unique=True)
+	message = db.Column(db.String(254), index=True)
+	show_on_date = db.Column(db.Date(), index=True, unique=True)
+
+	def __init__(self, title=None, message=None, show_on_date=None):
 		"""The constructor"""
-		self.abbreviation = abbreviation
-		self.name = name
-		self.schedule = schedule
+		self.title = title
+		self.message = message
+		self.show_on_date = show_on_date
 
 	def __repr__(self):
 		"""Get values from the table in an own-formatted output"""
-		return 'Bajs osv'
+		return 'MOTD on date %i contains %s' % (self.show_on_date, self.message)
 
-class RegisterCode(db.Model):
+class Prices(Base):
+	"""Prices-table
+
+	Contains all the prices that are used
+	"""
+	
+	__tablename__ = 'prices'
+	id = db.Column(db.Integer, primary_key=True)
+	name = db.Column(db.String(100), index=True, unique=True)
+	information = db.Column(db.UnicodeText())
+	price = db.Column(db.Integer)
+
+	def __init__(self):
+		"""The constructor"""
+		return
+
+	def __repr__(self):
+		"""Get values from the table in an own-formatted output"""
+		return;
+
+class RegisterCode(Base):
 	"""Register code-table
 
 	Contains the 'unique' code that are used on registration
@@ -236,7 +169,7 @@ class RegisterCode(db.Model):
 		"""Get values from the table in an own-formatted output"""
 		return '%s' % (self.code)
 
-class ScheduleDate(db.Model):
+class ScheduleDate(Base):
 	"""Schedule date-table
 
 	Contains which weekday and what date a scheduled event is on
@@ -274,7 +207,141 @@ class ScheduleDate(db.Model):
 		"""Get values from the table in an own-formatted output"""
 		return;
 
-'''class StudentPollResult(db.Model):
+class SchoolClasses(Base):
+	"""School classes-table
+
+	Contains the school classes that the student can choose between when register
+	"""
+	
+	__tablename__ = 'school_classes'
+	id = db.Column(db.Integer(), primary_key=True)
+	abbreviation = db.Column(db.String(5), index=True, unique=True)
+	name = db.Column(db.String(100), index=True, unique=True)
+	schedule = db.Column(db.String(254), index=True)
+
+	def __init__(self, abbreviation=None, name=None, schedule=None):
+		"""The constructor"""
+		self.abbreviation = abbreviation
+		self.name = name
+		self.schedule = schedule
+
+	def __repr__(self):
+		"""Get values from the table in an own-formatted output"""
+		return 'Bajs osv'
+
+class StudentPollAnswer(Base):
+	__tablename__ = 'student_poll_answer'
+	id = db.Column(db.Integer, primary_key=True)
+	fk_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+	fk_student_poll_question_id = db.Column(db.Integer, db.ForeignKey('student_poll_question.id'))
+
+	def __init__(self):
+		"""The constructor"""
+		return
+
+	def __repr__(self):
+		"""Get values from the table in an own-formatted output"""
+		return;
+
+class StudentPollPrefix(Base):
+	__tablename__ = 'student_poll_prefix'
+	id = db.Column(db.Integer, primary_key=True)
+	prefix = db.Column(db.String(100), index=True, unique=True)
+	question = db.relationship('StudentPollQuestion', backref='StudentPollPrefix')
+
+	def __init__(self, prefix=None):
+		"""The constructor"""
+		self.prefix = prefix
+		return
+
+	def __repr__(self):
+		"""Get values from the table in an own-formatted output"""
+		return '%s' % (self.prefix)
+		return;
+
+class StudentPollQuestion(Base):
+	__tablename__ = 'student_poll_question'
+	id = db.Column(db.Integer, primary_key=True)
+	fk_student_poll_prefix_id = db.Column(db.Integer, db.ForeignKey('student_poll_prefix.id'))
+	question = db.Column(db.String(100), index=True, unique=True)
+
+	def __init__(self, student_poll_prefix_id=None, question=None):
+		"""The constructor"""
+		self.fk_student_poll_prefix_id = student_poll_prefix_id
+		self.question = question
+		return
+
+	def __repr__(self):
+		"""Get values from the table in an own-formatted output"""
+		return '%s' % (self.question)
+		return;
+
+'''
+	Role will represent:
+	* STABEN (admins)                          (ROLE_ADMIN)
+	* Överfadder                               (role=1)
+	* Fadder                                   (role=2)
+	* Klassföreståndare                        (role=3)
+	* Studievägledning                         (role=4)
+	* Gallerinollan							   (role=5)
+	* Bloggnollan							   (role=6)
+	* Nollan                                   (ROLE_USER)
+'''
+class Users(Base):
+	"""Users-table
+
+	Contains all the registered users
+	"""
+	
+	__tablename__ = 'users'
+	id = db.Column(db.Integer(), primary_key=True)
+	email = db.Column(db.String(100), index=True, unique=True)
+	password = db.Column(db.String(254), index=True)
+	role = db.Column(db.SmallInteger(), default=ROLE_USER)
+	user_information = db.relationship('UserInformation', backref='Users', uselist=False)
+	student_poll = db.relationship('StudentPollAnswer', backref='Users', lazy='dynamic')
+
+	def __init__(self, email=None, password=None, role=ROLE_USER):
+		"""The constructor"""
+		self.email = email
+		self.password = password
+		self.role = role
+
+	def __repr__(self):
+		"""Get values from the table in an own-formatted output"""
+		return 'Email %s has %s as role' % (self.email, self.role)
+
+class UserInformation(Base):
+	"""User information-table
+
+	Contains a user's information. Connected with Users with fk_user_id
+	"""
+	
+	__tablename__ = 'user_information'
+	id = db.Column(db.Integer(), primary_key=True)
+	fk_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+	firstname = db.Column(db.String(100), index=True, default='')
+	lastname = db.Column(db.String(100), index=True)
+	phonenumber = db.Column(db.String(15), index=True)
+	phonenumber_vis = db.Column(db.SmallInteger, index=True, default=0)
+	age = db.Column(db.SmallInteger(), index=True)
+	facebook_url = db.Column(db.String(100), index=True)
+	school_class = db.Column(db.SmallInteger(), index=True)
+	current_city = db.Column(db.String(100), index=True)
+	where_from = db.Column(db.String(100), index=True)
+	presentation = db.Column(db.UnicodeText())
+	login_count = db.Column(db.Integer(), default=0)
+	poll_done = db.Column(db.SmallInteger(), default=0)
+
+	def __init__(self, user_id=None):
+		"""The constructor"""
+		self.fk_user_id = user_id
+
+	def __repr__(self):
+		"""Get values from the table in an own-formatted output"""
+		return 'Hejsan %s' % (self.firstname)
+
+'''class StudentPollResult(Base):
 	"""Student poll result-table
 
 	Contains the results the student had on the student poll. Connected with Users with fk_user_id
@@ -294,7 +361,7 @@ class ScheduleDate(db.Model):
 		"""Get values from the table in an own-formatted output"""
 		return;
 
-class StudentPollQuestions(db.Model):
+class StudentPollQuestions(Base):
 	"""Student poll questions-table
 
 	Contains the questions for the student poll
@@ -312,80 +379,9 @@ class StudentPollQuestions(db.Model):
 
 	def __repr__(self):
 		"""Get values from the table in an own-formatted output"""
-		return;'''
-
-class Prices(db.Model):
-	"""Prices-table
-
-	Contains all the prices that are used
-	"""
-	
-	__tablename__ = 'prices'
-	id = db.Column(db.Integer, primary_key=True)
-	name = db.Column(db.String(100), index=True, unique=True)
-	information = db.Column(db.UnicodeText())
-	price = db.Column(db.Integer)
-
-	def __init__(self):
-		"""The constructor"""
-		return
-
-	def __repr__(self):
-		"""Get values from the table in an own-formatted output"""
 		return;
-
-# user_information = db.relationship('UserInformation', backref='Users', uselist=False)
-# fk_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-
-class StudentPollPrefix(db.Model):
-	__tablename__ = 'student_poll_prefix'
-	id = db.Column(db.Integer, primary_key=True)
-	prefix = db.Column(db.String(100), index=True, unique=True)
-	question = db.relationship('StudentPollQuestion', backref='StudentPollPrefix')
-
-	def __init__(self, prefix=None):
-		"""The constructor"""
-		self.prefix = prefix
-		return
-
-	def __repr__(self):
-		"""Get values from the table in an own-formatted output"""
-		return '%s' % (self.prefix)
-		return;
-
-class StudentPollQuestion(db.Model):
-	__tablename__ = 'student_poll_question'
-	id = db.Column(db.Integer, primary_key=True)
-	fk_student_poll_prefix_id = db.Column(db.Integer, db.ForeignKey('student_poll_prefix.id'))
-	question = db.Column(db.String(100), index=True, unique=True)
-
-	def __init__(self, student_poll_prefix_id=None, question=None):
-		"""The constructor"""
-		self.fk_student_poll_prefix_id = student_poll_prefix_id
-		self.question = question
-		return
-
-	def __repr__(self):
-		"""Get values from the table in an own-formatted output"""
-		return '%s' % (self.question)
-		return;
-
-class StudentPollAnswer(db.Model):
-	__tablename__ = 'student_poll_answer'
-	id = db.Column(db.Integer, primary_key=True)
-	fk_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-	fk_student_poll_question_id = db.Column(db.Integer, db.ForeignKey('student_poll_question.id'))
-
-	def __init__(self):
-		"""The constructor"""
-		return
-
-	def __repr__(self):
-		"""Get values from the table in an own-formatted output"""
-		return;
-
-'''
-class StudentRights(db.Model):
+		
+class StudentRights(Base):
 	"""Student rights-table
 
 	Contains which student group the user is apart of. Connected with Users with fk_user_id and StudentGroups with fk_student_group
