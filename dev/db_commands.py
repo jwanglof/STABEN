@@ -100,19 +100,21 @@ def get_db_user(db_user_email,db_user_password=None):
 	else:
 		return False
 
-def update_db_user(db_user_email, db_user_dict, phonenumber_vis):
+def update_db_user(db_user_email, db_user_dict, phonenumber_vis=9):
+	try:
+		db_user = models.Users.query.filter_by(email=db_user_email).first()
+		models.UserInformation.query.filter_by(fk_user_id=db_user.id).update(db_user_dict)
+		if phonenumber_vis != 9:
+			models.UserInformation.query.filter_by(fk_user_id=db_user.id).update({'phonenumber_vis': phonenumber_vis})
+		db_session.commit()
+		return True
+	except:
+		return False
+		
+def add_login_count(db_user_email):
 	db_user = models.Users.query.filter_by(email=db_user_email).first()
-	models.UserInformation.query.filter_by(fk_user_id=db_user.id).update(db_user_dict)
-	models.UserInformation.query.filter_by(fk_user_id=db_user.id).update({'phonenumber_vis': phonenumber_vis})
-
-	db_session.commit()
-
-	return True
-
-def login_count(db_user_email):
-	#db_user = models.Users.query.filter_by(email=db_user_email).first()
-	#user_info = models.UserInformation.query.filter_by(user_id=db_user.id).first()
-	#user_info.login_count += 1
+	user_info = models.UserInformation.query.filter_by(user_id=db_user.id).first()
+	user_info.login_count += 1
 	db_session.commit()
 
 def get_school_classes():
