@@ -172,8 +172,6 @@ def get_contacts(role):
 		contacts = models.Contacts.query.filter_by(role=role).order_by(models.Contacts.school_class).all()
 	else:
 		contacts = models.Contacts.query.filter_by(role=role).all()
-	for i, x in enumerate(contacts):
-		print isinstance(x, unicode)
 	return contacts
 
 def get_schedule(week):
@@ -197,13 +195,9 @@ def get_student_poll_prefix():
 def add_student_poll_question(db_student_poll_dict):
 	print db_student_poll_dict
 	try:
-		print 0
 		new_question = models.StudentPollQuestion(db_student_poll_dict['prefix'], db_student_poll_dict['question'])
-		print 1
 		db_session.add(new_question)
-		print 2
 		db_session.commit()
-		print 3
 		return True
 	except:
 		return False
