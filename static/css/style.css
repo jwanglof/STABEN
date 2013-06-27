@@ -47,3 +47,7 @@ p.no_javascript {
 	font-size: 130%;
 	text-decoration: underline;
 }
+
+dd {
+	display: block;
+}
