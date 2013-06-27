@@ -107,7 +107,7 @@ class Contacts(Base):
 
 	def __repr__(self):
 		"""Get values from the table in an own-formatted output"""
-		return 'Hejsan %s' % (self.firstname)
+		return 'Hejsan %s' % (self.name)
 
 class Motd(Base):
 	"""Message of the Day-table
@@ -380,7 +380,7 @@ class StudentPollQuestions(Base):
 	def __repr__(self):
 		"""Get values from the table in an own-formatted output"""
 		return;
-		
+
 class StudentRights(Base):
 	"""Student rights-table
 
