@@ -86,7 +86,7 @@ def login():
 			if user:
 				# user_info['user'] contains email, password and role (from the table users)
 				# user_info['info'] contains all the user's information (from the table userInformation)
-				db_commands.login_count(request.form['email'])
+				db_commands.add_login_count(request.form['email'])
 				return redirect(url_for('profile', user_email=request.form['email']))
 			else:
 				return render('login.html', login=False)
@@ -168,7 +168,7 @@ def profile_save(user_email):
 		phonenumber_vis = 0
 		if 'phonenumber_vis' in request.form:
 			phonenumber_vis = 1
-
+		print request.form
 		db_commands.update_db_user(user_email, request.form, phonenumber_vis)
 		return redirect(url_for('profile', user_email=user_email))
 	else:
@@ -205,7 +205,11 @@ def profile_student_poll(user_email):
 @app.route('/profile/<user_email>/save/student_poll/', methods=['POST'])
 def profile_save_student_poll(user_email):
 	if session and user_email == session['email']:
-		return 'woho'
+		if db_commands.update_db_user(user_email, config.ImmutableMultiDict([('poll_done', u'1')])):
+			return 'woho'
+		else:
+			print '### Could not update poll_done on user'
+			return redirect(url_for('profile_student_poll'))
 	else:
 		return render('login.html', login=False)
 
