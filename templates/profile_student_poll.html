@@ -1,6 +1,24 @@
 {% extends "template.html" %}
 {% block content %}
+<h1>Nolleenkät</h1>
+<h4>Observera! Du kan bara fylla i denna en gang. Om du vill andra nogra svar moste du gora detta under forsta dagen i nolle-p!</h4>
 <form method='post' action='{{ url_for('profile_save_student_poll', user_email=session['email']) }}' class='stabForm' id='student_poll_form'>
+	<dl>
+	{% for prefix in student_poll_prefixes %}
+		<dt>{{ prefix.prefix }}</dt>
+		{% for question in student_poll_questions %}
+			{% if question.fk_student_poll_prefix_id == prefix.id %}
+				<dd>
+					<input type='checkbox' value='{{ question.id }}'  \> {{ question.question }}
+				</dd>
+			{% endif %}
+		{% endfor %}
+	{% endfor %}
+	</dl>
+	<button type="submit" class="btn btn-primary">Spara</button>
+</form>
+
+{#<form method='post' action='{{ url_for('profile_save_student_poll', user_email=session['email']) }}' class='stabForm' id='student_poll_form'>
 	<fieldset>
 		<ol>
 			<li>
@@ -24,5 +42,5 @@
 			</li>
 		</ol>
 	</fieldset>
-</form>
+</form>#}
 {% endblock %}
