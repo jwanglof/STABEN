@@ -4,6 +4,9 @@
 import models
 import config
 
+import locale
+print locale.getdefaultlocale()
+
 db = config.db
 app = config.app
 db_session = config.db_session
@@ -40,9 +43,6 @@ schedule_date.append(models.ScheduleDate('1', '20/8', 'Tisdag', '1a', '../static
 
 # Should check if the DB is created successfully or not!
 def create_db():
-	#db.init_app(app)
-	#with app.test_request_context():
-	# db.create_all()
 	config.Base.metadata.create_all(bind=config.engine)
 	return "DB creation done"
 
@@ -58,8 +58,6 @@ def create_admin_users():
 	return "Admin users added"
 
 def create_secret_code():
-	# db_session.add(models.RegisterCode('asd'))
-	# db_session.commit()
 	db_session.add(models.RegisterCode('asd'))
 	db_session.commit()
 	return 'Secret code added'
@@ -68,17 +66,13 @@ def create_secret_code():
 
 def create_school_classes():
 	for classes in school_classes:
-		# db_session.add(classes)
 		db_session.add(classes)
-	# db_session.commit()
 	db_session.commit()
 	return "School classes added"
 
 def create_contacts():
 	for contact in contacts:
-		# db_session.add(contact)
 		db_session.add(contact)
-	# db_session.commit()
 	db_session.commit()
 	return "Contacts added"
 
@@ -178,6 +172,8 @@ def get_contacts(role):
 		contacts = models.Contacts.query.filter_by(role=role).order_by(models.Contacts.school_class).all()
 	else:
 		contacts = models.Contacts.query.filter_by(role=role).all()
+	for i, x in enumerate(contacts):
+		print isinstance(x, unicode)
 	return contacts
 
 def get_schedule(week):
@@ -196,15 +192,7 @@ def add_student_poll_prefix(db_student_poll_dict):
 		return False
 
 def get_student_poll_prefix():
-	'''
-	companies = [company.decode("utf-8") for company in companies]
-	'''
-	prefixes = models.StudentPollPrefix.query.all()
-	# print prefixes[0]
-	# print [isinstance(x, unicode) for x in student_poll_prefixes]
-	for i, x in enumerate(prefixes):
-		print isinstance(x, unicode)
-	return prefixes
+	return models.StudentPollPrefix.query.order_by(models.StudentPollPrefix.id).all()
 
 def add_student_poll_question(db_student_poll_dict):
 	print db_student_poll_dict
@@ -221,4 +209,4 @@ def add_student_poll_question(db_student_poll_dict):
 		return False
 
 def get_student_poll_question():
-	return models.StudentPollQuestion.query.all()
+	return models.StudentPollQuestion.query.order_by(models.StudentPollQuestion.id).all()
