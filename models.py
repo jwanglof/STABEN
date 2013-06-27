@@ -326,7 +326,7 @@ class UserInformation(Base):
 	phonenumber_vis = db.Column(db.SmallInteger, index=True, default=0)
 	age = db.Column(db.SmallInteger(), index=True)
 	facebook_url = db.Column(db.String(100), index=True)
-	school_class = db.Column(db.SmallInteger(), index=True)
+	school_class = db.Column(db.SmallInteger(), index=True, default=0)
 	current_city = db.Column(db.String(100), index=True)
 	where_from = db.Column(db.String(100), index=True)
 	presentation = db.Column(db.UnicodeText())
