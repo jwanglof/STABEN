@@ -1,6 +1,17 @@
 {% extends "template.html" %}
 {% block content %}
+<div id='flashMessages'>
+	{% with messages = get_flashed_messages() %}
+		{% if messages %}
+			{% for message in messages %}
+				{{ message }}
+			{% endfor %}
+		{% endif %}
+	{% endwith %}
+</div>
+
 <a href='#'>Lägg till nytt prefix</a> | <a href='#'>Lägg till ny fråga</a>
+
 <form method='post' action='{{ url_for('admin_student_poll_save', command='prefix') }}' class='stabForm' id='admin_student_poll_form'>
 	<fieldset>
 		<legend>Lägg till nytt prefix</legend>
