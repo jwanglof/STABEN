@@ -257,8 +257,10 @@ def admin_student_poll():
 def admin_student_poll_save(command):
 	if request.method == 'POST':
 		if command == 'prefix':
+			flash('Prefix inlagt.')
 			result = db_commands.add_student_poll_prefix(request.form)
 		elif command == 'question':
+			flash(u'Fråga inlagd.')
 			result = db_commands.add_student_poll_question(request.form)
 
 		if result:
