@@ -109,7 +109,7 @@ def register():
 		if request.form['email'] != '' and str(regCode) == str(code):
 			print 'email och code funkar'
 			if request.form['password'] == request.form['rep_password']:
-				print '### Password is correct'
+				print '### Passwords are the same'
 				if db_commands.register_user(request.form):
 					print '### Registration succeeded'
 					user = login_user(request.form['email'], request.form['password'])
@@ -197,9 +197,8 @@ def profile_class(user_email):
 def profile_student_poll(user_email):
 	if session and user_email == session['email']:
 		student_poll_prefixes = db_commands.get_student_poll_prefix()
-		student_poll_question = db_commands.get_student_poll_question()
-		print unicode('asd')
-		return render('profile_student_poll.html', prefixes=student_poll_prefixes, questions=student_poll_question)
+		student_poll_questions = db_commands.get_student_poll_question()
+		return render('profile_student_poll.html', student_poll_prefixes=student_poll_prefixes, student_poll_questions=student_poll_questions)
 	else:
 		return render('login.html', login=False)
 
@@ -252,7 +251,6 @@ def admin_student_poll():
 	else:
 		return render('admin_fail.html')
 
-
 @app.route('/admin/student_poll/save/<command>', methods=['POST'])
 def admin_student_poll_save(command):
 	if request.method == 'POST':
@@ -269,6 +267,10 @@ def admin_student_poll_save(command):
 			return redirect(url_for('admin_student_poll'))
 		else:
 			return 'Couldn\'t add to poll'
+
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+	config.db_session.remove()
 
 if __name__ == '__main__':
 	app.debug = True
