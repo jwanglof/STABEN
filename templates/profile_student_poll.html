@@ -9,7 +9,7 @@
 		{% for question in student_poll_questions %}
 			{% if question.fk_student_poll_prefix_id == prefix.id %}
 				<dd>
-					<input type='checkbox' value='{{ question.id }}'  \> {{ question.question }}
+					<input type='checkbox' name='{{ question.id }}' value='{{ question.id }}'  \> {{ question.question }}
 				</dd>
 			{% endif %}
 		{% endfor %}
