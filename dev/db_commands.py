@@ -195,7 +195,6 @@ def get_student_poll_prefix():
 	return models.StudentPollPrefix.query.order_by(models.StudentPollPrefix.id).all()
 
 def add_student_poll_question(db_student_poll_dict):
-	print db_student_poll_dict
 	try:
 		new_question = models.StudentPollQuestion(db_student_poll_dict['prefix'], db_student_poll_dict['question'])
 		db_session.add(new_question)
@@ -206,3 +205,13 @@ def add_student_poll_question(db_student_poll_dict):
 
 def get_student_poll_question():
 	return models.StudentPollQuestion.query.order_by(models.StudentPollQuestion.id).all()
+
+def save_student_poll(db_user_email, db_student_poll_dict):
+	try:
+		db_user = models.Users.query.filter_by(email=db_user_email).first()
+		for x in db_student_poll_dict:
+			db_session.add(models.StudentPollAnswer(db_user.id, x))
+		db_session.commit()
+		return True
+	except:
+		return False
