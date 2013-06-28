@@ -100,17 +100,17 @@ def get_db_user(db_user_email,db_user_password=None):
 	else:
 		return False
 
-def update_db_user(db_user_email, db_user_dict, phonenumber_vis=9):
+def update_db_user(db_user_email, db_user_dict, phonenumber_vis=None):
 	try:
 		db_user = models.Users.query.filter_by(email=db_user_email).first()
 		models.UserInformation.query.filter_by(fk_user_id=db_user.id).update(db_user_dict)
-		if phonenumber_vis != 9:
+		if phonenumber_vis != None:
 			models.UserInformation.query.filter_by(fk_user_id=db_user.id).update({'phonenumber_vis': phonenumber_vis})
 		db_session.commit()
 		return True
 	except:
 		return False
-		
+
 def add_login_count(db_user_email):
 	db_user = models.Users.query.filter_by(email=db_user_email).first()
 	user_info = models.UserInformation.query.filter_by(user_id=db_user.id).first()
