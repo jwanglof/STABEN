@@ -196,9 +196,12 @@ def profile_class(user_email):
 @app.route('/profile/<user_email>/student_poll/')
 def profile_student_poll(user_email):
 	if session and user_email == session['email']:
+		# This should be changed so ONLY poll_done is get
+		user = db_commands.get_db_user(session['email'])
+
 		student_poll_prefixes = db_commands.get_student_poll_prefix()
 		student_poll_questions = db_commands.get_student_poll_question()
-		return render('profile_student_poll.html', student_poll_prefixes=student_poll_prefixes, student_poll_questions=student_poll_questions)
+		return render('profile_student_poll.html', student_poll_prefixes=student_poll_prefixes, student_poll_questions=student_poll_questions, user_info=user['info'])
 	else:
 		return render('login.html', login=False)
 
@@ -206,10 +209,14 @@ def profile_student_poll(user_email):
 def profile_save_student_poll(user_email):
 	if session and user_email == session['email']:
 		if db_commands.update_db_user(user_email, config.ImmutableMultiDict([('poll_done', u'1')])):
-			return 'woho'
+			if db_commands.save_student_poll(user_email, request.form):
+				return 'woho'
+			else:
+				print '### Could not save the student poll'
+				return redirect(url_for('profile_student_poll', user_email=user_email))
 		else:
 			print '### Could not update poll_done on user'
-			return redirect(url_for('profile_student_poll'))
+			return redirect(url_for('profile_student_poll', user_email=user_email))
 	else:
 		return render('login.html', login=False)
 
