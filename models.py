@@ -149,7 +149,7 @@ class Prices(Base):
 
 	def __repr__(self):
 		"""Get values from the table in an own-formatted output"""
-		return;
+		return
 
 class RegisterCode(Base):
 	"""Register code-table
@@ -235,13 +235,15 @@ class StudentPollAnswer(Base):
 	fk_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 	fk_student_poll_question_id = db.Column(db.Integer, db.ForeignKey('student_poll_question.id'))
 
-	def __init__(self):
+	def __init__(self, fk_user_id=None, fk_student_poll_question_id=None):
 		"""The constructor"""
+		self.fk_user_id = fk_user_id
+		self.fk_student_poll_question_id = fk_student_poll_question_id
 		return
 
 	def __repr__(self):
 		"""Get values from the table in an own-formatted output"""
-		return;
+		return
 
 class StudentPollPrefix(Base):
 	__tablename__ = 'student_poll_prefix'
@@ -257,7 +259,7 @@ class StudentPollPrefix(Base):
 	def __repr__(self):
 		"""Get values from the table in an own-formatted output"""
 		return '%s' % (self.prefix)
-		return;
+		return
 
 class StudentPollQuestion(Base):
 	__tablename__ = 'student_poll_question'
@@ -274,7 +276,7 @@ class StudentPollQuestion(Base):
 	def __repr__(self):
 		"""Get values from the table in an own-formatted output"""
 		return '%s' % (self.question)
-		return;
+		return
 
 '''
 	Role will represent:
