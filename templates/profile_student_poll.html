@@ -1,5 +1,6 @@
 {% extends "template.html" %}
 {% block content %}
+{{ user_info.fk_user_id }}
 <h1>Nolleenkät</h1>
 <h4>Observera! Du kan bara fylla i denna en gang. Om du vill andra nogra svar moste du gora detta under forsta dagen i nolle-p!</h4>
 <form method='post' action='{{ url_for('profile_save_student_poll', user_email=session['email']) }}' class='stabForm' id='student_poll_form'>
