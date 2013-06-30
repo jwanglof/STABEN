@@ -82,7 +82,7 @@ def gen_pw(clear_pw):
 def get_db_user(db_user_email,db_user_password=None):
 	db_user = models.Users.query.filter_by(email=db_user_email).first()
 	if db_user is not None:
-		db_user_info = {'user': db_user, 'info': models.UserInformation.query.filter_by(fk_user_id=db_user.id)}
+		db_user_info = {'user': db_user, 'info': models.UserInformation.query.filter_by(fk_user_id=db_user.id).first()}
 
 		# Check to see if a user is signing in
 		#
@@ -113,7 +113,7 @@ def update_db_user(db_user_email, db_user_dict, phonenumber_vis=None):
 
 def add_login_count(db_user_email):
 	db_user = models.Users.query.filter_by(email=db_user_email).first()
-	user_info = models.UserInformation.query.filter_by(user_id=db_user.id).first()
+	user_info = models.UserInformation.query.filter_by(fk_user_id=db_user.id).first()
 	user_info.login_count += 1
 	db_session.commit()
 
@@ -215,3 +215,7 @@ def save_student_poll(db_user_email, db_student_poll_dict):
 		return True
 	except:
 		return False
+
+def get_student_poll_answers(db_user_email):
+	user_id = get_db_user(db_user_email)['user'].id
+	return models.StudentPollAnswer.query.filter_by(fk_user_id=user_id).order_by(models.StudentPollAnswer.id).all()
