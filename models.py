@@ -235,6 +235,12 @@ class StudentPollAnswer(Base):
 	fk_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 	fk_student_poll_question_id = db.Column(db.Integer, db.ForeignKey('student_poll_question.id'))
 
+	# This will return the question id as an int instead of a
+	# StudentPollAnswer object.
+	# Need this to check the MultiDict in profile_student_poll
+	def __int__(self):
+		return self.fk_student_poll_question_id
+
 	def __init__(self, fk_user_id=None, fk_student_poll_question_id=None):
 		"""The constructor"""
 		self.fk_user_id = fk_user_id
@@ -243,7 +249,7 @@ class StudentPollAnswer(Base):
 
 	def __repr__(self):
 		"""Get values from the table in an own-formatted output"""
-		return
+		return '%i' % self.fk_student_poll_question_id
 
 class StudentPollPrefix(Base):
 	__tablename__ = 'student_poll_prefix'
@@ -259,7 +265,6 @@ class StudentPollPrefix(Base):
 	def __repr__(self):
 		"""Get values from the table in an own-formatted output"""
 		return '%s' % (self.prefix)
-		return
 
 class StudentPollQuestion(Base):
 	__tablename__ = 'student_poll_question'
