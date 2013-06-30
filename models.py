@@ -264,10 +264,6 @@ class StudentPollDialect(Base):
 		self.dialect = dialect
 		return
 
-	def __repr__(self):
-		"""Get values from the table in an own-formatted output"""
-		return '%s' % (self.dialect)
-
 class StudentPollPoint(Base):
 	__tablename__ = 'student_poll_point'
 	id = db.Column(db.Integer, primary_key=True)
@@ -351,10 +347,6 @@ class Users(Base):
 		self.password = password
 		self.role = role
 
-	def __repr__(self):
-		"""Get values from the table in an own-formatted output"""
-		return 'Email %s has %s as role' % (self.email, self.role)
-
 class UserInformation(Base):
 	"""User information-table
 
@@ -380,10 +372,6 @@ class UserInformation(Base):
 	def __init__(self, user_id=None):
 		"""The constructor"""
 		self.fk_user_id = user_id
-
-	def __repr__(self):
-		"""Get values from the table in an own-formatted output"""
-		return 'Hejsan %s' % (self.firstname)
 
 '''class StudentPollResult(Base):
 	"""Student poll result-table
