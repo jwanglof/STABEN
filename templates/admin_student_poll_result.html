@@ -1,14 +1,50 @@
 {% extends "template.html" %}
 {% block content %}
+
+{% for user in users_info %}
+	<a href='{{ url_for('admin_show_student_poll_result', user_id=user.fk_user_id) }}' target='_blank'><span style='display: block'>{{ user.firstname }} {{ user.lastname }}</span></a>
+{% endfor %}
+
+{# 
+<div style='float: left; border: 1px solid #000; padding-right: 20px; margin-top: 21px;'>
+	<span style='display: block; font-weight: bold;'>Nollegrupper:</span>
+	{% for dialect in poll_dialects %}
+		<span style='display: block;'>
+		{{ dialect.dialect }}
+		</span>
+	{% endfor %}
+</div>
+
 {% for user_info in users_info %}
-	<div style='border: 1px solid #c0c0c0; display: block; margin-bottom: 5px; padding-left: 5px;'>
+<div style='float: left; border: 1px solid #000;'>
 		{{ user_info.firstname }} {{ user_info.lastname }}
-		<br />
+		<br /><br />
 		{% for poll_answer in poll_answers %}
 			{% if poll_answer.fk_user_id == user_info.fk_user_id %}
-				{{ poll_answer }}
+				{{ poll_answer.id }}
+				<br />
 			{% endif %}
 		{% endfor %}
-	</div>
+
+
+
+		{% for poll_answer in poll_answers %}
+			{% if poll_answer.fk_user_id == user_info.fk_user_id %}
+				{{ poll_answer.fk_student_poll_question_id }}
+			{% endif %}
+			<br />
+			{% if poll_answer.fk_user_id == user_info.fk_user_id %}
+				<p>
+				 Question ID: {{ poll_questions[poll_answer.fk_poll_question_id].id }}
+				<br />
+				Question: {{ poll_questions[poll_answer.fk_poll_question_id] }}
+				Prefix ID: {{ poll_questions[poll_answer.fk_poll_question_id].fk_poll_prefix_id }}
+				<br /> 
+				Prefix: {{ poll_prefixes[poll_questions[poll_answer.fk_poll_question_id].fk_poll_prefix_id-1] }}
+				</p>
+			{% endif %}
+		{% endfor %}
+</div>
 {% endfor %}
+ #}
 {% endblock %}
