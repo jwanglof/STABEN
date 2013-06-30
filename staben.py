@@ -290,7 +290,23 @@ def admin_student_poll_result():
 	if db_commands.admin_check(session['email']) is 0:
 		users = db_commands.admin_get_all_users_w_poll_done()
 		poll_answers = db_commands.admin_get_all_student_poll_answers()
-		return render('admin_student_poll_result.html', users_info=users, poll_answers=poll_answers)
+		poll_prefixes = db_commands.get_student_poll_prefix()
+		poll_questions = db_commands.get_student_poll_question()
+		poll_dialects = db_commands.get_student_poll_dialects()
+		return render('admin_student_poll_result.html', users_info=users, poll_answers=poll_answers, poll_questions=poll_questions, poll_prefixes=poll_prefixes, poll_dialects=poll_dialects)
+	else:
+		return render('admin_fail.html')
+
+@app.route('/admin_show_student_poll_result/<user_id>')
+def admin_show_student_poll_result(user_id):
+	if db_commands.admin_check(session['email']) is 0:
+		user = db_commands.get_db_user(user_id=user_id)
+
+		poll_prefixes = db_commands.get_student_poll_prefix()
+		poll_questions = db_commands.get_student_poll_question()
+		poll_dialects = db_commands.get_student_poll_dialects()
+		poll_answer = db_commands.admin_get_user_poll_answer(user_id)
+		return render('admin_student_poll_user_result.html', user=user['user'], user_info=user['info'], poll_prefixes=poll_prefixes, poll_questions=poll_questions, poll_dialects=poll_dialects, poll_answer=poll_answer)
 	else:
 		return render('admin_fail.html')
 
