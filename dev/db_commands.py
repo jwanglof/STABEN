@@ -111,8 +111,12 @@ def create_student_poll():
 def gen_pw(clear_pw):
 	return config.bcrypt.generate_password_hash(clear_pw)
 
-def get_db_user(db_user_email,db_user_password=None):
-	db_user = models.Users.query.filter_by(email=db_user_email).first()
+def get_db_user(user_id=None,db_user_email=None,db_user_password=None):
+	if db_user_email != None:
+		db_user = models.Users.query.filter_by(email=db_user_email).first()
+	elif user_id != None:
+		db_user = models.Users.query.filter_by(id=user_id).first()
+		
 	if db_user is not None:
 		db_user_info = {'user': db_user, 'info': models.UserInformation.query.filter_by(fk_user_id=db_user.id).first()}
 
@@ -256,4 +260,11 @@ def get_student_poll_answers(db_user_email):
 def admin_get_all_student_poll_answers():
 	# asd = models.StudentPollAnswer.query.order_by(models.StudentPollAnswer.fk_user_id).all()
 	# db_user_info = {'user': db_user, 'info': models.UserInformation.query.filter_by(fk_user_id=db_user.id).first()}
-	return models.StudentPollAnswer.query.all()
+	asd = models.StudentPollAnswer.query.order_by(models.StudentPollAnswer.fk_user_id).all()
+	return asd
+
+def admin_get_user_poll_answer(user_id):
+	return models.StudentPollAnswer.query.filter_by(fk_user_id=user_id).all()
+
+def get_student_poll_dialects():
+	return models.StudentPollDialect.query.order_by(models.StudentPollDialect.id).all()
