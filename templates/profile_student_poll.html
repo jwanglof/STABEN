@@ -1,6 +1,5 @@
 {% extends "template.html" %}
 {% block content %}
-{{ user_info.fk_user_id }}
 <h1>Nolleenkät</h1>
 <h4>Observera! Du kan bara fylla i denna en gang. Om du vill andra nogra svar moste du gora detta under forsta dagen i nolle-p!</h4>
 <form method='post' action='{{ url_for('profile_save_student_poll', user_email=session['email']) }}' class='stabForm' id='student_poll_form'>
@@ -10,38 +9,12 @@
 		{% for question in student_poll_questions %}
 			{% if question.fk_student_poll_prefix_id == prefix.id %}
 				<dd>
-					<input type='checkbox' name='{{ question.id }}' value='{{ question.id }}'  \> {{ question.question }}
+					<input type='checkbox' name='{{ question.id }}' value='{{ question.id }}' {% if student_poll_user_answers.has_key(question.id) %}checked{% endif %} {% if user_poll_done == 1 %}disabled{% endif %} \> {{ question.question }}
 				</dd>
 			{% endif %}
 		{% endfor %}
 	{% endfor %}
 	</dl>
-	<button type="submit" class="btn btn-primary">Spara</button>
+	<button type="submit" class="btn btn-primary" {% if user_poll_done == 1 %}disabled{% endif %}>Spara</button>
 </form>
-
-{#<form method='post' action='{{ url_for('profile_save_student_poll', user_email=session['email']) }}' class='stabForm' id='student_poll_form'>
-	<fieldset>
-		<ol>
-			<li>
-				<label for="email">E-post *</label>
-				<input type="email" name="email" id="email" placeholder="E-post" />
-			</li>
-			<li>
-				<label for="password">Lösenord *</label>
-				<input type="password" name="password" id="password" placeholder="Lösenord" />
-			</li>
-			<li>
-				<label for="rep_password">Upprepa lösenord *</label>
-				<input type="password" name="rep_password" id="rep_password" placeholder="Upprepa lösenord" />
-			</li>
-			<li>
-				<label for="regCode">Registreringskod *</label>
-				<input type="text" name="regCode" id="regCode" placeholder="Registreringskod" />
-			</li>
-			<li>
-				<button type="submit" class="btn btn-primary">Registrera</button>
-			</li>
-		</ol>
-	</fieldset>
-</form>#}
 {% endblock %}
