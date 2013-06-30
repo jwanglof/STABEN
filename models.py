@@ -257,8 +257,9 @@ class StudentPollPrefix(Base):
 	prefix = db.Column(db.String(100), index=True, unique=True)
 	question = db.relationship('StudentPollQuestion', backref='StudentPollPrefix')
 
-	def __init__(self, prefix=None):
+	def __init__(self, id=None, prefix=None):
 		"""The constructor"""
+		self.id = id
 		self.prefix = prefix
 		return
 
