@@ -196,12 +196,15 @@ def profile_class(user_email):
 @app.route('/profile/<user_email>/student_poll/')
 def profile_student_poll(user_email):
 	if session and user_email == session['email']:
-		# This should be changed so ONLY poll_done is get
 		user = db_commands.get_db_user(session['email'])
+
+		student_poll_user_answers = config.MultiDict([])
+		for index, value in enumerate(db_commands.get_student_poll_answers(user_email)):
+			student_poll_user_answers.add(int(value), index)
 
 		student_poll_prefixes = db_commands.get_student_poll_prefix()
 		student_poll_questions = db_commands.get_student_poll_question()
-		return render('profile_student_poll.html', student_poll_prefixes=student_poll_prefixes, student_poll_questions=student_poll_questions, user_info=user['info'])
+		return render('profile_student_poll.html', student_poll_prefixes=student_poll_prefixes, student_poll_questions=student_poll_questions, user_poll_done=user['info'].poll_done, student_poll_user_answers=student_poll_user_answers)
 	else:
 		return render('login.html', login=False)
 
