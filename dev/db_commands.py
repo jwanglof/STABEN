@@ -7,6 +7,8 @@ import config
 import locale
 print locale.getdefaultlocale()
 
+import read_csv
+
 db = config.db
 app = config.app
 db_session = config.db_session
@@ -75,6 +77,23 @@ def create_contacts():
 		db_session.add(contact)
 	db_session.commit()
 	return "Contacts added"
+
+def create_student_poll():
+	StudentPoll = read_csv.ReadStudentPollCsvFile('/home/johan/Git/STABEN/dev/studentpoll.csv')
+
+	# Add prefixes
+	for index, p in StudentPoll.get_prefixes().iteritems():
+		db_session.add(models.StudentPollPrefix(index, p))
+		# print index, p
+
+	# Add questions
+	for index, dict_content in StudentPoll.get_questions().iteritems():
+		for q in dict_content:
+			print index, q
+			db_session.add(models.StudentPollQuestion(index, q))
+
+	db_session.commit()
+	return 'Student poll prefixes and questions added'
 
 def gen_pw(clear_pw):
 	return config.bcrypt.generate_password_hash(clear_pw)
