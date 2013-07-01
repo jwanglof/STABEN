@@ -147,7 +147,6 @@ def register():
 def profile(user_email):
 	if session and user_email == session['email']:
 		user = db_commands.get_db_user(user_email)
-		print user['info'].poll_done
 		return render('profile.html', user=user['user'], user_info=user['info'])
 		#return render('profile.html', user_info=user_info, user_role=config.user_roles[user_info.role])
 	else:
