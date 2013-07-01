@@ -45,6 +45,9 @@ def db_contacts():
 @app.route('/db_code')
 def db_code():
 	return db_commands.create_secret_code()
+@app.route('/db_student_poll')
+def db_prefixes():
+	return db_commands.create_student_poll()
 
 @app.route('/')
 def index():
@@ -144,6 +147,7 @@ def register():
 def profile(user_email):
 	if session and user_email == session['email']:
 		user = db_commands.get_db_user(user_email)
+		print user['info'].poll_done
 		return render('profile.html', user=user['user'], user_info=user['info'])
 		#return render('profile.html', user_info=user_info, user_role=config.user_roles[user_info.role])
 	else:
@@ -213,7 +217,7 @@ def profile_save_student_poll(user_email):
 	if session and user_email == session['email']:
 		if db_commands.update_db_user(user_email, config.ImmutableMultiDict([('poll_done', u'1')])):
 			if db_commands.save_student_poll(user_email, request.form):
-				return 'woho'
+				return redirect(url_for('profile_student_poll', user_email=user_email))
 			else:
 				print '### Could not save the student poll'
 				return redirect(url_for('profile_student_poll', user_email=user_email))
