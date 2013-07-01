@@ -1,7 +1,6 @@
 {% extends "template.html" %}
 {% block active_profile %}active{% endblock %}
 {% block content %}
-{% for user_info in user_info %}
 <h1>Redigera profil</h1>
 <form method='post' action='{{ url_for('profile_save', user_email=session['email']) }}' id='profile_edit'>
 	<h4>Användaruppgifter</h4>
@@ -40,7 +39,6 @@
 	<br />
 	<button type='submit' class='btn'>Spara</button> <input type='reset' value='Återställ' class='btn' />
 </form>
-{% endfor %}
 
 <form method='post' action='{{ url_for('profile_save_password', user_email=session['email']) }}' id='profile_password'>
 	<h4>Lösenord</h4>
