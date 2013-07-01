@@ -7,7 +7,8 @@
 
 '''
 To be able to delete all tables
-SET FOREIGN_KEY_CHECKS=0;TRUNCATE users;TRUNCATE student_poll_prefix;SET FOREIGN_KEY_CHECKS=1;
+SET FOREIGN_KEY_CHECKS=0;TRUNCATE users;TRUNCATE student_poll_prefix;TRUNCATE student_poll_question;TRUNCATE student_poll_answer;SET FOREIGN_KEY_CHECKS=1;
+SET FOREIGN_KEY_CHECKS=0;TRUNCATE student_poll_prefix;TRUNCATE student_poll_question;TRUNCATE student_poll_answer;SET FOREIGN_KEY_CHECKS=1;
 '''
 
 '''
@@ -271,7 +272,7 @@ class StudentPollQuestion(Base):
 	__tablename__ = 'student_poll_question'
 	id = db.Column(db.Integer, primary_key=True)
 	fk_student_poll_prefix_id = db.Column(db.Integer, db.ForeignKey('student_poll_prefix.id'))
-	question = db.Column(db.String(100), index=True, unique=True)
+	question = db.Column(db.String(100), index=True)
 
 	def __init__(self, student_poll_prefix_id=None, question=None):
 		"""The constructor"""
@@ -329,12 +330,12 @@ class UserInformation(Base):
 	id = db.Column(db.Integer(), primary_key=True)
 	fk_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 	firstname = db.Column(db.String(100), index=True, default='')
-	lastname = db.Column(db.String(100), index=True)
+	lastname = db.Column(db.String(100), index=True, default='')
 	phonenumber = db.Column(db.String(15), index=True)
 	phonenumber_vis = db.Column(db.SmallInteger, index=True, default=0)
 	age = db.Column(db.SmallInteger(), index=True)
 	facebook_url = db.Column(db.String(100), index=True)
-	school_class = db.Column(db.SmallInteger(), index=True, default=0)
+	school_class = db.Column(db.SmallInteger(), index=True, default=1)
 	current_city = db.Column(db.String(100), index=True)
 	where_from = db.Column(db.String(100), index=True)
 	presentation = db.Column(db.UnicodeText())
