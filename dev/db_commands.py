@@ -84,13 +84,26 @@ def create_student_poll():
 	# Add prefixes
 	for index, p in StudentPoll.get_prefixes().iteritems():
 		db_session.add(models.StudentPollPrefix(index, p))
-		# print index, p
 
 	# Add questions
 	for index, dict_content in StudentPoll.get_questions().iteritems():
 		for q in dict_content:
-			print index, q
 			db_session.add(models.StudentPollQuestion(index, q))
+
+	# Add dialects
+	for index, d in StudentPoll.get_dialects().iteritems():
+		db_session.add(models.StudentPollDialect(index, d))
+
+	# Add points
+	# Get the points from the CSV file
+	for index_in_db, points_dict in StudentPoll.get_points().iteritems():
+		# Get the question and 
+		for question, point_list in points_dict.iteritems():
+			for dialect_index, point in enumerate(point_list):
+				if point != '':
+					dialect_id = dialect_index+1
+					question_id = index_in_db
+					db_session.add(models.StudentPollPoint(dialect_id, question_id, point))
 
 	db_session.commit()
 	return 'Student poll prefixes and questions added'
@@ -104,8 +117,6 @@ def get_db_user(db_user_email,db_user_password=None):
 		db_user_info = {'user': db_user, 'info': models.UserInformation.query.filter_by(fk_user_id=db_user.id).first()}
 
 		# Check to see if a user is signing in
-		#
-		# A user wants to sign in
 		if db_user_password is not None:
 			if config.bcrypt.check_password_hash(db_user.password, db_user_password):
 				config.session['email'] = db_user_email
@@ -171,8 +182,11 @@ def admin_check(db_user_email):
 	user_info = models.Users.query.filter_by(email=db_user_email).first()
 	return user_info.role
 
-def admin_users():
-	return models.Users.query.all()
+def admin_get_all_users():
+	return {'user': models.Users.query.all(), 'info': models.UserInformation.query.all()}
+
+def admin_get_all_users_w_poll_done():
+	return models.UserInformation.query.filter_by(poll_done=1).all()
 
 def register_user(db_user_dict):
 	try:
@@ -238,3 +252,8 @@ def save_student_poll(db_user_email, db_student_poll_dict):
 def get_student_poll_answers(db_user_email):
 	user_id = get_db_user(db_user_email)['user'].id
 	return models.StudentPollAnswer.query.filter_by(fk_user_id=user_id).order_by(models.StudentPollAnswer.id).all()
+
+def admin_get_all_student_poll_answers():
+	# asd = models.StudentPollAnswer.query.order_by(models.StudentPollAnswer.fk_user_id).all()
+	# db_user_info = {'user': db_user, 'info': models.UserInformation.query.filter_by(fk_user_id=db_user.id).first()}
+	return models.StudentPollAnswer.query.all()
