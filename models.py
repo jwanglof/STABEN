@@ -248,9 +248,43 @@ class StudentPollAnswer(Base):
 		self.fk_student_poll_question_id = fk_student_poll_question_id
 		return
 
+	'''def __repr__(self):
+		"""Get values from the table in an own-formatted output"""
+		return '%i' % (self.fk_student_poll_question_id)'''
+
+class StudentPollDialect(Base):
+	__tablename__ = 'student_poll_dialect'
+	id = db.Column(db.Integer, primary_key=True)
+	dialect = db.Column(db.String(100), index=True, unique=True)
+	dialect_point = db.relationship('StudentPollPoint', backref='StudentPollDialect')
+
+	def __init__(self, id=None, dialect=None):
+		"""The constructor"""
+		self.id = id
+		self.dialect = dialect
+		return
+
 	def __repr__(self):
 		"""Get values from the table in an own-formatted output"""
-		return '%i' % self.fk_student_poll_question_id
+		return '%s' % (self.dialect)
+
+class StudentPollPoint(Base):
+	__tablename__ = 'student_poll_point'
+	id = db.Column(db.Integer, primary_key=True)
+	fk_student_poll_dialect_id = db.Column(db.Integer, db.ForeignKey('student_poll_dialect.id'))
+	fk_student_poll_question_id = db.Column(db.Integer, db.ForeignKey('student_poll_question.id'))
+	point = db.Column(db.Integer)
+
+	def __init__(self, fk_student_poll_dialect_id=None, fk_student_poll_question_id=None, point=None):
+		"""The constructor"""
+		self.fk_student_poll_dialect_id = fk_student_poll_dialect_id
+		self.fk_student_poll_question_id = fk_student_poll_question_id
+		self.point = point
+		return
+
+	def __repr__(self):
+		"""Get values from the table in an own-formatted output"""
+		return '%i' % (self.fk_student_poll_question_id)
 
 class StudentPollPrefix(Base):
 	__tablename__ = 'student_poll_prefix'
@@ -273,6 +307,7 @@ class StudentPollQuestion(Base):
 	id = db.Column(db.Integer, primary_key=True)
 	fk_student_poll_prefix_id = db.Column(db.Integer, db.ForeignKey('student_poll_prefix.id'))
 	question = db.Column(db.String(100), index=True)
+	question_point = db.relationship('StudentPollPoint', backref='StudentPollQuestion')
 
 	def __init__(self, student_poll_prefix_id=None, question=None):
 		"""The constructor"""
