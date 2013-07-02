@@ -9,7 +9,12 @@
 		{% endif %}
 	{% endwith %}
 </div>
-
+OBS!
+<br />
+Det går inte att ta bort prefixer eller frågor!
+<br />
+Om detta skall göras ska en ny CSV fil skapas utifrån den nolleenkät man skapat och sen ska motsvarande kommando skapa den nya databasen.
+<br />
 <a href='#'>Lägg till nytt prefix</a> | <a href='#'>Lägg till ny fråga</a>
 
 <form method='post' action='{{ url_for('admin_student_poll_save', command='prefix') }}' class='stabForm' id='admin_student_poll_form'>
@@ -53,10 +58,4 @@
 		</ol>
 	</fieldset>
 </form>
-
-OBS!
-<br />
-Det går inte att ta bort prefixer eller frågor!
-<br />
-Om detta skall göras ska en ny CSV fil skapas utifrån den nolleenkät man skapat och sen ska motsvarande kommando skapa den nya databasen.
 {% endblock %}
