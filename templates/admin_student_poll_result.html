@@ -1,0 +1,14 @@
+{% extends "template.html" %}
+{% block content %}
+{% for user_info in users_info %}
+	<div style='border: 1px solid #c0c0c0; display: block; margin-bottom: 5px; padding-left: 5px;'>
+		{{ user_info.firstname }} {{ user_info.lastname }}
+		<br />
+		{% for poll_answer in poll_answers %}
+			{% if poll_answer.fk_user_id == user_info.fk_user_id %}
+				{{ poll_answer }}
+			{% endif %}
+		{% endfor %}
+	</div>
+{% endfor %}
+{% endblock %}
