@@ -253,11 +253,11 @@ def admin_addcontact():
 		return render('admin_fail.html')
 
 @app.route('/admin/users/')
-def admin_users():
+def admin_get_all_users():
 	# Need to check that the user is signed in and is an admin
 	if db_commands.admin_check(session['email']) is 0:
-		users = db_commands.admin_users()
-		return render('admin_users.html', users=users)
+		users = db_commands.admin_get_all_users()
+		return render('admin_get_all_users.html', users=users)
 	else:
 		return render('admin_fail.html')
 
@@ -284,6 +284,15 @@ def admin_student_poll_save(command):
 			return redirect(url_for('admin_student_poll'))
 		else:
 			return 'Couldn\'t add to poll'
+
+@app.route('/admin_student_poll_result')
+def admin_student_poll_result():
+	if db_commands.admin_check(session['email']) is 0:
+		users = db_commands.admin_get_all_users_w_poll_done()
+		poll_answers = db_commands.admin_get_all_student_poll_answers()
+		return render('admin_student_poll_result.html', users_info=users, poll_answers=poll_answers)
+	else:
+		return render('admin_fail.html')
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
