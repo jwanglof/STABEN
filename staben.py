@@ -305,8 +305,14 @@ def admin_show_student_poll_result(user_id):
 		poll_prefixes = db_commands.get_student_poll_prefix()
 		poll_questions = db_commands.get_student_poll_question()
 		poll_dialects = db_commands.get_student_poll_dialects()
+		poll_points = db_commands.get_student_poll_points()
+
 		poll_answer = db_commands.admin_get_user_poll_answer(user_id)
-		return render('admin_student_poll_user_result.html', user=user['user'], user_info=user['info'], poll_prefixes=poll_prefixes, poll_questions=poll_questions, poll_dialects=poll_dialects, poll_answer=poll_answer)
+
+		asd = db_commands.testing(user_id)
+		# print asd['dialects'][1]
+		# poll_prefixes=poll_prefixes, poll_questions=poll_questions, poll_dialects=poll_dialects, poll_answer=poll_answer, poll_points=poll_points, check_mark=u"\u2713", 
+		return render('admin_student_poll_user_result.html', asd=asd)
 	else:
 		return render('admin_fail.html')
 
