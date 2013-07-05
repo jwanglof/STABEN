@@ -116,7 +116,7 @@ def get_db_user(user_id=None,db_user_email=None,db_user_password=None):
 		db_user = models.Users.query.filter_by(email=db_user_email).first()
 	elif user_id != None:
 		db_user = models.Users.query.filter_by(id=user_id).first()
-		
+
 	if db_user is not None:
 		db_user_info = {'user': db_user, 'info': models.UserInformation.query.filter_by(fk_user_id=db_user.id).first()}
 
@@ -268,3 +268,49 @@ def admin_get_user_poll_answer(user_id):
 
 def get_student_poll_dialects():
 	return models.StudentPollDialect.query.order_by(models.StudentPollDialect.id).all()
+
+def get_student_poll_points():
+	return models.StudentPollPoint.query.order_by(models.StudentPollPoint.fk_student_poll_question_id).all()
+
+def testing(user_id):
+	# poll_dialects = models.StudentPollDialect.query.all()
+	# poll_questions = models.StudentPollQuestion.query.all()
+	# poll_prefixes = models.StudentPollPrefix.query.all()
+	# poll_points = models.StudentPollPoint.query.all()
+
+	# user_answer = models.StudentPollAnswer.query.filter_by(fk_user_id=user_id).first()
+	# user = get_db_user(user_id=user_id)
+	# return {general: {dialects: poll_dialects, questions: poll_questions, prefixes: poll_prefixes, points: poll_points}, user_specific: {user: user['user'], user_info: user['info'], answer: user_answer}}
+
+	''' NUMBER 1
+	dsa = {}
+	ooo = config.MultiDict()
+
+	poll_prefixes = models.StudentPollPrefix.query.order_by(models.StudentPollPrefix.id).all()
+	for p in poll_prefixes:
+		tmp = config.MultiDict()
+		qtmp = config.MultiDict()
+
+		tmp.add('prefix', p.prefix)
+		# tmp.add('questions', models.StudentPollQuestion.query.filter_by(fk_student_poll_prefix_id=p.id).order_by(models.StudentPollQuestion.id).all())
+		for q in models.StudentPollQuestion.query.filter_by(fk_student_poll_prefix_id=p.id).order_by(models.StudentPollQuestion.id).all():
+			points = models.StudentPollPoint.query.filter_by(fk_student_poll_question_id=q.id).order_by(models.StudentPollPoint.id).all()
+			qtmp.add(q.fk_student_poll_dialect_id, {})
+
+		tmp.add('points', q)
+
+		ooo.add(p.id, tmp)'''
+		# dsa[p.id] = {'prefix': p.prefix, 'questions': models.StudentPollQuestion.query.filter_by(fk_student_poll_prefix_id=p.id).order_by(models.StudentPollQuestion.id).all()}
+
+	# dsa['user'] = get_db_user(user_id=user_id)
+	# dsa['user_answer'] = models.StudentPollAnswer.query.filter_by(fk_user_id=user_id).first()
+
+	# dsa['dialects'] = models.StudentPollDialect.query.all()
+
+	q = models.Users.query.filter_by(id=user_id).join(models.Users.user_information).join(models.Users.student_poll).all()
+	for a in q:
+		print a.user_information.firstname
+		for o in a.student_poll:
+			print o.id
+
+	return 2
