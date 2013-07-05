@@ -8,10 +8,13 @@ import locale
 print locale.getdefaultlocale()
 
 import read_csv
+import debug
 
 db = config.db
 app = config.app
 db_session = config.db_session
+
+debug = debug.debug
 
 # initial users
 admin_users2 = []
@@ -108,8 +111,38 @@ def create_student_poll():
 	db_session.commit()
 	return 'Student poll prefixes and questions added'
 
-def gen_pw(clear_pw):
-	return config.bcrypt.generate_password_hash(clear_pw)
+# def gen_pw(clear_pw):
+# 	return config.bcrypt.generate_password_hash(clear_pw)
+
+def add_contact(name, phonenumber, email, role, school_class, link):
+	contact = models.Contact(name, phonenumber, email, role, school_class, link)
+	db_session.add(contact)
+	db_session.commit()
+	return 'success'
+
+def add_login_count(db_user_email):
+	db_user = models.Users.query.filter_by(email=db_user_email).first()
+	user_info = models.UserInformation.query.filter_by(fk_user_id=db_user.id).first()
+	user_info.login_count += 1
+	db_session.commit()
+
+def add_user_information(db_user_id):
+	db_session.add(models.UserInformation(db_user_id))
+	db_session.commit()
+	return True
+
+def get_class_mates(db_user_email):
+	db_user = models.Users.query.filter_by(email=db_user_email).first()
+	user_info = models.UserInformation.query.filter_by(fk_user_id=db_user.id).first()
+	class_mates = models.UserInformation.query.filter_by(school_class=user_info.school_class).all()
+	return class_mates
+
+def get_contacts(role):
+	if role is 0:
+		contacts = models.Contacts.query.filter_by(role=role).order_by(models.Contacts.school_class).all()
+	else:
+		contacts = models.Contacts.query.filter_by(role=role).all()
+	return contacts
 
 def get_db_user(user_id=None,db_user_email=None,db_user_password=None):
 	if db_user_email != None:
@@ -134,6 +167,34 @@ def get_db_user(user_id=None,db_user_email=None,db_user_password=None):
 	else:
 		return False
 
+def get_schedule(week):
+	return models.ScheduleDate.query.filter_by(week=week).order_by(models.ScheduleDate.week).all()
+
+def get_school_class(db_user_email):
+	db_user = models.Users.query.filter_by(email=db_user_email).first()
+	user_info = models.UserInformation.query.filter_by(fk_user_id=db_user.id).first()
+	school_class = models.SchoolClasses.query.filter_by(id=user_info.school_class).first()
+	return school_class.abbreviation
+
+def get_school_classes():
+	return models.SchoolClasses.query
+
+def get_student_poll_answers(db_user_email):
+	user_id = get_db_user(db_user_email)['user'].id
+	return models.StudentPollAnswer.query.filter_by(fk_user_id=user_id).order_by(models.StudentPollAnswer.id).all()
+
+def get_student_poll_dialects():
+	return models.StudentPollDialect.query.order_by(models.StudentPollDialect.id).all()
+
+def get_student_poll_points():
+	return models.StudentPollPoint.query.order_by(models.StudentPollPoint.fk_student_poll_question_id).all()
+
+def get_student_poll_prefix():
+	return models.StudentPollPrefix.query.order_by(models.StudentPollPrefix.id).all()
+
+def get_student_poll_question():
+	return models.StudentPollQuestion.query.order_by(models.StudentPollQuestion.id).all()
+
 def update_db_user(db_user_email, db_user_dict, phonenumber_vis=None):
 	try:
 		db_user = models.Users.query.filter_by(email=db_user_email).first()
@@ -145,27 +206,6 @@ def update_db_user(db_user_email, db_user_dict, phonenumber_vis=None):
 	except:
 		return False
 
-def add_login_count(db_user_email):
-	db_user = models.Users.query.filter_by(email=db_user_email).first()
-	user_info = models.UserInformation.query.filter_by(fk_user_id=db_user.id).first()
-	user_info.login_count += 1
-	db_session.commit()
-
-def get_school_classes():
-	return models.SchoolClasses.query
-
-def get_class_mates(db_user_email):
-	db_user = models.Users.query.filter_by(email=db_user_email).first()
-	user_info = models.UserInformation.query.filter_by(fk_user_id=db_user.id).first()
-	class_mates = models.UserInformation.query.filter_by(school_class=user_info.school_class).all()
-	return class_mates
-
-def get_school_class(db_user_email):
-	db_user = models.Users.query.filter_by(email=db_user_email).first()
-	user_info = models.UserInformation.query.filter_by(fk_user_id=db_user.id).first()
-	school_class = models.SchoolClasses.query.filter_by(id=user_info.school_class).first()
-	return school_class.abbreviation
-
 def update_db_pw(db_user_email, db_user_dict):
 	db_user = models.Users.query.filter_by(email=db_user_email).first()
 	if db_user_dict['new_password'] == db_user_dict['repeat_password'] and db_user_dict['current_password'] == db_user.password:
@@ -175,73 +215,20 @@ def update_db_pw(db_user_email, db_user_dict):
 	else:
 		return False
 
-def add_contact(name, phonenumber, email, role, school_class, link):
-	contact = models.Contact(name, phonenumber, email, role, school_class, link)
-	db_session.add(contact)
-	db_session.commit()
-	return 'success'
-
-def admin_check(db_user_email):
-	# Check only role!
-	user_info = models.Users.query.filter_by(email=db_user_email).first()
-	return user_info.role
-
-def admin_get_all_users():
-	return {'user': models.Users.query.all(), 'info': models.UserInformation.query.all()}
-
-def admin_get_all_users_w_poll_done():
-	return models.UserInformation.query.filter_by(poll_done=1).all()
-
 def register_user(db_user_dict):
+	print db_user_dict
 	try:
+		print 1
 		new_user = models.Users(db_user_dict['email'], config.bcrypt.generate_password_hash(db_user_dict['password']))
+		print 2
 		db_session.add(new_user)
+		print 3
 		db_session.commit()
+		print 4
+		print new_user
 		return True
 	except:
 		return False
-
-def add_user_information(db_user_id):
-	db_session.add(models.UserInformation(db_user_id))
-	db_session.commit()
-	return True
-
-def get_contacts(role):
-	if role is 0:
-		contacts = models.Contacts.query.filter_by(role=role).order_by(models.Contacts.school_class).all()
-	else:
-		contacts = models.Contacts.query.filter_by(role=role).all()
-	return contacts
-
-def get_schedule(week):
-	return models.ScheduleDate.query.filter_by(week=week).order_by(models.ScheduleDate.week).all()
-
-def get_register_code():
-	return models.RegisterCode.query.first()
-
-def add_student_poll_prefix(db_student_poll_dict):
-	try:
-		new_prefix = models.StudentPollPrefix(db_student_poll_dict['prefix'])
-		db_session.add(new_prefix)
-		db_session.commit()
-		return True
-	except:
-		return False
-
-def get_student_poll_prefix():
-	return models.StudentPollPrefix.query.order_by(models.StudentPollPrefix.id).all()
-
-def add_student_poll_question(db_student_poll_dict):
-	try:
-		new_question = models.StudentPollQuestion(db_student_poll_dict['prefix'], db_student_poll_dict['question'])
-		db_session.add(new_question)
-		db_session.commit()
-		return True
-	except:
-		return False
-
-def get_student_poll_question():
-	return models.StudentPollQuestion.query.order_by(models.StudentPollQuestion.id).all()
 
 def save_student_poll(db_user_email, db_student_poll_dict):
 	try:
@@ -253,9 +240,31 @@ def save_student_poll(db_user_email, db_student_poll_dict):
 	except:
 		return False
 
-def get_student_poll_answers(db_user_email):
-	user_id = get_db_user(db_user_email)['user'].id
-	return models.StudentPollAnswer.query.filter_by(fk_user_id=user_id).order_by(models.StudentPollAnswer.id).all()
+def get_register_code():
+	return models.RegisterCode.query.first()
+
+
+
+##############
+# ADMIN TOOLS #
+##############
+def add_student_poll_prefix(db_student_poll_dict):
+	try:
+		new_prefix = models.StudentPollPrefix(db_student_poll_dict['prefix'])
+		db_session.add(new_prefix)
+		db_session.commit()
+		return True
+	except:
+		return False
+
+def add_student_poll_question(db_student_poll_dict):
+	try:
+		new_question = models.StudentPollQuestion(db_student_poll_dict['prefix'], db_student_poll_dict['question'])
+		db_session.add(new_question)
+		db_session.commit()
+		return True
+	except:
+		return False
 
 def admin_get_all_student_poll_answers():
 	# asd = models.StudentPollAnswer.query.order_by(models.StudentPollAnswer.fk_user_id).all()
@@ -266,11 +275,7 @@ def admin_get_all_student_poll_answers():
 def admin_get_user_poll_answer(user_id):
 	return models.StudentPollAnswer.query.filter_by(fk_user_id=user_id).all()
 
-def get_student_poll_dialects():
-	return models.StudentPollDialect.query.order_by(models.StudentPollDialect.id).all()
 
-def get_student_poll_points():
-	return models.StudentPollPoint.query.order_by(models.StudentPollPoint.fk_student_poll_question_id).all()
 
 def testing(user_id):
 	# poll_dialects = models.StudentPollDialect.query.all()
@@ -314,3 +319,15 @@ def testing(user_id):
 			print o.id
 
 	return 2
+
+
+def admin_check(db_user_email):
+	# Check only role!
+	user_info = models.Users.query.filter_by(email=db_user_email).first()
+	return user_info.role
+
+def admin_get_all_users():
+	return {'user': models.Users.query.all(), 'info': models.UserInformation.query.all()}
+
+def admin_get_all_users_w_poll_done():
+	return models.UserInformation.query.filter_by(poll_done=1).all()
