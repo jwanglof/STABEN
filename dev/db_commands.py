@@ -180,7 +180,7 @@ def get_school_classes():
 	return models.SchoolClasses.query
 
 def get_student_poll_answers(db_user_email):
-	user_id = get_db_user(db_user_email)['user'].id
+	user_id = get_db_user(db_user_email=db_user_email)['user'].id
 	return models.StudentPollAnswer.query.filter_by(fk_user_id=user_id).order_by(models.StudentPollAnswer.id).all()
 
 def get_student_poll_dialects():
@@ -216,16 +216,11 @@ def update_db_pw(db_user_email, db_user_dict):
 		return False
 
 def register_user(db_user_dict):
-	print db_user_dict
 	try:
-		print 1
 		new_user = models.Users(db_user_dict['email'], config.bcrypt.generate_password_hash(db_user_dict['password']))
-		print 2
 		db_session.add(new_user)
-		print 3
 		db_session.commit()
-		print 4
-		print new_user
+
 		return True
 	except:
 		return False
