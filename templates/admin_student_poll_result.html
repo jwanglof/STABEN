@@ -2,7 +2,13 @@
 {% block content %}
 
 {% for user in users_info %}
-	<a href='{{ url_for('admin_show_student_poll_result', user_id=user.fk_user_id) }}' target='_blank'><span style='display: block'>{{ user.firstname }} {{ user.lastname }}</span></a>
+	<a href='{{ url_for('admin_show_student_poll_result', user_id=user.fk_user_id) }}' target='_blank'><span style='display: block'>
+		{% if user.firstname == '' %}
+			<i>Har inte fyllt i namn, databasid: {{ user.fk_user_id }}</i>
+		{% else %}
+			{{ user.firstname }} {{ user.lastname }}
+		{% endif %}
+	</span></a>
 {% endfor %}
 
 {# 
