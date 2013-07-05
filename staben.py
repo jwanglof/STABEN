@@ -4,6 +4,7 @@
 import config
 #import model
 from dev import db_commands
+from dev import debug
 
 app = config.app
 render = config.render_template
@@ -13,20 +14,9 @@ session = config.session
 flash = config.flash
 redirect = config.redirect
 
+debug = debug.debug
+
 nollan = 'minus'
-
-def login_user(user_email, user_password):
-	user = db_commands.get_db_user(user_email, user_password)
-
-	if user:
-		# user_info['user'] contains email, password and role (from the table users)
-		# user_info['info'] contains all the user's information (from the table userInformation)
-		#db_commands.login_count(request.form['email'])
-		
-		return user
-	else:
-		# return render('login.html', login=False)
-		return False
 
 # DEV OPTIONS
 # NEEDS TO BE REMOVED IN PRODUCTION MODE
@@ -84,7 +74,7 @@ def contact(show_page='contact'):
 def login():
 	if request.form['email'] not in session:
 		if request.method == 'POST':
-			user = db_commands.get_db_user(request.form['email'], request.form['password'])
+			user = db_commands.get_db_user(db_user_email=request.form['email'], db_user_password=request.form['password'])
 
 			if user:
 				# user_info['user'] contains email, password and role (from the table users)
@@ -110,21 +100,21 @@ def register():
 		code = db_commands.get_register_code()
 
 		if request.form['email'] != '' and str(regCode) == str(code):
-			print 'email och code funkar'
+			debug('register', 'email och code funkar')
 			if request.form['password'] == request.form['rep_password']:
-				print '### Passwords are the same'
+				debug('register', 'Passwords are the same')
 				if db_commands.register_user(request.form):
-					print '### Registration succeeded'
-					user = login_user(request.form['email'], request.form['password'])
+					debug('register', 'Registration succeeded')
+					user = db_commands.get_db_user(db_user_email=request.form['email'], db_user_password=request.form['password'])
 
 					if user:
 						db_commands.add_user_information(user.id)
 						return redirect(url_for('profile_edit', user_email=user.email))
 					else:
-						print 'Unsuccessfull, user is None'
+						debug('register', 'Error, could not get user')
 						return redirect(url_for('register'))
 				else:
-					print 'Unsuccessfull, could not register user'
+					debug('register', 'Error, could not register user')	
 					return redirect(url_for('register'))
 			else:
 				flash(u'Du måste ange samma lösenord i båda rutorna.')
@@ -146,7 +136,7 @@ def register():
 @app.route('/profile/<user_email>/')
 def profile(user_email):
 	if session and user_email == session['email']:
-		user = db_commands.get_db_user(user_email)
+		user = db_commands.get_db_user(db_user_email=user_email)
 		return render('profile.html', user=user['user'], user_info=user['info'])
 		#return render('profile.html', user_info=user_info, user_role=config.user_roles[user_info.role])
 	else:
@@ -156,7 +146,7 @@ def profile(user_email):
 @app.route('/profile/<user_email>/edit/')
 def profile_edit(user_email):
 	if session and user_email == session['email']:
-		user = db_commands.get_db_user(session['email'])
+		user = db_commands.get_db_user(db_user_email=session['email'])
 		#user_info = db_commands.get_user_info()
 		classes = db_commands.get_school_classes()
 		return render('profile_edit.html', user=user['user'], user_info=user['info'], school_classes=classes)
@@ -199,7 +189,7 @@ def profile_class(user_email):
 @app.route('/profile/<user_email>/student_poll/')
 def profile_student_poll(user_email):
 	if session and user_email == session['email']:
-		user = db_commands.get_db_user(session['email'])
+		user = db_commands.get_db_user(db_user_email=session['email'])
 
 		student_poll_user_answers = config.MultiDict([])
 		for index, value in enumerate(db_commands.get_student_poll_answers(user_email)):
@@ -218,7 +208,7 @@ def profile_save_student_poll(user_email):
 			if db_commands.save_student_poll(user_email, request.form):
 				return redirect(url_for('profile_student_poll', user_email=user_email))
 			else:
-				print '### Could not save the student poll'
+				print 'Could not save the student poll'
 				return redirect(url_for('profile_student_poll', user_email=user_email))
 		else:
 			print '### Could not update poll_done on user'
