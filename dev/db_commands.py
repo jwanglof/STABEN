@@ -4,9 +4,6 @@
 import models
 import config
 
-import locale
-print locale.getdefaultlocale()
-
 import read_csv
 import debug
 
@@ -15,6 +12,9 @@ app = config.app
 db_session = config.db_session
 
 debug = debug.debug
+
+import locale
+debug('locale', str(locale.getdefaultlocale()))
 
 # initial users
 admin_users2 = []
@@ -167,6 +167,9 @@ def get_db_user(user_id=None,db_user_email=None,db_user_password=None):
 	else:
 		return False
 
+def get_register_code():
+	return models.RegisterCode.query.first()
+
 def get_schedule(week):
 	return models.ScheduleDate.query.filter_by(week=week).order_by(models.ScheduleDate.week).all()
 
@@ -195,26 +198,6 @@ def get_student_poll_prefix():
 def get_student_poll_question():
 	return models.StudentPollQuestion.query.order_by(models.StudentPollQuestion.id).all()
 
-def update_db_user(db_user_email, db_user_dict, phonenumber_vis=None):
-	try:
-		db_user = models.Users.query.filter_by(email=db_user_email).first()
-		models.UserInformation.query.filter_by(fk_user_id=db_user.id).update(db_user_dict)
-		if phonenumber_vis != None:
-			models.UserInformation.query.filter_by(fk_user_id=db_user.id).update({'phonenumber_vis': phonenumber_vis})
-		db_session.commit()
-		return True
-	except:
-		return False
-
-def update_db_pw(db_user_email, db_user_dict):
-	db_user = models.Users.query.filter_by(email=db_user_email).first()
-	if db_user_dict['new_password'] == db_user_dict['repeat_password'] and db_user_dict['current_password'] == db_user.password:
-		models.Users.query.filter_by(email=db_user_email).update({'password': db_user_dict['new_password']})
-		db_session.commit()
-		return True
-	else:
-		return False
-
 def register_user(db_user_dict):
 	try:
 		new_user = models.Users(db_user_dict['email'], config.bcrypt.generate_password_hash(db_user_dict['password']))
@@ -235,9 +218,25 @@ def save_student_poll(db_user_email, db_student_poll_dict):
 	except:
 		return False
 
-def get_register_code():
-	return models.RegisterCode.query.first()
+def update_db_user(db_user_email, db_user_dict, phonenumber_vis=None):
+	try:
+		db_user = models.Users.query.filter_by(email=db_user_email).first()
+		models.UserInformation.query.filter_by(fk_user_id=db_user.id).update(db_user_dict)
+		if phonenumber_vis != None:
+			models.UserInformation.query.filter_by(fk_user_id=db_user.id).update({'phonenumber_vis': phonenumber_vis})
+		db_session.commit()
+		return True
+	except:
+		return False
 
+def update_db_pw(db_user_email, db_user_dict):
+	db_user = models.Users.query.filter_by(email=db_user_email).first()
+	if db_user_dict['new_password'] == db_user_dict['repeat_password'] and db_user_dict['current_password'] == db_user.password:
+		models.Users.query.filter_by(email=db_user_email).update({'password': db_user_dict['new_password']})
+		db_session.commit()
+		return True
+	else:
+		return False
 
 
 ##############
@@ -269,8 +268,6 @@ def admin_get_all_student_poll_answers():
 
 def admin_get_user_poll_answer(user_id):
 	return models.StudentPollAnswer.query.filter_by(fk_user_id=user_id).all()
-
-
 
 def testing(user_id):
 	# poll_dialects = models.StudentPollDialect.query.all()
@@ -307,14 +304,80 @@ def testing(user_id):
 
 	# dsa['dialects'] = models.StudentPollDialect.query.all()
 
-	q = models.Users.query.filter_by(id=user_id).join(models.Users.user_information).join(models.Users.student_poll).all()
-	for a in q:
-		print a.user_information.firstname
-		for o in a.student_poll:
-			print o.id
+	userinfo_w_answers = models.Users.query.filter_by(id=user_id).join(models.Users.user_information).join(models.Users.student_poll).all()
+	# prefixes_w_questions = models.StudentPollPrefix.query.join(models.StudentPollPrefix.question).join(models.StudentPollQuestion.question_point).all()
+	dialects_w_points = models.StudentPollDialect.query.join(models.StudentPollDialect.dialect_point).all()
 
-	return 2
+	prefixes_w_questions_w_points = models.StudentPollPrefix.query.order_by(models.StudentPollPrefix.id).all()
 
+	# prefixes_w_questions_w_points_dict = {}
+	test = config.OrderedMultiDict()
+	for content in prefixes_w_questions_w_points:
+		# question_dict = {}
+		test_q = config.OrderedMultiDict()
+		for question in content.question:
+			# points_dict = {}
+			test_p = config.OrderedMultiDict()
+			for point in question.question_point:
+				# points_dict[point.fk_student_poll_dialect_id] = point.point
+				test_p.add(point.fk_student_poll_dialect_id, point.point)
+			# question_dict[question.question] = {'id': question.id, 'points': points_dict}
+			test_a = config.OrderedMultiDict()
+			test_a.add('question', question.question)
+			test_a.add('points', test_p)
+			test_q.add(question.id, test_a)
+		# prefixes_w_questions_w_points_dict[content.prefix] = question_dict
+		test.add(content.prefix, test_q)
+
+		### ISSUE
+		### THe order wont hold, it gets all messed up in the template
+
+	# print test
+	# print prefixes_w_questions_w_points_dict
+	
+	userinfo_w_answers_dict = {}
+	for userinfo in userinfo_w_answers:
+		tmp_list = []
+		for answer in userinfo.student_poll:
+			tmp_list.append(answer.fk_student_poll_question_id)
+		userinfo_w_answers_dict[userinfo.user_information.id] = tmp_list
+
+	print '############################'
+
+	# {Prefix_prefix: {Question_question: {Question_id: id, {Dialect_id: Point}}}}
+	# {'Har med sig': {'dattamaskin': {'id': 1, {9: 5}}, 'verktygslada': {'id': 2, {10: 2, 20: 5}}}}
+
+	# IS REPLACES BY prefixes_w_questions_w_points
+	# prefixes_w_questions_dict = {}
+	# for prefix in prefixes_w_questions:
+	# 	tmp_dict = {}
+	# 	for question in prefix.question:
+	# 		# tmp_dict[question.id] = question.question
+	# 		tmp_dialect_dict = {}
+	# 		for point in question.question_point:
+	# 		# 	tmp_dialect_dict[int(point.fk_student_poll_dialect_id)] = int(point.point)
+	# 		# tmp_dict[question.question] = {'id': int(question.id), 'points': tmp_dialect_dict}
+	# 			tmp_dialect_dict[point.fk_student_poll_dialect_id] = point.point
+	# 		tmp_dict[question.question] = {'id': question.id, 'points': tmp_dialect_dict}
+
+	# 	prefixes_w_questions_dict[prefix.prefix] = tmp_dict
+
+	# for i, con in prefixes_w_questions_dict.iteritems():
+	# 	print i
+	# 	for o, p in con.iteritems():
+	# 		print '-', o, ' -- id:', p['id'], ' -- points: ', p['points']
+	# 	print '!!!!!!!!!'
+
+	print '############################'
+
+	# dialects_w_points_dict = {}
+	# for dialect in dialects_w_points:
+	# 	dialects_w_points_dict[dialect.id] = dialect.dialect_point
+	# , 3: dialects_w_points_dict
+
+	# poll_dialects = models.StudentPollDialect.query.all()
+
+	return {1: userinfo_w_answers_dict, 2: test, 3: get_student_poll_dialects()}
 
 def admin_check(db_user_email):
 	# Check only role!
