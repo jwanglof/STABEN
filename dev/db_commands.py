@@ -16,6 +16,8 @@ debug = debug.debug
 import locale
 debug('locale', str(locale.getdefaultlocale()))
 
+import os
+
 # initial users
 admin_users2 = []
 admin_users2.append(models.Users('jwanglof@gmail.com', 'tmppass', 0))
@@ -82,7 +84,7 @@ def create_contacts():
 	return "Contacts added"
 
 def create_student_poll():
-	StudentPoll = read_csv.ReadStudentPollCsvFile('/home/johan/Git/STABEN/dev/studentpoll.csv')
+	StudentPoll = read_csv.ReadStudentPollCsvFile(os.getcwd() + '/studentpoll.csv')
 
 	# Add prefixes
 	for index, p in StudentPoll.get_prefixes().iteritems():
@@ -266,118 +268,67 @@ def admin_get_all_student_poll_answers():
 	asd = models.StudentPollAnswer.query.order_by(models.StudentPollAnswer.fk_user_id).all()
 	return asd
 
-def admin_get_user_poll_answer(user_id):
-	return models.StudentPollAnswer.query.filter_by(fk_user_id=user_id).all()
+def admin_calc_user_points(user_id):
+	points = models.StudentPollPoint.query.all()
 
-def testing(user_id):
-	# poll_dialects = models.StudentPollDialect.query.all()
-	# poll_questions = models.StudentPollQuestion.query.all()
-	# poll_prefixes = models.StudentPollPrefix.query.all()
-	# poll_points = models.StudentPollPoint.query.all()
+	questions_w_points = models.StudentPollQuestion.query.order_by(models.StudentPollQuestion.id).all()
 
-	# user_answer = models.StudentPollAnswer.query.filter_by(fk_user_id=user_id).first()
-	# user = get_db_user(user_id=user_id)
-	# return {general: {dialects: poll_dialects, questions: poll_questions, prefixes: poll_prefixes, points: poll_points}, user_specific: {user: user['user'], user_info: user['info'], answer: user_answer}}
+	# {Question_id: {Dialect_id: Point}}
+	bla = config.MultiDict()
+	for question in questions_w_points:
+		point_MD = config.MultiDict()
+		for point in question.question_point:
+			point_MD.add(point.fk_student_poll_dialect_id, point.point)
+		bla.add(question.id, point_MD)
 
-	''' NUMBER 1
+	# {Dialect_id: Total_points}
+	answers = models.StudentPollAnswer.query.filter_by(fk_user_id=user_id).order_by(models.StudentPollAnswer.fk_student_poll_question_id).all()
+	dialects_w_points = config.MultiDict()	
+	# Is the answers from ONLY user_id
+	for answer in answers:
+		for dialect_id, point in bla[answer.fk_student_poll_question_id].iteritems():
+			dialects_w_points.add(dialect_id, point)
+
+	"""
+	Add the missing dialect id(s) to dialects_w_points
+	"""
+	for i in range(1, len(get_student_poll_dialects())+1):
+		if not dialects_w_points.get(i):
+			dialects_w_points.add(i, 0)
+
 	dsa = {}
-	ooo = config.MultiDict()
+	for key, value in dialects_w_points.iteritems(multi=True):
+		if key in dsa:
+			dsa[key] = dsa[key]+value
+		else:
+			dsa[key] = value
 
-	poll_prefixes = models.StudentPollPrefix.query.order_by(models.StudentPollPrefix.id).all()
-	for p in poll_prefixes:
-		tmp = config.MultiDict()
-		qtmp = config.MultiDict()
+	return dsa
 
-		tmp.add('prefix', p.prefix)
-		# tmp.add('questions', models.StudentPollQuestion.query.filter_by(fk_student_poll_prefix_id=p.id).order_by(models.StudentPollQuestion.id).all())
-		for q in models.StudentPollQuestion.query.filter_by(fk_student_poll_prefix_id=p.id).order_by(models.StudentPollQuestion.id).all():
-			points = models.StudentPollPoint.query.filter_by(fk_student_poll_question_id=q.id).order_by(models.StudentPollPoint.id).all()
-			qtmp.add(q.fk_student_poll_dialect_id, {})
-
-		tmp.add('points', q)
-
-		ooo.add(p.id, tmp)'''
-		# dsa[p.id] = {'prefix': p.prefix, 'questions': models.StudentPollQuestion.query.filter_by(fk_student_poll_prefix_id=p.id).order_by(models.StudentPollQuestion.id).all()}
-
-	# dsa['user'] = get_db_user(user_id=user_id)
-	# dsa['user_answer'] = models.StudentPollAnswer.query.filter_by(fk_user_id=user_id).first()
-
-	# dsa['dialects'] = models.StudentPollDialect.query.all()
-
+def admin_get_user_poll_answer(user_id):
 	userinfo_w_answers = models.Users.query.filter_by(id=user_id).join(models.Users.user_information).join(models.Users.student_poll).all()
-	# prefixes_w_questions = models.StudentPollPrefix.query.join(models.StudentPollPrefix.question).join(models.StudentPollQuestion.question_point).all()
-	dialects_w_points = models.StudentPollDialect.query.join(models.StudentPollDialect.dialect_point).all()
-
 	prefixes_w_questions_w_points = models.StudentPollPrefix.query.order_by(models.StudentPollPrefix.id).all()
 
-	# prefixes_w_questions_w_points_dict = {}
-	test = config.OrderedMultiDict()
+	pref_w_ques_w_point_OMD = config.OrderedMultiDict()
 	for content in prefixes_w_questions_w_points:
-		# question_dict = {}
-		test_q = config.OrderedMultiDict()
+		questions_OMD = config.OrderedMultiDict()
 		for question in content.question:
-			# points_dict = {}
-			test_p = config.OrderedMultiDict()
+			dialect_id_w_points_OMD = config.OrderedMultiDict()
 			for point in question.question_point:
-				# points_dict[point.fk_student_poll_dialect_id] = point.point
-				test_p.add(point.fk_student_poll_dialect_id, point.point)
-			# question_dict[question.question] = {'id': question.id, 'points': points_dict}
-			test_a = config.OrderedMultiDict()
-			test_a.add('question', question.question)
-			test_a.add('points', test_p)
-			test_q.add(question.id, test_a)
-		# prefixes_w_questions_w_points_dict[content.prefix] = question_dict
-		test.add(content.prefix, test_q)
-
-		### ISSUE
-		### THe order wont hold, it gets all messed up in the template
-
-	# print test
-	# print prefixes_w_questions_w_points_dict
+				dialect_id_w_points_OMD.add(point.fk_student_poll_dialect_id, point.point)
+			inner_OMD = config.OrderedMultiDict()
+			inner_OMD.add('question', question.question)
+			inner_OMD.add('points', dialect_id_w_points_OMD)
+			questions_OMD.add(question.id, inner_OMD)
+		pref_w_ques_w_point_OMD.add(content.prefix, questions_OMD)
 	
-	userinfo_w_answers_dict = {}
+	userinfo_w_answers_MD = config.MultiDict()
 	for userinfo in userinfo_w_answers:
-		tmp_list = []
+		userinfo_w_answers_MD.add('userinfo', userinfo.user_information)
 		for answer in userinfo.student_poll:
-			tmp_list.append(answer.fk_student_poll_question_id)
-		userinfo_w_answers_dict[userinfo.user_information.id] = tmp_list
-
-	print '############################'
-
-	# {Prefix_prefix: {Question_question: {Question_id: id, {Dialect_id: Point}}}}
-	# {'Har med sig': {'dattamaskin': {'id': 1, {9: 5}}, 'verktygslada': {'id': 2, {10: 2, 20: 5}}}}
-
-	# IS REPLACES BY prefixes_w_questions_w_points
-	# prefixes_w_questions_dict = {}
-	# for prefix in prefixes_w_questions:
-	# 	tmp_dict = {}
-	# 	for question in prefix.question:
-	# 		# tmp_dict[question.id] = question.question
-	# 		tmp_dialect_dict = {}
-	# 		for point in question.question_point:
-	# 		# 	tmp_dialect_dict[int(point.fk_student_poll_dialect_id)] = int(point.point)
-	# 		# tmp_dict[question.question] = {'id': int(question.id), 'points': tmp_dialect_dict}
-	# 			tmp_dialect_dict[point.fk_student_poll_dialect_id] = point.point
-	# 		tmp_dict[question.question] = {'id': question.id, 'points': tmp_dialect_dict}
-
-	# 	prefixes_w_questions_dict[prefix.prefix] = tmp_dict
-
-	# for i, con in prefixes_w_questions_dict.iteritems():
-	# 	print i
-	# 	for o, p in con.iteritems():
-	# 		print '-', o, ' -- id:', p['id'], ' -- points: ', p['points']
-	# 	print '!!!!!!!!!'
-
-	print '############################'
-
-	# dialects_w_points_dict = {}
-	# for dialect in dialects_w_points:
-	# 	dialects_w_points_dict[dialect.id] = dialect.dialect_point
-	# , 3: dialects_w_points_dict
-
-	# poll_dialects = models.StudentPollDialect.query.all()
-
-	return {1: userinfo_w_answers_dict, 2: test, 3: get_student_poll_dialects()}
+			userinfo_w_answers_MD.add(answer.fk_student_poll_question_id, answer.fk_student_poll_question_id)
+	#, 4: admin_calc_user_points(user_id)
+	return {1: userinfo_w_answers_MD, 2: pref_w_ques_w_point_OMD}
 
 def admin_check(db_user_email):
 	# Check only role!
