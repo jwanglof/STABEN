@@ -286,7 +286,7 @@ class StudentPollPrefix(Base):
 	__tablename__ = 'student_poll_prefix'
 	id = db.Column(db.Integer, primary_key=True)
 	prefix = db.Column(db.String(100), index=True, unique=True)
-	question = db.relationship('StudentPollQuestion', backref='StudentPollPrefix')
+	question = db.relationship('StudentPollQuestion', backref='StudentPollPrefix', lazy='joined')
 
 	def __init__(self, id=None, prefix=None):
 		"""The constructor"""
@@ -303,7 +303,7 @@ class StudentPollQuestion(Base):
 	id = db.Column(db.Integer, primary_key=True)
 	fk_student_poll_prefix_id = db.Column(db.Integer, db.ForeignKey('student_poll_prefix.id'))
 	question = db.Column(db.String(100), index=True)
-	question_point = db.relationship('StudentPollPoint', backref='StudentPollQuestion')
+	question_point = db.relationship('StudentPollPoint', backref='StudentPollQuestion', lazy='joined')
 
 	def __init__(self, student_poll_prefix_id=None, question=None):
 		"""The constructor"""
