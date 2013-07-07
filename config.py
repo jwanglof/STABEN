@@ -9,7 +9,7 @@ from sqlalchemy.orm import relationship, backref, scoped_session, sessionmaker, 
 from sqlalchemy.ext.declarative import declarative_base
 
 # Need this to make ImmutableMultiDict's that can be inserted into the database
-from werkzeug.datastructures import ImmutableMultiDict, MultiDict
+from werkzeug.datastructures import ImmutableMultiDict, MultiDict, OrderedMultiDict
 
 dbhost = '127.0.0.1'
 dbuser = 'STABEN'
