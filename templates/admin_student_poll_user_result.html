@@ -1,51 +1,51 @@
 {% extends "template.html" %}
 {% block content %}
-
-{# NUMBER 1<div style='width: 200px; float: left; margin-top: 22px;'>
-{% for a, b in asd.iteritems() %}
-	<dt>{{ b['prefix'] }}</dt>
-	{% for c in b['questions'] %}
-		<dd>{{ c }}</dd>
-	{% endfor %}
-{% endfor %}
-</div>
-
-<div style='max-width: 1000px; overflow-x: scroll; overflow-y: hidden; border: 1px solid #c0c0c0; margin-left: 100px;'>
-<div style='width: 2500px;'>
-{% for a in asd['dialects'] %}
-	{{ a.dialect }}
-{% endfor %}
-</div>
-</div>#}
-
-
-{#<div style='width: 200px; float: left; border-right: 1px solid #000; margin-top: 22px;'>
-	{% for prefix in poll_prefixes %}
-		<dt>{{ prefix.prefix }}</dt>
-		{% for question in poll_questions %}
-			{% if question.fk_student_poll_prefix_id == prefix.id %}
-				<dd style='padding-bottom: 3px;'>
-					{{ question.question }}
-					{% for answer in poll_answer %}
-						{% if answer.fk_student_poll_question_id == question.id %}
-							{{ check_mark }}
-						{% endif %}
-					{% endfor %}
-				</dd>
-			{% endif %}
-		{% endfor %}
-	{% endfor %}
-</div>
-<div style='max-width: 1000px; overflow-x: scroll; overflow-y: hidden; border: 1px solid #c0c0c0'>
-	<div style='width: 2500px;'>
-		{% for dialect in poll_dialects %}
-			<span style='padding-right: 5px;'>{{ dialect.dialect }}</span>
-			{% for point in poll_points %}
-				{% if point.fk_student_poll_dialect_id == dialect.id %}
-					{{ point.point }}
-				{% endif %}
-			{% endfor %}
+<h1>{{ user['userinfo'].firstname }} {{ user['userinfo'].lastname }}</h1>
+<div style='width: 1400px; height: 800px; margin-top: 22px; overflow-x: scroll; overflow-y: scroll;'>
+	<div style='width: 250%; margin-left: 230px'>
+		{% for dialect in dialects %}
+			<div style='width: 100px; float: left; border-left: 1px solid #000; text-align: center'>
+				{{ dialect.dialect }}
+			</div>
 		{% endfor %}
 	</div>
-</div>#}
+
+	<div class='admin_student_poll_show_hide'>
+		Press to collapse!
+	</div>
+	<div class='admin_student_poll_q_w_a_content'>
+		{% for i, content in alot_of_info.iteritems() %}
+			<h4>{{ i }}</h4>
+			<div style='width: 250%'>
+			{% for question_id, inner_content in content.iteritems() %}
+				<div style='float: left; width: 230px; border-bottom: 1px solid #000; {% if user[question_id] %} font-weight: bold; {% endif %}'>
+					{{ inner_content['question'][:28] }}
+				</div>
+				{% for dialect_index in range(1, number_of_dialects+1) %}
+					<div style='width: 100px; float: left; border-left: 1px solid #000; border-bottom: 1px solid #000; text-align: center'>
+					{% if inner_content['points'][dialect_index] %}
+						{{ inner_content['points'][dialect_index] }}
+					{% else %}
+						&nbsp;
+					{% endif %}
+					</div>
+				{% endfor %}
+				
+			{% endfor %}
+			</div>
+		{% endfor %}
+	</div>
+	<div style='clear: both'></div>
+
+	<div style='width: 250%'>
+	<div style='float: left; width: 230px'>
+		<h3>Totalt</h3>
+	</div>
+	{% for dialect_id, total_point in user_points.iteritems() %}
+		<div style='width: 100px; float: left; border-left: 1px solid #000; border-bottom: 1px solid #000; text-align: center'>
+			<h3>{{ total_point }}</h3>
+		</div>
+	{% endfor %}
+	</div>
+</div>
 {% endblock %}
