@@ -20,6 +20,18 @@ nollan = 'minus'
 
 # DEV OPTIONS
 # NEEDS TO BE REMOVED IN PRODUCTION MODE
+@app.route('/db_all')
+def db_all():
+	try:
+		db_create()
+		db_school()
+		db_contacts()
+		db_code()
+		db_student_poll()
+		return 'SUUUUUUUUCCESS!!!!!'
+	except:
+		return 'NOOOOOO SUUUUUUUUCCESS!!!!!!!'
+
 @app.route('/db_create')
 def db_create():
 	return db_commands.create_db()
@@ -36,7 +48,7 @@ def db_contacts():
 def db_code():
 	return db_commands.create_secret_code()
 @app.route('/db_student_poll')
-def db_prefixes():
+def db_student_poll():
 	return db_commands.create_student_poll()
 
 @app.route('/')
@@ -279,30 +291,15 @@ def admin_student_poll_save(command):
 def admin_student_poll_result():
 	if db_commands.admin_check(session['email']) is 0:
 		users = db_commands.admin_get_all_users_w_poll_done()
-		poll_answers = db_commands.admin_get_all_student_poll_answers()
-		poll_prefixes = db_commands.get_student_poll_prefix()
-		poll_questions = db_commands.get_student_poll_question()
-		poll_dialects = db_commands.get_student_poll_dialects()
-		return render('admin_student_poll_result.html', users_info=users, poll_answers=poll_answers, poll_questions=poll_questions, poll_prefixes=poll_prefixes, poll_dialects=poll_dialects)
+		return render('admin_student_poll_result.html', users_info=users)
 	else:
 		return render('admin_fail.html')
 
 @app.route('/admin_show_student_poll_result/<user_id>')
 def admin_show_student_poll_result(user_id):
 	if db_commands.admin_check(session['email']) is 0:
-		user = db_commands.get_db_user(user_id=user_id)
-
-		poll_prefixes = db_commands.get_student_poll_prefix()
-		poll_questions = db_commands.get_student_poll_question()
-		poll_dialects = db_commands.get_student_poll_dialects()
-		poll_points = db_commands.get_student_poll_points()
-
-		poll_answer = db_commands.admin_get_user_poll_answer(user_id)
-
-		asd = db_commands.testing(user_id)
-		# print asd['dialects'][1]
-		# poll_prefixes=poll_prefixes, poll_questions=poll_questions, poll_dialects=poll_dialects, poll_answer=poll_answer, poll_points=poll_points, check_mark=u"\u2713", 
-		return render('admin_student_poll_user_result.html', asd=asd)
+		alot_of_info = db_commands.admin_get_user_poll_answer(user_id)
+		return render('admin_student_poll_user_result.html', user=alot_of_info[1], alot_of_info=alot_of_info[2], dialects=db_commands.get_student_poll_dialects(), number_of_dialects=len(db_commands.get_student_poll_dialects()), user_points=db_commands.admin_calc_user_points(user_id))
 	else:
 		return render('admin_fail.html')
 
