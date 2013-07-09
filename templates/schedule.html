@@ -43,7 +43,8 @@
                             {% else %}
                         <li>
                     {% endif %}
-                <a href="#{{ schedule_tab.href_div_id }}" data-toggle="tab">{{ schedule_tab.weekday }} {{ schedule_tab.date }}</a>
+                <a href="#{{ schedule_tab.href_div_id }}" data-toggle="tab">
+                    {{ schedule_tab.weekday }} {{ schedule_tab.date }}</a>
                 </li>
                 {% endfor %}
             </ul>
@@ -60,12 +61,13 @@
                         <p>
                             <b>Tid:</b> {{ schedule_info.time }}. <b>Plats: </b>{{ schedule_info.place }}.</p>
                         <p>
-                            {{ schedule_info.activity_info_day }}
+                            {{ schedule_info.activity_info_day|safe }}
                         </p>
                         <p>
-                            {{ schedule_info.activity_info_evening }}
+                            {{ schedule_info.activity_info_evening|safe }}
                         </p>
-                        <img src="{{ schedule_info.img_url }}">
+
+                        <img src="../static/img/schedule/{{ schedule_info.img_url }}">
                     </div>
                 {% endfor %}
             </div>
