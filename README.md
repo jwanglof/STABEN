@@ -70,6 +70,7 @@ TODO
 	<dd>[ ] (NEW BRANCH) get_user_information(role) - hämtar alla users som har role</dd>
 	<dd>[ ] (NEW BRANCH) En resultat sida för nolleenkäten, där man ska kunna se statistik över vilka som är med (klass, vad dom önskar göra osv) och kunna flytta nollor kors och tvärs till andra grupper</dd>
 	<dd>[ ] (NEW BRANCH) Fixa alla DB tabeller</dd>
+	<dd>[ ] (NEW BRANCH) Fixa så att schedule läses in från fil</dd>
 	<dd>[ ] Lägg till kommentarer lite här och var</dd>
 	<dd>[/] Fråga Widerberg om en ny startsidebild</dd>
 	<dd>[ ] Kolla hur deploy av hemsidan fungerar i Flask!</dd>
