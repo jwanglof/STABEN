@@ -290,8 +290,10 @@ def admin_student_poll_save(command):
 @app.route('/admin_student_poll_result')
 def admin_student_poll_result():
 	if db_commands.admin_check(session['email']) is 0:
-		users = db_commands.admin_get_all_users_w_poll_done()
-		return render('admin_student_poll_result.html', users_info=users)
+		for i in db_commands.admin_get_all_users_w_poll_done():
+			db_commands.admin_calc_user_points(i.id, True)
+
+		return render('admin_student_poll_result.html', users_info=db_commands.admin_get_all_users_w_poll_done(), dialects=db_commands.get_student_poll_dialects())
 	else:
 		return render('admin_fail.html')
 
