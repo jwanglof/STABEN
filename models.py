@@ -258,6 +258,7 @@ class StudentPollDialect(Base):
 	dialect = db.Column(db.String(100), index=True, unique=True)
 	dialect_point = db.relationship('StudentPollPoint', backref='StudentPollDialect')
 
+
 	def __init__(self, id=None, dialect=None):
 		"""The constructor"""
 		self.id = id
@@ -368,84 +369,8 @@ class UserInformation(Base):
 	presentation = db.Column(db.UnicodeText())
 	login_count = db.Column(db.Integer(), default=0)
 	poll_done = db.Column(db.SmallInteger(), default=0)
+	fk_student_dialect = db.Column(db.Integer, db.ForeignKey('student_poll_dialect.id'))
 
 	def __init__(self, user_id=None):
 		"""The constructor"""
 		self.fk_user_id = user_id
-
-'''class StudentPollResult(Base):
-	"""Student poll result-table
-
-	Contains the results the student had on the student poll. Connected with Users with fk_user_id
-	"""
-	
-	__tablename__ = 'student_poll'
-	id = db.Column(db.Integer, primary_key=True)
-	fk_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-	# dattamaskin(db.SmallInteger())
-	# Will contain each answer for fk_user_id
-
-	def __init__(self):
-		"""The constructor"""
-		return
-
-	def __repr__(self):
-		"""Get values from the table in an own-formatted output"""
-		return;
-
-class StudentPollQuestions(Base):
-	"""Student poll questions-table
-
-	Contains the questions for the student poll
-	"""
-	
-	__tablename__ = 'student_poll_questions'
-	id = db.Column(db.Integer, primary_key=True)
-	# group_name()
-	# real_question(String)
-	# dattamaskin(db.Integer)
-
-	def __init__(self):
-		"""The constructor"""
-		return
-
-	def __repr__(self):
-		"""Get values from the table in an own-formatted output"""
-		return;
-
-class StudentRights(Base):
-	"""Student rights-table
-
-	Contains which student group the user is apart of. Connected with Users with fk_user_id and StudentGroups with fk_student_group
-	"""
-	
-	__tablename__ = 'student_rights'
-	fk_user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
-	fk_student_group = db.Column(db.Integer, db.ForeignKey('studendgroups.id'))
-
-	def __init__(self):
-		"""The constructor"""
-		return
-
-	def __repr__(self):
-		"""Get values from the table in an own-formatted output"""
-		return;
-	
-class StudentGroups(db.Model):
-	"""Student groups-table
-
-	Contains what groups a user can be apart of
-	"""
-	
-	__tablename__ = 'student_groups'
-	id = db.Column(db.Integer, primary_key=True)
-	name = db.Column(db.String(100), index=True, unique=True)
-
-	def __init__(self):
-		"""The constructor"""
-		return
-
-	def __repr__(self):
-		"""Get values from the table in an own-formatted output"""
-		return;
-'''
