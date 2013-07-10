@@ -3,7 +3,7 @@
 
 import models
 import config
-
+import math
 import read_csv
 import debug
 
@@ -84,7 +84,7 @@ def create_contacts():
 	return "Contacts added"
 
 def create_student_poll():
-	StudentPoll = read_csv.ReadStudentPollCsvFile(os.getcwd() + '/studentpoll.csv')
+	StudentPoll = read_csv.ReadStudentPollCsvFile(os.getcwd() + '/dev/studentpoll.csv')
 
 	# Add prefixes
 	for index, p in StudentPoll.get_prefixes().iteritems():
@@ -268,7 +268,7 @@ def admin_get_all_student_poll_answers():
 	asd = models.StudentPollAnswer.query.order_by(models.StudentPollAnswer.fk_user_id).all()
 	return asd
 
-def admin_calc_user_points(user_id):
+def admin_calc_user_points(user_id, order=False):
 	points = models.StudentPollPoint.query.all()
 
 	questions_w_points = models.StudentPollQuestion.query.order_by(models.StudentPollQuestion.id).all()
@@ -296,14 +296,22 @@ def admin_calc_user_points(user_id):
 		if not dialects_w_points.get(i):
 			dialects_w_points.add(i, 0)
 
-	dsa = {}
+	dialect_w_total_points_md = config.MultiDict()
 	for key, value in dialects_w_points.iteritems(multi=True):
-		if key in dsa:
-			dsa[key] = dsa[key]+value
+		if dialect_w_total_points_md.has_key(key):
+			dialect_w_total_points_md[key] = dialect_w_total_points_md[key]+value
 		else:
-			dsa[key] = value
+			dialect_w_total_points_md.add(key, value)
 
-	return dsa
+	"""
+	If order is True then it will return a dict with the highest student group at first place
+	"""
+	if order is True:
+		sort_multidict(dialect_w_total_points_md)
+
+	# print dialect_w_total_points_omd
+
+	return dialect_w_total_points_md
 
 def admin_get_user_poll_answer(user_id):
 	userinfo_w_answers = models.Users.query.filter_by(id=user_id).join(models.Users.user_information).join(models.Users.student_poll).all()
@@ -340,3 +348,12 @@ def admin_get_all_users():
 
 def admin_get_all_users_w_poll_done():
 	return models.UserInformation.query.filter_by(poll_done=1).all()
+
+def sort_multidict(m_dict):
+	tmp = config.OrderedMultiDict()
+	for key, value in m_dict.iteritems():
+		if len(tmp) is 0:
+			tmp.add(key, value)
+		else:
+			pass
+	return tmp
