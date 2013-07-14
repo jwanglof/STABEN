@@ -235,13 +235,13 @@ class RegisterCode(db.Model):
 		"""Get values from the table in an own-formatted output"""
 		return '%s' % (self.code)
 
-class ScheduleDate(db.Model):
+class Schedule(db.Model):
 	"""Schedule date-table
 
 	Contains which weekday and what date a scheduled event is on
 	"""
 	
-	__tablename__ = 'schedule_date'
+	__tablename__ = 'schedule'
 	id = db.Column(db.Integer, primary_key=True)
 	week = db.Column(db.Integer, index=True)
 	date = db.Column(db.String(6), index=True, unique=True)

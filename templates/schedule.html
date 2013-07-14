@@ -1,7 +1,7 @@
 {% extends "template.html" %}
 {% block active_schedule %}active{% endblock %}
 {% block content %}
-    <h1>Här kan <span class="nollanfont">minus</span> läsa sitt schema över nolle-p.</h1>
+
     <br>
     <div class="span8">
         <h3 style="display: inline">Ange vecka </h3>
@@ -59,15 +59,19 @@
                     {% endif %}"
                          id="{{ schedule_info.href_div_id }}">
                         <p>
-                            <b>Tid:</b> {{ schedule_info.time }}. <b>Plats: </b>{{ schedule_info.place }}.</p>
+                            <b>Tid:</b> {{ schedule_info.time }}. <b>Plats: </b>{{ schedule_info.place|safe }}.</p>
                         <p>
+                            {% if schedule_info.href_div_id == '2c' %}
+                                <img src="../static/img/schedule/MHLOGGA.png" width="273px" height="90px" alt="Hoben-loggan">
+                                <br><br>
+                            {% endif %}
                             {{ schedule_info.activity_info_day|safe }}
                         </p>
                         <p>
                             {{ schedule_info.activity_info_evening|safe }}
                         </p>
 
-                        <img src="../static/img/schedule/{{ schedule_info.img_url }}">
+                        <img src="../static/img/schedule/{{ schedule_info.img_url }}.png">
                     </div>
                 {% endfor %}
             </div>

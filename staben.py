@@ -57,8 +57,8 @@ def prices():
 @app.route('/schedule')
 @app.route('/schedule/<show_week>')
 def schedule(show_week='1'):
-	schedule_date = db_commands.get_schedule(show_week)
-	return render('schedule.html', week=show_week, schedule=schedule_date)
+	schedule = db_commands.get_schedule(show_week)
+	return render('schedule.html', week=show_week, schedule=schedule)
 
 @app.route('/student_poll')
 def student_poll():

@@ -175,7 +175,7 @@ def get_contacts(role):
 	return contacts
 
 def get_schedule(week):
-	schedule = model.ScheduleDate.query.filter_by(week=week).order_by(model.ScheduleDate.week).all()
+	schedule = model.Schedule.query.filter_by(week=week).order_by(model.Schedule.week).all()
 	return schedule
 
 def get_register_code():
