@@ -290,10 +290,10 @@ def admin_student_poll_save(command):
 @app.route('/admin_student_poll_result')
 def admin_student_poll_result():
 	if db_commands.admin_check(session['email']) is 0:
-		for i in db_commands.admin_get_all_users_w_poll_done():
-			db_commands.admin_calc_user_points(i.id, True)
-
-		return render('admin_student_poll_result.html', users_info=db_commands.admin_get_all_users_w_poll_done(), dialects=db_commands.get_student_poll_dialects())
+		return render('admin_student_poll_result.html', \
+			users_info=db_commands.admin_get_all_users_w_poll_done(), \
+			dialects=db_commands.get_student_poll_dialects(), \
+			user_w_points=db_commands.admin_get_top_three_groups())
 	else:
 		return render('admin_fail.html')
 
@@ -301,9 +301,21 @@ def admin_student_poll_result():
 def admin_show_student_poll_result(user_id):
 	if db_commands.admin_check(session['email']) is 0:
 		alot_of_info = db_commands.admin_get_user_poll_answer(user_id)
-		return render('admin_student_poll_user_result.html', user=alot_of_info[1], alot_of_info=alot_of_info[2], dialects=db_commands.get_student_poll_dialects(), number_of_dialects=len(db_commands.get_student_poll_dialects()), user_points=db_commands.admin_calc_user_points(user_id))
+		return render('admin_student_poll_user_result.html', \
+			user=alot_of_info[1], \
+			alot_of_info=alot_of_info[2], \
+			dialects=db_commands.get_student_poll_dialects(), \
+			number_of_dialects=len(db_commands.get_student_poll_dialects()), \
+			user_points=db_commands.admin_calc_user_points(user_id))
 	else:
 		return render('admin_fail.html')
+
+@app.route('/admin_insert_user_to_group', methods=['POST'])
+def admin_insert_user_to_group():
+	if request.method == 'POST':
+		db_commands.admin_insert_user_to_group()
+		flash(u'ALLA ANVÄNDARE HAR EN EGEN GRUPP. WOOOOOOHOOOOOOOOOO!!')
+		return redirect(url_for('admin_student_poll'))
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):

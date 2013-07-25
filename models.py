@@ -256,8 +256,8 @@ class StudentPollDialect(Base):
 	__tablename__ = 'student_poll_dialect'
 	id = db.Column(db.Integer, primary_key=True)
 	dialect = db.Column(db.String(100), index=True, unique=True)
-	dialect_point = db.relationship('StudentPollPoint', backref='StudentPollDialect')
-
+	r_student_poll_point = db.relationship('StudentPollPoint', backref='StudentPollDialect')
+	r_student_poll_assigned_group = db.relationship('StudentPollAssignedGroups', backref='StudentPollDialect')
 
 	def __init__(self, id=None, dialect=None):
 		"""The constructor"""
@@ -341,6 +341,7 @@ class Users(Base):
 	role = db.Column(db.SmallInteger(), default=ROLE_USER)
 	user_information = db.relationship('UserInformation', backref='Users', uselist=False)
 	student_poll = db.relationship('StudentPollAnswer', backref='Users', lazy='dynamic')
+	r_student_poll_assigned_group = db.relationship('StudentPollAssignedGroups', backref='Users')
 
 	def __init__(self, email=None, password=None, role=ROLE_USER):
 		"""The constructor"""
@@ -374,3 +375,10 @@ class UserInformation(Base):
 	def __init__(self, user_id=None):
 		"""The constructor"""
 		self.fk_user_id = user_id
+
+class StudentPollAssignedGroups(Base):
+	__tablename__ = 'student_poll_assigned_groups'
+	id = db.Column(db.Integer(), primary_key=True)
+	fk_student_poll_dialect_id = db.Column(db.Integer, db.ForeignKey('student_poll_dialect.id'))
+	fk_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+	position = db.Column(db.Integer)

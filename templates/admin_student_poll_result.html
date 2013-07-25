@@ -15,18 +15,35 @@
 	{% endfor %}
 </div>
 <hr />
+Choose your search criteria:
+<form method='get' action='#'>
+	<input type='radio' name='' value='' /> Groups with < 5 students
+	<input type='radio' name='' value='' /> Groups with > 5 students
+	<input type='radio' name='' value='' /> All
+</form>
+<div class='student_poll'>
+	<div class='percent_width dialect_margin'>
+		{% for dialect in dialects %}
+			<div class='dialect_dialect'>
+				{{ dialect.dialect }}
+			</div>
+		{% endfor %}
+	</div>
 
-	Choose your search criteria:
-	<form method='get' action='#'>
-		<input type='radio' name='' value='' /> Groups with < 5 students
-		<input type='radio' name='' value='' /> Groups with > 5 students
-		<input type='radio' name='' value='' /> All
-	</form>
-<div class='dialects' style='width: 1400px; overflow-x: scroll; overflow-y: scroll;'>	
-	<div style='width: 145%'>
-	{% for dialect in dialects %}
-		{{ dialect.dialect }}
-	{% endfor %}
+	<div style='clear: both'></div>
+
+	<div class='percent_width'>
+		{% for user in user_w_points %}
+			<span style='float: left; display: block; width: 230px;'>{{ user_w_points[user]['user_realname'] }}</span>
+			{% for dialect_id, user_point in user_w_points[user]['user_points'].iteritems() %}
+				{% if user_w_points[user]['top_score'][dialect_id] %}
+					<span class='dialect_dialect' style='background-color: {{ user_w_points[user]['top_score_colors'][dialect_id] }}'>{{ user_point }}</span>
+				{% else %}
+					<span class='dialect_dialect'>{{ user_point }}</span>
+				{% endif %}
+			{% endfor %}
+			<br />
+		{% endfor %}
 	</div>
 </div>
 {% endblock %}

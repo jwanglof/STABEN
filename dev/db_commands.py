@@ -296,6 +296,7 @@ def admin_calc_user_points(user_id, order=False):
 		if not dialects_w_points.get(i):
 			dialects_w_points.add(i, 0)
 
+	test_list_w_tuples = []
 	dialect_w_total_points_md = config.MultiDict()
 	for key, value in dialects_w_points.iteritems(multi=True):
 		if dialect_w_total_points_md.has_key(key):
@@ -303,13 +304,12 @@ def admin_calc_user_points(user_id, order=False):
 		else:
 			dialect_w_total_points_md.add(key, value)
 
+
 	"""
 	If order is True then it will return a dict with the highest student group at first place
 	"""
 	if order is True:
-		sort_multidict(dialect_w_total_points_md)
-
-	# print dialect_w_total_points_omd
+		dialect_w_total_points_md = sort_dict(dialect_w_total_points_md.to_dict())
 
 	return dialect_w_total_points_md
 
@@ -349,11 +349,70 @@ def admin_get_all_users():
 def admin_get_all_users_w_poll_done():
 	return models.UserInformation.query.filter_by(poll_done=1).all()
 
-def sort_multidict(m_dict):
-	tmp = config.OrderedMultiDict()
-	for key, value in m_dict.iteritems():
-		if len(tmp) is 0:
-			tmp.add(key, value)
-		else:
-			pass
-	return tmp
+def admin_insert_user_to_group():
+	'''
+		MultiDict([(DialectID, {UserID: Position})])
+		e.g.:
+		MultiDict([(1L, {99: 1}, (12L, {99: 3}), (23L, {99: 2})])
+	'''
+
+	dialect_md = config.MultiDict()
+	rest_list = []
+	for user_id, content in admin_get_top_three_groups().iteritems():
+		for i, dialect_id in enumerate(content['top_score']):
+			if len(dialect_md.getlist(dialect_id)) < 6:
+				dialect_md.add(dialect_id, {user_id: i+1})
+			else:
+				rest_list.append(user_id)
+
+	print dialect_md
+	print rest_list
+
+def admin_get_top_three_groups():
+	bla = {}
+	for i in admin_get_all_users_w_poll_done():
+		tmp = {}
+		dialect_w_total_points = config.OrderedMultiDict()
+		dialect_w_total_points_colors = config.OrderedMultiDict()
+		for dialect_id, total_point in admin_calc_user_points(i.id, True).iteritems():
+			if len(dialect_w_total_points) < 3:
+				dialect_w_total_points.add(dialect_id, total_point)
+
+				if len(dialect_w_total_points) is 1:
+					dialect_w_total_points_colors.add(dialect_id, '#00ff00')
+				elif len(dialect_w_total_points) is 2:
+					dialect_w_total_points_colors.add(dialect_id, '#ffff00')
+				elif len(dialect_w_total_points) is 3:
+					dialect_w_total_points_colors.add(dialect_id, '#ff0000')
+			else:
+				break
+
+		user = get_db_user(user_id=i.id)['info']
+
+		tmp['top_score'] = dialect_w_total_points
+		tmp['top_score_colors'] = dialect_w_total_points_colors
+		tmp['user_points'] = admin_calc_user_points(i.id)
+		tmp['user_realname'] = user.firstname + ' ' + user.lastname
+		### CHANGE FIRSTNAME LASTNAME TO ID INSTEAD!!!!!!!!!
+		bla[i.id] = tmp
+	return bla
+
+def sort_dict(m_dict):
+	"""
+	Add keys and values to a tuple that is within a list so it is possible to sort
+	on the value (which is x[1] in sorted())
+	"""
+	tmp_list = [(key, value) for key, value in m_dict.iteritems()]
+	tmp_list = sorted(tmp_list, key=lambda x: x[1])
+
+
+	"""
+	Loop the sorted values into an OrderedMultiDict().
+	This is so the function return a MultiDict() and not a list with tuples
+	"""
+	tmp_list.reverse()	
+	new_omd = config.OrderedMultiDict()
+	for a, b in tmp_list:
+		new_omd.add(a, b)
+
+	return new_omd
