@@ -21,7 +21,7 @@ dbname = 'STABEN'
 # SQLALCHEMY_DATABASE_URI = 'mysql://' + dbuser + ':' + dbpass + '@' + dbhost + '/' +dbname
 # SQLALCHEMY_MIGRATE_REPO = 'db_repo'
 
-engine = create_engine('mysql://' + dbuser + ':' + dbpass + '@' + dbhost + '/' +dbname, convert_unicode=True)
+engine = create_engine('mysql://' + dbuser + ':' + dbpass + '@' + dbhost + '/' + dbname, convert_unicode=True)
 db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
 Base = declarative_base()
 Base.query = db_session.query_property()
@@ -30,17 +30,18 @@ DEBUG = True
 SECRET_KEY = ':\xbe\xef\xc9\xbf\xf6\x86\x8d\xeb\x90\xa5!+\x97i\xa38\xe0\x98\x7f\xec\xca*\x8c'
 USERNAME = 'admin'
 PASSWORD = 'default'
+HOST = '0.0.0.0'
 
 UPLOAD_FOLDER = 'upload'
 ALLOWED_EXTENSIONS = set(['png','jpg','jpeg'])
 
 app = Flask(__name__)
 app.secret_key = SECRET_KEY
+app.debug = DEBUG
 # app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 bcrypt = Bcrypt(app)
 db = SQLAlchemy(app)
-
 user_roles = [u'Admin', u'Överfadder', u'Fadder', u'Klassföreståndare', u'Användare']
 
 # TODO
