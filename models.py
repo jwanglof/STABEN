@@ -166,10 +166,6 @@ class RegisterCode(Base):
 		"""The constructor"""
 		self.code = code
 
-	def __repr__(self):
-		"""Get values from the table in an own-formatted output"""
-		return '%s' % (self.code)
-
 class ScheduleDate(Base):
 	"""Schedule date-table
 
@@ -362,7 +358,7 @@ class UserInformation(Base):
 	lastname = db.Column(db.String(100), index=True, default='')
 	phonenumber = db.Column(db.String(15), index=True)
 	phonenumber_vis = db.Column(db.SmallInteger, index=True, default=0)
-	age = db.Column(db.SmallInteger(), index=True)
+	age = db.Column(db.SmallInteger(), index=True, default=0)
 	facebook_url = db.Column(db.String(100), index=True)
 	school_class = db.Column(db.SmallInteger(), index=True, default=1)
 	current_city = db.Column(db.String(100), index=True)
@@ -381,4 +377,10 @@ class StudentPollAssignedGroups(Base):
 	id = db.Column(db.Integer(), primary_key=True)
 	fk_student_poll_dialect_id = db.Column(db.Integer, db.ForeignKey('student_poll_dialect.id'))
 	fk_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-	position = db.Column(db.Integer)
+	position = db.Column(db.Integer())
+
+	def __init__(self, fk_student_poll_dialect_id=None, fk_user_id=None, position=None):
+		"""The constructor"""
+		self.fk_student_poll_dialect_id = fk_student_poll_dialect_id
+		self.fk_user_id = fk_user_id
+		self.position = position
