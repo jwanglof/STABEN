@@ -1,20 +1,21 @@
 {% extends "template.html" %}
 {% block content %}
 <h1>Nolleenkät</h1>
-<h4>Observera! Du kan bara fylla i denna en gang. Om du vill andra nogra svar moste du gora detta under forsta dagen i nolle-p!</h4>
+<h4>Observera! Du kan bara fylla i denna en gång. Om du vill ändra något svar måste du göra detta första dagen under nolle-p!</h4>
 <form method='post' action='{{ url_for('profile_save_student_poll', user_email=session['email']) }}' class='stabForm' id='student_poll_form'>
-	<dl>
 	{% for prefix in student_poll_prefixes %}
-		<dt>{{ prefix.prefix }}</dt>
-		{% for question in student_poll_questions %}
-			{% if question.fk_student_poll_prefix_id == prefix.id %}
-				<dd>
-					<input type='checkbox' name='{{ question.id }}' value='{{ question.id }}' {% if student_poll_user_answers.has_key(question.id) %}checked{% endif %} {% if user_poll_done == 1 %}disabled{% endif %} \> {{ question.question }}
-				</dd>
-			{% endif %}
-		{% endfor %}
+		<fieldset>
+			<legend>{{ prefix.prefix }}</legend>
+			{% for question in student_poll_questions %}
+				{% if question.fk_student_poll_prefix_id == prefix.id %}
+					<input type='checkbox' name='{{ question.id }}' id='{{ question.id }}' value='{{ question.id }}' {% if student_poll_user_answers.has_key(question.id) %}checked{% endif %} {% if user_poll_done == 1 %}disabled{% endif %} \>
+					<label for='{{ question.id }}'>{{ question.question }}</label>
+					<br />
+				{% endif %}
+			{% endfor %}
+		</fieldset>
 	{% endfor %}
-	</dl>
+	<h4>Observera! Du kan bara fylla i denna en gång. Om du vill ändra något svar måste du göra detta första dagen under nolle-p!</h4>
 	<button type="submit" class="btn btn-primary" {% if user_poll_done == 1 %}disabled{% endif %}>Spara</button>
 </form>
 {% endblock %}
