@@ -35,6 +35,9 @@ def db_all():
 @app.route('/db_create')
 def db_create():
 	return db_commands.create_db()
+@app.route('/db_delete')
+def db_delete():
+	return db_commands.delete_db()
 @app.route('/db_admins')
 def db_admins():
 	return db_commands.create_admin_users()
@@ -108,10 +111,7 @@ def signout():
 @app.route('/register', methods=['POST', 'GET'])
 def register():
 	if request.method == 'POST':
-		regCode = request.form['regCode']
-		code = db_commands.get_register_code()
-
-		if request.form['email'] != '' and str(regCode) == str(code):
+		if request.form['email'] != '' and str(request.form['regCode']) == str(db_commands.get_register_code().code):
 			debug('register', 'email och code funkar')
 			if request.form['password'] == request.form['rep_password']:
 				debug('register', 'Passwords are the same')
@@ -126,12 +126,14 @@ def register():
 						debug('register', 'Error, could not get user')
 						return redirect(url_for('register'))
 				else:
-					debug('register', 'Error, could not register user')	
+					debug('register', 'Error, could not register user')
 					return redirect(url_for('register'))
 			else:
+				debug('register', 'Error, the password did not match')
 				flash(u'Du måste ange samma lösenord i båda rutorna.')
 				return redirect(url_for('register'))
 		else:
+			debug('register', 'Error, the user did not type his email and register code')
 			flash(u'Du måste ange din e-mail och registreringskod!')
 			return redirect(url_for('register'))
 	else:
@@ -216,15 +218,20 @@ def profile_student_poll(user_email):
 @app.route('/profile/<user_email>/save/student_poll/', methods=['POST'])
 def profile_save_student_poll(user_email):
 	if session and user_email == session['email']:
-		if db_commands.update_db_user(user_email, config.ImmutableMultiDict([('poll_done', u'1')])):
-			if db_commands.save_student_poll(user_email, request.form):
-				return redirect(url_for('profile_student_poll', user_email=user_email))
+		# Check if the user already have done the student poll
+		# Added this check so that no body tries to save his poll more than once
+		if db_commands.get_db_user(db_user_email=session['email'])['info'].poll_done == 0:
+			if db_commands.update_db_user(user_email, config.ImmutableMultiDict([('poll_done', u'1')])):
+				if db_commands.save_student_poll(user_email, request.form):
+					return redirect(url_for('profile_student_poll', user_email=user_email))
+				else:
+					debug('profile_save_student_poll', 'Could not save the student poll')
+					return redirect(url_for('profile_student_poll', user_email=user_email))
 			else:
-				print 'Could not save the student poll'
+				debug('profile_save_student_poll', 'Could not update poll_done on user')
 				return redirect(url_for('profile_student_poll', user_email=user_email))
 		else:
-			print '### Could not update poll_done on user'
-			return redirect(url_for('profile_student_poll', user_email=user_email))
+			return redirect(url_for('profile_student_poll'))
 	else:
 		return render('login.html', login=False)
 
@@ -322,5 +329,4 @@ def shutdown_session(exception=None):
 	config.db_session.remove()
 
 if __name__ == '__main__':
-	app.debug = True
-	app.run()
+	app.run(host=config.HOST, debug=config.DEBUG)
