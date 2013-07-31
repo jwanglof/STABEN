@@ -175,7 +175,6 @@ def profile_save(user_email):
 		phonenumber_vis = 0
 		if 'phonenumber_vis' in request.form:
 			phonenumber_vis = 1
-		print request.form
 		db_commands.update_db_user(user_email, request.form, phonenumber_vis)
 		return redirect(url_for('profile', user_email=user_email))
 	else:
