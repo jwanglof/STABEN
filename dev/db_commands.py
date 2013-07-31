@@ -50,8 +50,12 @@ schedule_date.append(models.ScheduleDate('1', '20/8', 'Tisdag', '1a', '../static
 
 # Should check if the DB is created successfully or not!
 def create_db():
-	config.Base.metadata.create_all(bind=config.engine)
+	config.Base.metadata.create_all(bind=config.engine, checkfirst=True)
 	return "DB creation done"
+
+def delete_db():
+	config.Base.metadata.drop_all(bind=config.engine)
+	return "JAAAA"
 
 def create_admin_users():
 	# TODO: Call to register_user instead with a dict!!
@@ -357,27 +361,84 @@ def admin_insert_user_to_group():
 	'''
 
 	dialect_md = config.MultiDict()
-	rest_list = []
+	rest_md = config.MultiDict()
 	for user_id, content in admin_get_top_three_groups().iteritems():
 		for i, dialect_id in enumerate(content['top_score']):
-			if len(dialect_md.getlist(dialect_id)) < 6:
-				dialect_md.add(dialect_id, {user_id: i+1})
-			else:
-				rest_list.append(user_id)
+			# Add 1 to i because i starts with 0
+			position = i+1
 
-	print dialect_md
-	print rest_list
+			# Check so there is not more than 5 students in a group.
+			# If there are more than 5 students they will be added to rest_list
+			# to be dealt with later.
+			if len(dialect_md.getlist(dialect_id)) < 5: # Change to 5!
+				dialect_md.add(dialect_id, {user_id: position})
+			else:
+				# If dialect_id is full in dialect_md,
+				# check if the current user_id has a higher position then
+				# any of the users already in dialect_md
+				#
+				# If true, the current user will swap with the user
+				# in dialect_md and that user will be added to rest_list
+				#
+				# If false, the current user will be added to rest_list
+
+				# PROBLEM
+				# This adds a user to rest_md EVEN if that user is in dialect_md
+				# but with two other positions.
+				# E.g.: If a user that has position 1 replaces user2 with position 2, then
+				# user2 will be added to rest_md even if user2's position 1 and 3 is in
+				# dialect_md
+				found = False
+				for list_position, ze_list in enumerate(dialect_md.getlist(dialect_id)):
+					for list_user_id, list_user_position in ze_list.iteritems():
+						if position < list_user_position:
+							# replace_position_in_md(dialect_md.getlist(dialect_id), list_user_position, position)
+							dialect_md = replace_position_in_md(dialect_md, dialect_id, list_position, \
+								{user_id: position})
+							print 'Replaced:', {user_id: position}, 'with:', {list_user_id: list_user_position}
+							user_id = list_user_id
+							found = True
+					if found: break #Ugly solution but it works...
+
+				rest_md.add(dialect_id, {user_id: list_user_position})
+
+	print ''
+	print 'DialectID: [{UserID: Position}]'
+	for a, d in dialect_md.iterlists():
+		print 'Dialect ID: ', a, ' has: ', d
+	print ''
+	print rest_md
+
+def replace_position_in_md(md, dialect_id, list_position, new_value):
+	poped_list = md.getlist(dialect_id)
+	poped_list.pop(list_position)
+	poped_list.append(new_value)
+
+	md.poplist(dialect_id)
+	for content in poped_list:
+		md.add(dialect_id, content)
+
+	return md
 
 def admin_get_top_three_groups():
-	bla = {}
+	top_three_groups = {}
 	for i in admin_get_all_users_w_poll_done():
-		tmp = {}
+		# content will contain the information gathered
+		content = {}
+
+		# This is a really ugly way to do it, it should be a better way!
+		# dialect_w_total_points = OrderedMultiDict([(DialectID, TotalPoints)])
+		# dialect_w_total_points_colors = OrderedMultiDict([(DialectID, ColorCode)])
 		dialect_w_total_points = config.OrderedMultiDict()
 		dialect_w_total_points_colors = config.OrderedMultiDict()
-		for dialect_id, total_point in admin_calc_user_points(i.id, True).iteritems():
+
+		# Loop the specific user's top three groups and add to the MultiDict
+		for dialect_id, total_point in admin_calc_user_points(i.fk_user_id, True).iteritems():
 			if len(dialect_w_total_points) < 3:
 				dialect_w_total_points.add(dialect_id, total_point)
 
+				# This is soooo ugly
+				# Gotta find out another way to do this!
 				if len(dialect_w_total_points) is 1:
 					dialect_w_total_points_colors.add(dialect_id, '#00ff00')
 				elif len(dialect_w_total_points) is 2:
@@ -387,15 +448,14 @@ def admin_get_top_three_groups():
 			else:
 				break
 
-		user = get_db_user(user_id=i.id)['info']
+		user = get_db_user(user_id=i.fk_user_id)['info']
 
-		tmp['top_score'] = dialect_w_total_points
-		tmp['top_score_colors'] = dialect_w_total_points_colors
-		tmp['user_points'] = admin_calc_user_points(i.id)
-		tmp['user_realname'] = user.firstname + ' ' + user.lastname
-		### CHANGE FIRSTNAME LASTNAME TO ID INSTEAD!!!!!!!!!
-		bla[i.id] = tmp
-	return bla
+		content['top_score'] = dialect_w_total_points
+		content['top_score_colors'] = dialect_w_total_points_colors
+		content['user_points'] = admin_calc_user_points(i.fk_user_id)
+		content['user_realname'] = user.firstname + ' ' + user.lastname
+		top_three_groups[i.fk_user_id] = content
+	return top_three_groups
 
 def sort_dict(m_dict):
 	"""

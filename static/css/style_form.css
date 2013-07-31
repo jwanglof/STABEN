@@ -20,7 +20,6 @@ form.stabForm legend {
 
 form.stabForm label {
 	display: inline-block;
-	line-height: 1.8px;	
 	width: 350px;
 	vertical-align: text-top;
 }
