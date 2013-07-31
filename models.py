@@ -48,10 +48,6 @@ class Blog(Base):
 		self.time = time
 		self.author = author
 
-	def __repr__(self):
-		"""Get values from the table in an own-formatted output"""
-		return 'The blog %s has %s as author!' % (self.title, self.author)
-
 class BlogComments(Base):
 	"""Blog comments-table
 
@@ -73,10 +69,6 @@ class BlogComments(Base):
 		self.date = date
 		self.time = time
 		self.author = author
-
-	def __repr__(self):
-		"""Get values from the table in an own-formatted output"""
-		return 'The blog comment belongs to %i, was written by %s and contains %s' % (self.belong_to_id, self.author, self.comment)
 
 class Contacts(Base):
 	"""Conacts-table
@@ -106,10 +98,6 @@ class Contacts(Base):
 		self.school_class = school_class
 		self.link = link
 
-	def __repr__(self):
-		"""Get values from the table in an own-formatted output"""
-		return 'Hejsan %s' % (self.name)
-
 class Motd(Base):
 	"""Message of the Day-table
 
@@ -128,10 +116,6 @@ class Motd(Base):
 		self.message = message
 		self.show_on_date = show_on_date
 
-	def __repr__(self):
-		"""Get values from the table in an own-formatted output"""
-		return 'MOTD on date %i contains %s' % (self.show_on_date, self.message)
-
 class Prices(Base):
 	"""Prices-table
 
@@ -146,10 +130,6 @@ class Prices(Base):
 
 	def __init__(self):
 		"""The constructor"""
-		return
-
-	def __repr__(self):
-		"""Get values from the table in an own-formatted output"""
 		return
 
 class RegisterCode(Base):
@@ -200,10 +180,6 @@ class ScheduleDate(Base):
 		self.activity_info_evening = activity_info_evening
 		return
 
-	def __repr__(self):
-		"""Get values from the table in an own-formatted output"""
-		return;
-
 class SchoolClasses(Base):
 	"""School classes-table
 
@@ -222,10 +198,6 @@ class SchoolClasses(Base):
 		self.name = name
 		self.schedule = schedule
 
-	def __repr__(self):
-		"""Get values from the table in an own-formatted output"""
-		return 'Bajs osv'
-
 class StudentPollAnswer(Base):
 	__tablename__ = 'student_poll_answer'
 	id = db.Column(db.Integer, primary_key=True)
@@ -243,10 +215,6 @@ class StudentPollAnswer(Base):
 		self.fk_user_id = fk_user_id
 		self.fk_student_poll_question_id = fk_student_poll_question_id
 		return
-
-	'''def __repr__(self):
-		"""Get values from the table in an own-formatted output"""
-		return '%i' % (self.fk_student_poll_question_id)'''
 
 class StudentPollDialect(Base):
 	__tablename__ = 'student_poll_dialect'
@@ -275,10 +243,6 @@ class StudentPollPoint(Base):
 		self.point = point
 		return
 
-	def __repr__(self):
-		"""Get values from the table in an own-formatted output"""
-		return '%i' % (self.fk_student_poll_question_id)
-
 class StudentPollPrefix(Base):
 	__tablename__ = 'student_poll_prefix'
 	id = db.Column(db.Integer, primary_key=True)
@@ -291,10 +255,6 @@ class StudentPollPrefix(Base):
 		self.prefix = prefix
 		return
 
-	def __repr__(self):
-		"""Get values from the table in an own-formatted output"""
-		return '%s' % (self.prefix)
-
 class StudentPollQuestion(Base):
 	__tablename__ = 'student_poll_question'
 	id = db.Column(db.Integer, primary_key=True)
@@ -306,11 +266,6 @@ class StudentPollQuestion(Base):
 		"""The constructor"""
 		self.fk_student_poll_prefix_id = student_poll_prefix_id
 		self.question = question
-		return
-
-	def __repr__(self):
-		"""Get values from the table in an own-formatted output"""
-		return '%s' % (self.question)
 		return
 
 '''
