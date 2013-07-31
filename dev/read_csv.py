@@ -4,6 +4,14 @@ import csv
 # Need to add the questions to a list
 # since dict's aren't ordered
 ###
+
+###
+# Run example:
+# - FIRST!
+# -- Make sure that dev/studentpoll.csv is up to date
+# 
+# After that just run /db_all (or just /db_student_poll for just the student poll DB entries)
+###
 class ReadStudentPollCsvFile():
 	def __init__(self, filename):
 		csv.register_dialect('commas', delimiter=',')
