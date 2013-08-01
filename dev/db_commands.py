@@ -274,33 +274,36 @@ def admin_get_all_student_poll_answers():
 
 def admin_calc_user_points(user_id, order=False):
 	points = models.StudentPollPoint.query.all()
-
 	questions_w_points = models.StudentPollQuestion.query.order_by(models.StudentPollQuestion.id).all()
 
 	# {Question_id: {Dialect_id: Point}}
-	bla = config.MultiDict()
+	# MultiDict([(QuestionID, MultiDict([(Dialect_id: Point), (Dialect_id: Point)]))])
+	questions_w_dialects_a_points = config.MultiDict()
 	for question in questions_w_points:
 		point_MD = config.MultiDict()
 		for point in question.question_point:
 			point_MD.add(point.fk_student_poll_dialect_id, point.point)
-		bla.add(question.id, point_MD)
-
-	# {Dialect_id: Total_points}
-	answers = models.StudentPollAnswer.query.filter_by(fk_user_id=user_id).order_by(models.StudentPollAnswer.fk_student_poll_question_id).all()
-	dialects_w_points = config.MultiDict()	
-	# Is the answers from ONLY user_id
+		questions_w_dialects_a_points.add(question.id, point_MD)
+	
+	# MultiDict([(Dialect_id, Point), (Dialect_id, Point)])
+	# The answers from user_id
+	# Add all the dialects with the points
+	answers = models.StudentPollAnswer.query.filter_by(fk_user_id=user_id).all()
+	dialects_w_points = config.MultiDict()
 	for answer in answers:
-		for dialect_id, point in bla[answer.fk_student_poll_question_id].iteritems():
+		for dialect_id, point in questions_w_dialects_a_points[answer.fk_student_poll_question_id].iteritems():
 			dialects_w_points.add(dialect_id, point)
 
-	"""
-	Add the missing dialect id(s) to dialects_w_points
-	"""
+	# MultiDict([(Missing_dialect_id, 0), (Missing_dialect_id, 0)])
+	# Add the missing dialect id(s) with zero points to dialects_w_points
 	for i in range(1, len(get_student_poll_dialects())+1):
 		if not dialects_w_points.get(i):
 			dialects_w_points.add(i, 0)
 
-	test_list_w_tuples = []
+	# Get the total points for all dialects
+	# If the dialect ID exist in dialect_w_total_points_md it will add the \
+	# points to that dialect
+	# Else it will add that dialect with the initial point
 	dialect_w_total_points_md = config.MultiDict()
 	for key, value in dialects_w_points.iteritems(multi=True):
 		if dialect_w_total_points_md.has_key(key):
@@ -308,10 +311,7 @@ def admin_calc_user_points(user_id, order=False):
 		else:
 			dialect_w_total_points_md.add(key, value)
 
-
-	"""
-	If order is True then it will return a dict with the highest student group at first place
-	"""
+	# If order is True then it will return a dict with the highest student group at first place
 	if order is True:
 		dialect_w_total_points_md = sort_dict(dialect_w_total_points_md.to_dict())
 
@@ -409,17 +409,6 @@ def admin_insert_user_to_group():
 	print ''
 	print rest_md
 
-def replace_position_in_md(md, dialect_id, list_position, new_value):
-	poped_list = md.getlist(dialect_id)
-	poped_list.pop(list_position)
-	poped_list.append(new_value)
-
-	md.poplist(dialect_id)
-	for content in poped_list:
-		md.add(dialect_id, content)
-
-	return md
-
 def admin_get_top_three_groups():
 	top_three_groups = {}
 	for i in admin_get_all_users_w_poll_done():
@@ -476,3 +465,14 @@ def sort_dict(m_dict):
 		new_omd.add(a, b)
 
 	return new_omd
+
+def replace_position_in_md(md, dialect_id, list_position, new_value):
+	poped_list = md.getlist(dialect_id)
+	poped_list.pop(list_position)
+	poped_list.append(new_value)
+
+	md.poplist(dialect_id)
+	for content in poped_list:
+		md.add(dialect_id, content)
+
+	return md
