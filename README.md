@@ -18,7 +18,6 @@ TODO (x == finished)
 		<dd>[x] Schedule</dd>
 		<dd>[x] Contact information</dd>
 		<dd>[?] Sponsor-footer</dd>
-		<dd>[/] Daily secret</dd>
 		<dd>[-] 'Nolleportalen'</dd>
 		<dd>[ ] 'Nolleenkäten'</dd>
 		<dd>[x] Register</dd>
@@ -64,7 +63,7 @@ TODO
 <dl>
 	<dd>[ ] Flytta 'Enkät' till Loginmenyn</dd>
 	<dd>[x] (NEW BRANCH) Registrering, kolla i funktionen för TODO!</dd>
-	<dd>[ ] (NEW BRANCH) Efter registrering, användaren MÅSTE fylla i sin information. Ha en check!</dd>
+	<dd>[/] (NEW BRANCH) Efter registrering, användaren MÅSTE fylla i sin information. Ha en check!</dd>
 	<dd>[ ] (NEW BRANCH) Nolleenkäten</dd>
 	<dd>[x] (NEW BRANCH) 'Lägg till användare' i Adminmenyn (t.ex för klassföreståndare osv)</dd>
 	<dd>[ ] (NEW BRANCH) get_user_information(role) - hämtar alla users som har role</dd>
@@ -72,8 +71,7 @@ TODO
 	<dd>[ ] (NEW BRANCH) Fixa alla DB tabeller</dd>
 	<dd>[ ] (NEW BRANCH) Fixa så att schedule läses in från fil</dd>
 	<dd>[ ] Lägg till kommentarer lite här och var</dd>
-	<dd>[/] Fråga Widerberg om en ny startsidebild</dd>
-	<dd>[ ] Kolla hur deploy av hemsidan fungerar i Flask!</dd>
+	<dd>[x] Kolla hur deploy av hemsidan fungerar i Flask!</dd>
 	<dd>[x] Maila CYD-poolen och kolla om dom kan installera våra 'requirements'</dd>
 </dl>
 
