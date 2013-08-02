@@ -1,6 +1,7 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html lang="sv">
 <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta charset="utf-8">
     <title>STABEN</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}" />
@@ -12,7 +13,7 @@
 
 <body>
 
-<div class="navbar navbar-static-top">
+<div class="navbar navbar-static-top navbar-inverse">
     <div class="navbar-inner">
         <div class="container">
             <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -20,7 +21,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </a>
-            <a class="brand" href="{{ url_for('index') }}">STABEN</a>
+            <a class="brand" href="{{ url_for('index') }}"><span class="stabenfont">STABEN</span></a>
             <div class="nav-collapse collapse">
                 <ul class="nav" id="nav_menu">
                     <li class='{% block active_index %}{% endblock %}'><a href="{{ url_for('index') }}">Start</a></li>

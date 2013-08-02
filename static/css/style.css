@@ -1,3 +1,21 @@
+html {
+    overflow-y: scroll;
+    background: #000 url(../img/background.png) no-repeat fixed center bottom;
+    height: 100%;
+}
+
+body {
+    background: transparent;
+}
+
+#content{
+    color: #FFFFFF;
+}
+
+.row {
+    color: #ffffff;
+}
+
 .content {
 	padding-top: 20px;
 }
@@ -6,7 +24,6 @@
 	display: block;
 	border: 1px solid #000;
 	border-radius: 5px;
-
 	padding-left: 10px;
 	margin-bottom: 10px;
 }
@@ -46,4 +63,38 @@ span.nollanfont {
 p.no_javascript {
 	font-size: 130%;
 	text-decoration: underline;
+}
+
+.pagination {
+    display: inline;
+}
+
+.pagination ul > li > a {
+    background-color: #1F1F1F;
+}
+
+.pagination ul > li> a:hover,
+.pagination a {
+    background-color: #3D3D3D;
+    color: #999999;
+    cursor: default;
+}
+.pagination ul > .active > a {
+    background-color: #3D3D3D;
+    color: #999999;
+}
+
+.tabs-left > .nav-tabs > li > a:hover {
+    background-color: #3D3D3D;
+    color: #999999;
+    cursor: default;
+}
+
+.tabs-left > .nav-tabs > .active > a {
+    background-color: #3D3D3D;
+}
+
+.tabs-left > .nav-tabs > li > a {
+    background-color: transparent;
+    color: #999999;
 }

@@ -1,11 +1,11 @@
 {% extends "template.html" %}
 {% block active_schedule %}active{% endblock %}
 {% block content %}
-
+    <div class="row" id="content">
     <br>
-    <div class="span8">
+    <div class="span8 offset2">
         <h3 style="display: inline">Ange vecka </h3>
-        <div class="pagination" style="display: inline">
+        <div class="pagination">
             <ul>
                 {% if week == '1' %}
                     <li class="active">
@@ -76,5 +76,6 @@
                 {% endfor %}
             </div>
         </div>
+    </div>
     </div>
 {% endblock %}
