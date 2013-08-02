@@ -21,7 +21,7 @@ USERNAME = 'admin'
 PASSWORD = 'default'
 
 UPLOAD_FOLDER = 'upload'
-ALLOWED_EXTENSIONS = set(['png','jpg','jpeg'])
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 app = Flask(__name__)
 app.secret_key = SECRET_KEY

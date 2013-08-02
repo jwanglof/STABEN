@@ -2,10 +2,14 @@
 {% block active_index %}active{% endblock %}
 {% block content %}
 
-<div class="row">
+<div class="row" id="content">
     <div class="span12 offset1">
-
-        <p class='no_javascript'><span class="stabenfont">STABEN</span> ser att <span class="nollanfont">{{ nollan }}</span> inte har Javascript aktiverat. Om <span class="nollanfont">{{ nollan }}</span> vill kunna använda <span class="stabenfont">STABEN</span>s hemsida till fullo bör <span class="nollanfont">{{ nollan }}</span> aktivera Javascript.</p>
+        <p class='no_javascript'>
+            <span class="stabenfont">STABEN</span> ser att <span class="nollanfont">{{ nollan }}</span>
+            inte har Javascript aktiverat. Om <span class="nollanfont">{{ nollan }}</span> vill kunna använda
+            <span class="stabenfont">STABEN</span>s hemsida till fullo bör <span class="nollanfont">{{ nollan }}</span>
+            aktivera Javascript.
+        </p>
     </div>
     <div class="span12">
         <div style="text-align: center;">
@@ -31,7 +35,7 @@
     </div>
     <div class="span3">
         <br>
-        <a class="twitter-timeline" data-theme="light" height="300" data-dnt="true" href="https://twitter.com/fadderi_staben" data-widget-id="339411237781794816">Tweets av @fadderi_staben</a>
+        <a class="twitter-timeline" data-theme="dark" height="300" data-dnt="true" href="https://twitter.com/fadderi_staben" data-widget-id="339411237781794816">Tweets av @fadderi_staben</a>
         <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
     </div>
 </div>

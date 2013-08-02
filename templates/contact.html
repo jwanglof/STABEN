@@ -2,7 +2,7 @@
 {% block active_contact %}active{% endblock %}
 {% block content %}
 {% if show == 'admins' %}
-<div class="row">
+<div class="row" id="content">
     <div class="span4">
         <h2>Webmasters</h2>
         <ul>
@@ -20,25 +20,13 @@
     </div>
 </div>
 {% elif show == 'contact' %}
-<div class="row">
-    <div class="span12">
+<div class="row" id="content">
+    <div class="span10 offset2">
         <h1>Kontaktuppgifter</h1>
         <br>
-        <p>Här kan <sub>minus</sub> hitta hur hen ska kontakta viktiga personer.</p>
+        <p>Här kan <span class="nollanfont">minus</span> hitta hur hen ska kontakta viktiga personer.</p>
     </div>
-    {#<div class="span4">
-        <h2>Överfaddrar</h2>
-        <ul>
-            <li><b>Namn: </b>Överfadder1</li>
-            <li><b>Telefon: </b>Nummer1</li>
-            <li><b>E-post: </b>Adress1</li>
-            <br>
-            <li><b>Namn: </b>Överfadder2</li>
-            <li><b>Telefon: </b>Nummer2</li>
-            <li><b>E-post: </b>adress2</li>
-        </ul>
-    </div>#}
-    <div class="span6">
+    <div class="span4 offset2">
         <h2>Klassföreståndare</h2>
         <ul>
             {% for klassfor in klassforestandare %}
@@ -50,7 +38,7 @@
             {% endfor %}
         </ul>
     </div>
-    <div class="span6">
+    <div class="span4">
         <h2>Studievägledning</h2>
         <ul>
             {% for studie in studievagledning %}
@@ -59,6 +47,17 @@
             <li><b>E-post: </b><a href="mailto:{{ studie.email }}">{{ studie.email }}</a></li>
             <li><b>Länk: </b><a href="{{ studie.link }}" target="_blank">LiU:s kontaktsida för {{ studie.name }}</a></li>
             {% endfor %}
+        </ul>
+        <br>
+        <h2>Webbadministratörer</h2>
+        <ul>
+            <li><b>För frågor om registrering, inlogg eller nolleenkät</b></li>
+            <li><b>Namn:</b> Whaler</li>
+            <li><b>E-post:</b> <a href="mailto: whaler@staben.info">whaler@staben.info</a></li>
+            <br>
+            <li><b>För andra frågor rörande hemsidan</b></li>
+            <li><b>Namn:</b> Webber</li>
+            <li><b>E-post:</b> <a href="mailto: webb@staben.info">webb@staben.info</a></li>
         </ul>
     </div>
 </div>
