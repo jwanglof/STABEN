@@ -34,7 +34,13 @@ Choose your search criteria:
 
 	<div class='percent_width'>
 		{% for user in user_w_points %}
-			<span style='float: left; display: block; width: 230px;'>{{ user_w_points[user]['user_realname'] }}</span>
+			<span style='float: left; display: block; width: 230px;'>
+				{% if user_w_points[user]['user'].firstname == '' %}
+					<i>Har inte fyllt i namn, databasid: {{ user }}</i>
+				{% else %}
+					{{ user_w_points[user]['user'].firstname }} {{ user_w_points[user]['user'].lastname }}
+				{% endif %}
+			</span>
 			{% for dialect_id, user_point in user_w_points[user]['user_points'].iteritems() %}
 				{% if user_w_points[user]['top_score'][dialect_id] %}
 					<span class='dialect_dialect' style='background-color: {{ user_w_points[user]['top_score_colors'][dialect_id] }}'>{{ user_point }}</span>
