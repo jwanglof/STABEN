@@ -28,18 +28,18 @@ admin_users_info.append(models.UserInformation('Johan'))
 admin_users_info.append(models.UserInformation('Simon'))
 
 school_program = []
-school_program.append(models.SchoolProgram('D', 'Datateknik'))
-school_program.append(models.SchoolProgram('IT', 'Informationsteknologi'))
-school_program.append(models.SchoolProgram('IP', 'Innovativ Programmering'))
-school_program.append(models.SchoolProgram('U', 'Mjukvaruteknik'))
+school_program.append(models.SchoolProgram(1, 'D', 'Datateknik'))
+school_program.append(models.SchoolProgram(2, 'IT', 'Informationsteknologi'))
+school_program.append(models.SchoolProgram(3, 'IP', 'Innovativ Programmering'))
+school_program.append(models.SchoolProgram(4, 'U', 'Mjukvaruteknik'))
 
 school_class = []
-school_class.append(models.SchoolClass('D0a'))
-school_class.append(models.SchoolClass('D0b'))
-school_class.append(models.SchoolClass('D0c'))
-school_class.append(models.SchoolClass('IP0'))
-school_class.append(models.SchoolClass('IT0'))
-school_class.append(models.SchoolClass('U0'))
+school_class.append(models.SchoolClass(name='D0a', fk_school_program_id='1'))
+school_class.append(models.SchoolClass(name='D0b', fk_school_program_id='1'))
+school_class.append(models.SchoolClass(name='D0c', fk_school_program_id='1'))
+school_class.append(models.SchoolClass(name='IT0', fk_school_program_id='2'))
+school_class.append(models.SchoolClass(name='IP0', fk_school_program_id='3'))
+school_class.append(models.SchoolClass(name='U0', fk_school_program_id='4'))
 
 contacts = []
 contacts.append(models.Contacts('Patrik Hillgren', '070-0434527', 'pathi747@student.liu.se', 0, 'IT0',''))
@@ -188,7 +188,7 @@ def get_school_programs():
 	return models.SchoolProgram.query.all()
 
 def get_school_classes():
-	return models.SchoolProgram.query
+	return models.SchoolClass.query.all()
 
 def get_student_poll_answers(db_user_email):
 	user_id = get_db_user(db_user_email=db_user_email)['user'].id
