@@ -182,7 +182,7 @@ def get_register_code():
 	return models.RegisterCode.query.first()
 
 def get_schedule(week):
-	return models.ScheduleDate.query.filter_by(week=week).order_by(models.ScheduleDate.week).all()
+	return models.Schedule.query.filter_by(week=week).order_by(models.Schedule.week).all()
 
 def get_school_class(db_user_email):
 	db_user = models.Users.query.filter_by(email=db_user_email).first()
@@ -346,10 +346,6 @@ def admin_get_user_poll_answer(user_id):
 			userinfo_w_answers_MD.add(answer.fk_student_poll_question_id, answer.fk_student_poll_question_id)
 	#, 4: admin_calc_user_points(user_id)
 	return {1: userinfo_w_answers_MD, 2: pref_w_ques_w_point_OMD}
-
-# def get_schedule(week):
-# 	schedule = model.Schedule.query.filter_by(week=week).order_by(model.Schedule.week).all()
-# 	return schedule
 
 def admin_check(db_user_email):
 	# Check only role!
