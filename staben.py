@@ -58,6 +58,11 @@ def db_code():
 def db_student_poll():
 	return db_commands.create_student_poll()
 
+def add_session(db_user):
+	config.session['email'] = db_user.email
+	config.session['role'] = db_user.role
+	return True
+
 @app.route('/')
 def index():
 	return render('index.html', session=session, bla=config.user_roles, nollan=nollan)
@@ -147,11 +152,6 @@ def register():
 	# 	classes = db_commands.get_school_classes()
 	# 	return render('register.html', classes=classes)
 
-def add_session(db_user):
-	config.session['email'] = db_user.email
-	config.session['role'] = db_user.role
-	return True
-
 '''
 	*
 	* User profile
@@ -172,11 +172,11 @@ def profile(user_email):
 def profile_edit(user_email):
 	if session and user_email == session['email']:
 		user = db_commands.get_db_user(db_user_email=session['email'])
-		classes = db_commands.get_school_classes()
+		school_programs = db_commands.get_school_programs()
 		return render('profile_edit.html', \
 			user=user['user'], \
 			user_info=user['info'], \
-			school_classes=classes)
+			school_programs=school_programs)
 	else:
 		return render('login.html', login=False)
 
@@ -207,8 +207,8 @@ def profile_save_password(user_email):
 def profile_class(user_email):
 	if session and user_email == session['email']:
 		class_mates = db_commands.get_class_mates(user_email)
-		school_class = db_commands.get_school_class(user_email)
-		return render('profile_class.html', class_mates=class_mates, school_class=school_class)
+		school_programs = db_commands.get_user_school_program(user_email)
+		return render('profile_class.html', class_mates=class_mates, school_programs=school_programs)
 	else:
 		return render('login.html', login=False)
 
