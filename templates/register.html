@@ -2,13 +2,13 @@
 {% block active_register %}active{% endblock %}
 {% block content %}
 <div id='errorMessages'>
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-{% for message in messages %}
-{{ message }}
-{% endfor %}
-{% endif %}
-{% endwith %}
+	{% with messages = get_flashed_messages() %}
+		{% if messages %}
+			{% for message in messages %}
+				{{ message }}
+			{% endfor %}
+		{% endif %}
+	{% endwith %}
 </div>
 <form method='post' action='{{ url_for('register') }}' class='stabForm' id='register_form'>
 	<fieldset>

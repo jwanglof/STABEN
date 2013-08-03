@@ -54,5 +54,16 @@ $(document).ready(function() {
 			$('#collapsed' + id).text('Tryck för att dölja info');
 		}
 	});
+
+	$('.admin_student_poll_show_hide').click(function() {
+		if ($('.admin_student_poll_q_w_a_content').is(':visible')) {
+			$('.admin_student_poll_q_w_a_content').hide();
+			$('.admin_student_poll_show_hide').text('Press to uncollapse!')
+		}
+		else {
+			$('.admin_student_poll_q_w_a_content').show();
+			$('.admin_student_poll_show_hide').text('Press to collapse!')
+		}
+	});
 });
 

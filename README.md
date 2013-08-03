@@ -25,8 +25,10 @@ TODO (x == finished)
 
 REQUIREMENTS
 ======
+[in pip] flask
 [in pip] flask-bcrypt (https://github.com/maxcountryman/flask-bcrypt)
-[in pip] flask-sqlalchemy
+[in pip] flask-sqlalchemy (be sure to install version 0.16!)
+[in pip] flask-mysql
 [in pip] sqlalchemy-migrate
 
 PROFILE PAGE

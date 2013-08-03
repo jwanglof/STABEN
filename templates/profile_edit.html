@@ -1,32 +1,40 @@
 {% extends "template.html" %}
 {% block active_profile %}active{% endblock %}
 {% block content %}
-{% for user_info in user_info %}
 <h1>Redigera profil</h1>
-<form method='post' action='/profile/{{ session['email'] }}/save/' id='profile_edit'>
-	<h4>Användaruppgifter</h4>
-	Namn * <br />
+<form method='post' action='{{ url_for('profile_save', user_email=session['email']) }}' id='profile_edit'>
+	<h4>Nolleuppgifter</h4>
+	Förnamn <br />
 	<input type='text' id='firstname' name='firstname' value='{{ user_info.firstname }}' /> <br />
+	Efternamn <br />
 	<input type='text' id='lastname' name='lastname' value='{{ user_info.lastname }}' /> <br />
+	Allergier <br />
+	<input type='text' id='allergies' name='allergies' value='{{ user_info.allergies }}' /> <br />
+	Vegan/Vegetarian <br />
+	<select name='food_preference'>
+		<option value='0' {% if user_info.food_preference == 0 %}selected{% endif %}></option>
+		<option value='1' {% if user_info.food_preference == 1 %}selected{% endif %}>Vegetarian</option>
+		<option value='2' {% if user_info.food_preference == 2 %}selected{% endif %}>Vegan</option>
+	</select>
+	<br />
 	Telefonnummer <br />
 	<input type='text' name='phonenumber' value='{{ user_info.phonenumber }}' /> <br />
 	<input type='checkbox' name='phonenumber_vis' {% if user_info.phonenumber_vis == 1 %}value='0' checked='checked'{% elif user_info.phonenumber_vis == 0 %}value='1'{% endif %} /> Visa mitt telefonnummer på min profil <br /> <br />
-	Ålder <br />
-	<input type='text' name='age' value='{{ user_info.age}}' /> <br />
-	Facebook länk <br />
+	Länk till din facebookprofil <br />
 	<input type='text' name='facebook_url' value='{{ user_info.facebook_url }}' /> <br />
-	Var bor du? <br />
+	Vilken adress kommer du ha i Linköping? <br />
 	<input type='text' name='current_city' value='{{ user_info.current_city }}' /> <br />
 	Var kommer du ifrån? <br />
 	<input type='text' name='where_from' value='{{ user_info.where_from }}' /> <br />
-	Klass <br />
+	Program <br />
 	<select name='school_class'>
 		{%- for classes in school_classes %}
-		<option value='{{ classes.id }}' {%- if user_info.school_class == classes.id -%}selected{%- endif %}>
+		<option value='{{ classes.id }}' {% if user_info.school_class == classes.id %}selected{% endif %}>
 			{{ classes.name }} ({{ classes.abbreviation }})
 		</option>
 		{%- endfor %}
 	</select>
+	{# In med en klasschooser #}
 	<p>
 		Presentation
 		<br />
@@ -38,11 +46,10 @@
 	<br />
 	<input type='text' id='email' name='email' value='{{ user.email }}' disabled />
 	<br />
-	<button type='submit' class='btn'>Spara</button> <input type='reset' value='Återställ' class='btn' />
+	<button type='submit' class='btn'>Spara information</button> <input type='reset' value='Återställ information' class='btn' />
 </form>
-{% endfor %}
 
-<form method='post' action='/profile/{{ session['email'] }}/save/password' id='profile_password'>
+<form method='post' action='{{ url_for('profile_save_password', user_email=session['email']) }}' id='profile_password'>
 	<h4>Lösenord</h4>
 	<input type='password' name='current_password' placeholder='Nuvarande lösenord' />
 	<br />

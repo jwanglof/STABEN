@@ -20,8 +20,7 @@ form.stabForm legend {
 
 form.stabForm label {
 	display: inline-block;
-	line-height: 1.8px;	
-	width: 350px;
+	min-width: 350px;
 	vertical-align: text-top;
 }
 
@@ -35,6 +34,15 @@ div#errorMessages {
 	border: 1px solid #cc0;
 	border-radius: 5px;
 	padding: 0px 15px;
+}
+
+div#flashMessages {
+	/*background-color: #cc0;*/
+	border: 1px solid #cc0;
+	border-radius: 5px;
+	padding: 5px 15px;
+	min-height: 20px;
+	font-size: 200%;
 }
 
 input { border: 1px solid #000000; }

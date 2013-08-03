@@ -98,3 +98,19 @@ p.no_javascript {
     background-color: transparent;
     color: #999999;
 }
+
+dd {
+	display: block;
+}
+
+.student_poll {
+	width: 1400px;
+	height: 800px;
+	margin-top: 22px;
+	overflow-x: scroll;
+	overflow-y: scroll;
+}
+
+.student_poll .percent_width {width: 250%;}
+.student_poll .dialect_margin {margin-left: 230px;}
+.student_poll .dialect_dialect {width: 100px; height: 40px; float: left; border-left: 1px solid #000; text-align: center;}

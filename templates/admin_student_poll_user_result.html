@@ -1,0 +1,52 @@
+{% extends "template.html" %}
+{% block content %}
+<h1>{{ user['userinfo'].firstname }} {{ user['userinfo'].lastname }}</h1>
+<div class='student_poll'>
+	<div class='percent_width dialect_margin'>
+		{% for dialect in dialects %}
+			<div class='dialect_dialect'>
+				{{ dialect.dialect }}
+			</div>
+		{% endfor %}
+	</div>
+
+	<div class='admin_student_poll_show_hide'>
+		Press to collapse!
+	</div>
+	<div class='admin_student_poll_q_w_a_content'>
+		{% for i, content in alot_of_info.iteritems() %}
+			<h4>{{ i }}</h4>
+			<div class='percent_width'>
+			{% for question_id, inner_content in content.iteritems() %}
+				<div style='float: left; width: 230px; border-bottom: 1px solid #000; {% if user[question_id] %} font-weight: bold; {% endif %}'>
+					{{ inner_content['question'][:25] }}
+				</div>
+				{% for dialect_index in range(1, number_of_dialects+1) %}
+					<div style='width: 100px; float: left; border-left: 1px solid #000; border-bottom: 1px solid #000; text-align: center'>
+					{% if inner_content['points'][dialect_index] %}
+						{{ inner_content['points'][dialect_index] }}
+					{% else %}
+						&nbsp;
+					{% endif %}
+					</div>
+				{% endfor %}
+				
+			{% endfor %}
+			</div>
+		{% endfor %}
+	</div>
+	
+	<div style='clear: both'></div>
+
+	<div class='percent_width'>
+		<div style='float: left; width: 230px'>
+			<h3>Totalt</h3>
+		</div>
+		{% for dialect_id, total_point in user_points.iteritems() %}
+			<div style='width: 100px; float: left; border-left: 1px solid #000; border-bottom: 1px solid #000; text-align: center'>
+				<h3>{{ total_point }}</h3>
+			</div>
+		{% endfor %}
+	</div>
+</div>
+{% endblock %}
