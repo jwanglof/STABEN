@@ -24,7 +24,8 @@ nollan = 'minus'
 def db_all():
 	try:
 		db_create()
-		db_school()
+		db_programs()
+		db_classes()
 		db_contacts()
 		db_code()
 		db_student_poll()
@@ -41,8 +42,11 @@ def db_delete():
 @app.route('/db_admins')
 def db_admins():
 	return db_commands.create_admin_users()
-@app.route('/db_school')
-def db_school():
+@app.route('/db_programs')
+def db_programs():
+	return db_commands.create_school_programs()
+@app.route('/db_classes')
+def db_classes():
 	return db_commands.create_school_classes()
 @app.route('/db_contacts')
 def db_contacts():
@@ -94,8 +98,9 @@ def login():
 			if user:
 				# user_info['user'] contains email, password and role (from the table users)
 				# user_info['info'] contains all the user's information (from the table userInformation)
-				db_commands.add_login_count(request.form['email'])
-				return redirect(url_for('profile', user_email=request.form['email']))
+				if add_session(user):
+					db_commands.add_login_count(request.form['email'])
+					return redirect(url_for('profile', user_email=request.form['email']))
 			else:
 				return render('login.html', login=False)
 		else:
@@ -121,6 +126,7 @@ def register():
 
 					if user:
 						db_commands.add_user_information(user.id)
+						add_session(user)
 						return redirect(url_for('profile_edit', user_email=user.email))
 					else:
 						debug('register', 'Error, could not get user')
@@ -140,6 +146,11 @@ def register():
 		return render('register.html')
 	# 	classes = db_commands.get_school_classes()
 	# 	return render('register.html', classes=classes)
+
+def add_session(db_user):
+	config.session['email'] = db_user.email
+	config.session['role'] = db_user.role
+	return True
 
 '''
 	*
@@ -161,9 +172,11 @@ def profile(user_email):
 def profile_edit(user_email):
 	if session and user_email == session['email']:
 		user = db_commands.get_db_user(db_user_email=session['email'])
-		#user_info = db_commands.get_user_info()
 		classes = db_commands.get_school_classes()
-		return render('profile_edit.html', user=user['user'], user_info=user['info'], school_classes=classes)
+		return render('profile_edit.html', \
+			user=user['user'], \
+			user_info=user['info'], \
+			school_classes=classes)
 	else:
 		return render('login.html', login=False)
 
@@ -210,7 +223,12 @@ def profile_student_poll(user_email):
 
 		student_poll_prefixes = db_commands.get_student_poll_prefix()
 		student_poll_questions = db_commands.get_student_poll_question()
-		return render('profile_student_poll.html', student_poll_prefixes=student_poll_prefixes, student_poll_questions=student_poll_questions, user_poll_done=user['info'].poll_done, student_poll_user_answers=student_poll_user_answers)
+		return render('profile_student_poll.html', \
+			student_poll_prefixes=student_poll_prefixes, \
+			student_poll_questions=student_poll_questions, \
+			user_poll_done=user['info'].poll_done, \
+			student_poll_user_answers=student_poll_user_answers, \
+			nollan=nollan)
 	else:
 		return render('login.html', login=False)
 
@@ -296,6 +314,7 @@ def admin_student_poll_save(command):
 @app.route('/admin_student_poll_result')
 def admin_student_poll_result():
 	if db_commands.admin_check(session['email']) is 0:
+		# print db_commands.admin_get_top_three_groups()[1]['user'].firstname
 		return render('admin_student_poll_result.html', \
 			users_info=db_commands.admin_get_all_users_w_poll_done(), \
 			dialects=db_commands.get_student_poll_dialects(), \
