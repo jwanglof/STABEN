@@ -330,6 +330,7 @@ class UserInformation(Base):
 	phonenumber = db.Column(db.String(15), index=True, default='')
 	phonenumber_vis = db.Column(db.SmallInteger, index=True, default=0)
 	facebook_url = db.Column(db.String(100), index=True, default='')
+	school_program = db.Column(db.SmallInteger(), index=True, default=1)
 	school_class = db.Column(db.SmallInteger(), index=True, default=1)
 	current_city = db.Column(db.String(100), index=True, default='')
 	where_from = db.Column(db.String(100), index=True, default='')
