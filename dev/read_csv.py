@@ -42,6 +42,7 @@ class ReadStudentPollCsvFile():
 		tmp_list = []
 		questions = {}
 
+		# Change staben to <span class='stabenfont'>STABEN</span>
 		with open(self.filename, 'rb') as csvfile:
 			reader = csv.reader(csvfile)
 			for row in reader:
