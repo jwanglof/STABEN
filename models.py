@@ -146,7 +146,7 @@ class RegisterCode(Base):
 		"""The constructor"""
 		self.code = code
 
-class ScheduleDate(Base):
+class Schedule(Base):
 	"""Schedule date-table
 
 	Contains which weekday and what date a scheduled event is on
