@@ -184,11 +184,8 @@ def get_register_code():
 def get_schedule(week):
 	return models.Schedule.query.filter_by(week=week).order_by(models.Schedule.week).all()
 
-def get_school_class(db_user_email):
-	db_user = models.Users.query.filter_by(email=db_user_email).first()
-	user_info = models.UserInformation.query.filter_by(fk_user_id=db_user.id).first()
-	school_class = models.SchoolProgram.query.filter_by(id=user_info.school_class).first()
-	return school_class.abbreviation
+def get_school_programs():
+	return models.SchoolProgram.query.all()
 
 def get_school_classes():
 	return models.SchoolProgram.query
@@ -210,6 +207,12 @@ def get_student_poll_prefix():
 def get_student_poll_question():
 	admin_prefix_id = models.StudentPollPrefix.query.filter_by(prefix = 'Admin').first().id
 	return models.StudentPollQuestion.query.filter(models.StudentPollQuestion.fk_student_poll_prefix_id != admin_prefix_id).order_by(models.StudentPollQuestion.id).all()
+
+def get_user_school_program(db_user_email):
+	db_user = models.Users.query.filter_by(email=db_user_email).first()
+	user_info = models.UserInformation.query.filter_by(fk_user_id=db_user.id).first()
+	school_class = models.SchoolProgram.query.filter_by(id=user_info.school_class).first()
+	return school_class.abbreviation
 
 def register_user(db_user_dict):
 	try:
