@@ -80,7 +80,11 @@
 
 <div class="container content">
     <div class="row">
-        {% block content %}{% endblock %}
+        <div class="row" id="content">
+            <div class="span10 offset1">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
     </div>
 </div>
 
