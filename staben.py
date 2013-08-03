@@ -221,11 +221,9 @@ def profile_student_poll(user_email):
 		for index, value in enumerate(db_commands.get_student_poll_answers(user_email)):
 			student_poll_user_answers.add(int(value), index)
 
-		student_poll_prefixes = db_commands.get_student_poll_prefix()
-		student_poll_questions = db_commands.get_student_poll_question()
 		return render('profile_student_poll.html', \
-			student_poll_prefixes=student_poll_prefixes, \
-			student_poll_questions=student_poll_questions, \
+			student_poll_prefixes=db_commands.get_student_poll_prefix(), \
+			student_poll_questions=db_commands.get_student_poll_question(), \
 			user_poll_done=user['info'].poll_done, \
 			student_poll_user_answers=student_poll_user_answers, \
 			nollan=nollan)
