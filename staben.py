@@ -176,7 +176,8 @@ def profile_edit(user_email):
 		return render('profile_edit.html', \
 			user=user['user'], \
 			user_info=user['info'], \
-			school_programs=school_programs)
+			school_programs=school_programs,
+			school_classes=db_commands.get_school_classes())
 	else:
 		return render('login.html', login=False)
 
