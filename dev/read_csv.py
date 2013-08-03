@@ -19,7 +19,7 @@ class ReadStudentPollCsvFile():
 
 	# Check so that row doesn't contain any 'illegal' characters
 	def check(self, row):
-		if row[:1] == ',' or row == 'SUmma' or row == '':
+		if row[:1] == ',' or row == 'SUmma' or row == 'Summa' or row == '':
 			return False
 		else:
 			return True
@@ -37,9 +37,11 @@ class ReadStudentPollCsvFile():
 		return prefixes
 
 	def get_questions(self):
+		# i will determine which dialect id the question belongs to
+		# question_list contains all the questions
+		# questions contains dialect id with question_list
 		i = 0
-		o = 0
-		tmp_list = []
+		question_list = []
 		questions = {}
 
 		# Change staben to <span class='stabenfont'>STABEN</span>
@@ -48,15 +50,15 @@ class ReadStudentPollCsvFile():
 			for row in reader:
 				if self.check(row[0]) and row[0][:1].isupper():
 					if i > 0:
-						questions[i] = tmp_list
-						tmp_list = []
+						questions[i] = question_list
+						question_list = []
 					i += 1
 
 				if self.check(row[0]) and row[0][:1].islower():
-					tmp_list.append(row[0])
+					question_list.append(row[0].replace('staben', '<span class=\'stabenfont\'>STABEN</span>'))
 
 		# Need this so the last list is added to questions!
-		questions[i] = tmp_list
+		questions[i] = question_list
 		return questions
 
 	def get_dialects(self):
