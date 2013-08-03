@@ -180,23 +180,33 @@ class ScheduleDate(Base):
 		self.activity_info_evening = activity_info_evening
 		return
 
-class SchoolClasses(Base):
+class SchoolProgram(Base):
 	"""School classes-table
 
 	Contains the school classes that the student can choose between when register
 	"""
 	
-	__tablename__ = 'school_classes'
+	__tablename__ = 'school_program'
 	id = db.Column(db.Integer(), primary_key=True)
 	abbreviation = db.Column(db.String(5), index=True, unique=True)
 	name = db.Column(db.String(100), index=True, unique=True)
-	schedule = db.Column(db.String(254), index=True)
 
 	def __init__(self, abbreviation=None, name=None, schedule=None):
 		"""The constructor"""
 		self.abbreviation = abbreviation
 		self.name = name
 		self.schedule = schedule
+
+class SchoolClass(Base):
+	__tablename__ = 'school_class'
+	id = db.Column(db.Integer(), primary_key=True)
+	name = db.Column(db.String(100), index=True, unique=True)
+	schedule = db.Column(db.String(254), index=True)
+
+	def __init__(self, name=None, schedule=None):
+		"""The constructor"""
+		self.name = name
+		self.schedule = schedule	
 
 class StudentPollAnswer(Base):
 	__tablename__ = 'student_poll_answer'
@@ -220,6 +230,7 @@ class StudentPollDialect(Base):
 	__tablename__ = 'student_poll_dialect'
 	id = db.Column(db.Integer, primary_key=True)
 	dialect = db.Column(db.String(100), index=True, unique=True)
+	max_students = db.Column(db.Integer(), default=0)
 	r_student_poll_point = db.relationship('StudentPollPoint', backref='StudentPollDialect')
 	r_student_poll_assigned_group = db.relationship('StudentPollAssignedGroups', backref='StudentPollDialect')
 
@@ -311,21 +322,24 @@ class UserInformation(Base):
 	fk_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 	firstname = db.Column(db.String(100), index=True, default='')
 	lastname = db.Column(db.String(100), index=True, default='')
-	phonenumber = db.Column(db.String(15), index=True)
+	allergies = db.Column(db.String(254), index=True, default='')
+	food_preference = db.Column(db.SmallInteger(), index=True, default=0)
+	phonenumber = db.Column(db.String(15), index=True, default='')
 	phonenumber_vis = db.Column(db.SmallInteger, index=True, default=0)
-	age = db.Column(db.SmallInteger(), index=True, default=0)
-	facebook_url = db.Column(db.String(100), index=True)
+	facebook_url = db.Column(db.String(100), index=True, default='')
 	school_class = db.Column(db.SmallInteger(), index=True, default=1)
-	current_city = db.Column(db.String(100), index=True)
-	where_from = db.Column(db.String(100), index=True)
+	current_city = db.Column(db.String(100), index=True, default='')
+	where_from = db.Column(db.String(100), index=True, default='')
 	presentation = db.Column(db.UnicodeText())
 	login_count = db.Column(db.Integer(), default=0)
 	poll_done = db.Column(db.SmallInteger(), default=0)
+	finished_profile = db.Column(db.SmallInteger(), default=0)
 	fk_student_dialect = db.Column(db.Integer, db.ForeignKey('student_poll_dialect.id'))
 
-	def __init__(self, user_id=None):
+	def __init__(self, user_id=None, presentation=None):
 		"""The constructor"""
 		self.fk_user_id = user_id
+		self.presentation = presentation
 
 class StudentPollAssignedGroups(Base):
 	__tablename__ = 'student_poll_assigned_groups'
