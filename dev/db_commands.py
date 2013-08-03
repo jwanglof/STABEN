@@ -204,10 +204,12 @@ def get_student_poll_points():
 	return models.StudentPollPoint.query.order_by(models.StudentPollPoint.fk_student_poll_question_id).all()
 
 def get_student_poll_prefix():
-	return models.StudentPollPrefix.query.order_by(models.StudentPollPrefix.id).all()
+	admin_prefix_id = models.StudentPollPrefix.query.filter_by(prefix = 'Admin').first().id
+	return models.StudentPollPrefix.query.filter(models.StudentPollPrefix.id != admin_prefix_id).order_by(models.StudentPollPrefix.id).all()
 
 def get_student_poll_question():
-	return models.StudentPollQuestion.query.order_by(models.StudentPollQuestion.id).all()
+	admin_prefix_id = models.StudentPollPrefix.query.filter_by(prefix = 'Admin').first().id
+	return models.StudentPollQuestion.query.filter(models.StudentPollQuestion.fk_student_poll_prefix_id != admin_prefix_id).order_by(models.StudentPollQuestion.id).all()
 
 def register_user(db_user_dict):
 	try:
