@@ -2,7 +2,7 @@
 {% block content %}
 <div class="row" id="content">
     <div class="span12 offset1">
-		<h1>Min skolklass ({{ school_class }})</h1>
+		<h1>Min skolklass ({{ school_programs }})</h1>
 		{% for mate in class_mates %}
 			<div class='school_mate' id='{{ mate.id }}'>
 				<b>{{ mate.firstname + ' ' + mate.lastname }}</b>
