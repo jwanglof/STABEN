@@ -13,7 +13,7 @@ Och <span class="nollanfont">{{ nollan }}</span>, nolle-p blir roligast om <span
 			{% for question in student_poll_questions %}
 				{% if question.fk_student_poll_prefix_id == prefix.id %}
 					<input type='checkbox' name='{{ question.id }}' id='{{ question.id }}' value='{{ question.id }}' {% if student_poll_user_answers.has_key(question.id) %}checked{% endif %} {% if user_poll_done == 1 %}disabled{% endif %} \>
-					<label for='{{ question.id }}'>{{ question.question }}</label>
+					<label for='{{ question.id }}'>{{ question.question|safe }}</label>
 					<br />
 				{% endif %}
 			{% endfor %}
