@@ -185,11 +185,13 @@ class SchoolClass(Base):
 	id = db.Column(db.Integer(), primary_key=True)
 	name = db.Column(db.String(100), index=True, unique=True)
 	schedule = db.Column(db.String(254), index=True)
+	fk_school_program_id = db.Column(db.Integer(), db.ForeignKey('school_program.id'))
 
-	def __init__(self, name=None, schedule=None):
+	def __init__(self, name=None, schedule=None, fk_school_program_id=None):
 		"""The constructor"""
 		self.name = name
 		self.schedule = schedule
+		self.fk_school_program_id = fk_school_program_id
 
 class SchoolProgram(Base):
 	"""School classes-table
@@ -201,9 +203,11 @@ class SchoolProgram(Base):
 	id = db.Column(db.Integer(), primary_key=True)
 	abbreviation = db.Column(db.String(5), index=True, unique=True)
 	name = db.Column(db.String(100), index=True, unique=True)
+	r_school_class = db.relationship('SchoolClass', backref='SchoolProgram')
 
-	def __init__(self, abbreviation=None, name=None):
+	def __init__(self, id=None, abbreviation=None, name=None):
 		"""The constructor"""
+		self.id = id
 		self.abbreviation = abbreviation
 		self.name = name
 
