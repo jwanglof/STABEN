@@ -2,8 +2,7 @@
 {% block active_contact %}active{% endblock %}
 {% block content %}
 {% if show == 'admins' %}
-<div class="row" id="content">
-    <div class="span4">
+    <div class="span12">
         <h2>Webmasters</h2>
         <ul>
             <li><b>Namn: </b>Johan</li>
@@ -18,15 +17,13 @@
     <div class="span8">
         <img src="http://i.imgur.com/kZgSuL1.gif" />
     </div>
-</div>
 {% elif show == 'contact' %}
-<div class="row" id="content">
-    <div class="span10 offset2">
+    <div>
         <h1>Kontaktuppgifter</h1>
         <br>
         <p>Här kan <span class="nollanfont">minus</span> hitta hur hen ska kontakta viktiga personer.</p>
     </div>
-    <div class="span4 offset2">
+    <div class="span4">
         <h2>Klassföreståndare</h2>
         <ul>
             {% for klassfor in klassforestandare %}
@@ -60,6 +57,5 @@
             <li><b>E-post:</b> <a href="mailto: webb@staben.info">webb@staben.info</a></li>
         </ul>
     </div>
-</div>
 {% endif %}
 {% endblock %}
