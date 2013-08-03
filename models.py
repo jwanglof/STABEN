@@ -180,6 +180,17 @@ class Schedule(Base):
 		self.activity_info_evening = activity_info_evening
 		return
 
+class SchoolClass(Base):
+	__tablename__ = 'school_class'
+	id = db.Column(db.Integer(), primary_key=True)
+	name = db.Column(db.String(100), index=True, unique=True)
+	schedule = db.Column(db.String(254), index=True)
+
+	def __init__(self, name=None, schedule=None):
+		"""The constructor"""
+		self.name = name
+		self.schedule = schedule
+
 class SchoolProgram(Base):
 	"""School classes-table
 
@@ -191,22 +202,10 @@ class SchoolProgram(Base):
 	abbreviation = db.Column(db.String(5), index=True, unique=True)
 	name = db.Column(db.String(100), index=True, unique=True)
 
-	def __init__(self, abbreviation=None, name=None, schedule=None):
+	def __init__(self, abbreviation=None, name=None):
 		"""The constructor"""
 		self.abbreviation = abbreviation
 		self.name = name
-		self.schedule = schedule
-
-class SchoolClass(Base):
-	__tablename__ = 'school_class'
-	id = db.Column(db.Integer(), primary_key=True)
-	name = db.Column(db.String(100), index=True, unique=True)
-	schedule = db.Column(db.String(254), index=True)
-
-	def __init__(self, name=None, schedule=None):
-		"""The constructor"""
-		self.name = name
-		self.schedule = schedule	
 
 class StudentPollAnswer(Base):
 	__tablename__ = 'student_poll_answer'
