@@ -211,8 +211,8 @@ def get_student_poll_question():
 def get_user_school_program(db_user_email):
 	db_user = models.Users.query.filter_by(email=db_user_email).first()
 	user_info = models.UserInformation.query.filter_by(fk_user_id=db_user.id).first()
-	school_class = models.SchoolProgram.query.filter_by(id=user_info.school_class).first()
-	return school_class.abbreviation
+	school_program = models.SchoolProgram.query.filter_by(id=user_info.school_program).first()
+	return school_program.abbreviation
 
 def register_user(db_user_dict):
 	try:
