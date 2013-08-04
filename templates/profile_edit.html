@@ -27,14 +27,23 @@
 	Var kommer du ifrån? <br />
 	<input type='text' name='where_from' value='{{ user_info.where_from }}' /> <br />
 	Program <br />
-	<select name='school_class'>
-		{%- for classes in school_classes %}
-		<option value='{{ classes.id }}' {% if user_info.school_class == classes.id %}selected{% endif %}>
-			{{ classes.name }} ({{ classes.abbreviation }})
+	<select name='school_program' id='school_program'>
+		{%- for program in school_programs %}
+		<option value='{{ program.id }}' {% if user_info.school_program == program.id %}selected{% endif %}>
+			{{ program.name }} ({{ program.abbreviation }})
 		</option>
 		{%- endfor %}
 	</select>
-	{# In med en klasschooser #}
+	<br />
+	{# {"foo": {{ classes.id }}, "bar": {{ classes.fk_school_program_id }}} #}
+	Klass <br />
+	<select name='school_class' id='school_class'>
+		{%- for classes in school_classes %}
+		<option value='{{ classes.id }}|{{ classes.fk_school_program_id }}' {% if user_info.school_class == classes.id %}selected{% endif %}>
+			{{ classes.name }}
+		</option>
+		{%- endfor %}
+	</select>
 	<p>
 		Presentation
 		<br />

@@ -17,6 +17,19 @@ $(document).ready(function() {
 		}
 	});
 
+	$('#school_program').change(function() {
+		$('#school_program option:selected').each(function() {
+			alert($(this).val())
+		});
+	});
+
+	$('#school_class').change(function() {
+		$('#school_class option:selected').each(function() {
+			var school_program_id = $(this).val().split('|')[1]
+			// Hide all IDs that are not chosen
+		});
+	});
+
 	$('#register_form').validate({
 		errorLabelContainer: $("#errorMessages"),
 		rules: {
