@@ -289,7 +289,9 @@ def admin_get_all_users():
 @app.route('/admin/student_poll/')
 def admin_student_poll():
 	if db_commands.admin_check(session['email']) is 0:
-		return render('admin_student_poll.html', prefixes=db_commands.get_student_poll_prefix())
+		return render('admin_student_poll.html', \
+			prefixes=db_commands.get_student_poll_prefix(), \
+			dialects=db_commands.get_student_poll_dialects())
 	else:
 		return render('admin_fail.html')
 
@@ -302,6 +304,9 @@ def admin_student_poll_save(command):
 		elif command == 'question':
 			flash(u'Fråga inlagd.')
 			result = db_commands.add_student_poll_question(request.form)
+		elif command == 'max_students':
+			flash(u'Max antal studenter inlagt.')
+			result = db_commands.add_student_poll_max_students(request.form)
 
 		if result:
 			# Perhaps add some kind of alert here to show that the
