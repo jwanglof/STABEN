@@ -19,7 +19,27 @@ $(document).ready(function() {
 
 	$('#school_program').change(function() {
 		$('#school_program option:selected').each(function() {
-			alert($(this).val())
+			/*
+				Show all #school_class that have school_program == school_program_id
+			*/
+			// var school_class_selected_id = $('#school_class option').val().split('|');
+			var school_program_id = $(this).val();
+
+			$('#school_class option').each(function() {
+				var school_class_value = $(this).val().split('|');
+				var chosen_school_class = school_class_value[1]
+				var chosen_one = $(this)
+				// Show all classes
+				$(this).show();
+				if (chosen_school_class != school_program_id) {
+					// Hide the classes that does not belong to
+					$(this).hide();
+				}
+			});
+			$(chosen_one).attr('selected', true);
+
+			// alert(school_class_selected_id);
+			// alert(school_program_id);
 		});
 	});
 
@@ -27,6 +47,7 @@ $(document).ready(function() {
 		$('#school_class option:selected').each(function() {
 			var school_program_id = $(this).val().split('|')[1]
 			// Hide all IDs that are not chosen
+			// $('#school_class option').hide()
 		});
 	});
 
