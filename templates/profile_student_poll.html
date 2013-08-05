@@ -20,6 +20,6 @@ För att <span class="stabenfont">STABEN</span> ska kunna göra nolle-p till en 
 		</fieldset>
 	{% endfor %}
 	<h4>Observera! Du kan bara fylla i denna en gång. Om du vill ändra något svar måste du göra detta första dagen under nolle-p!</h4>
-	<button type="submit" class="btn btn-primary" {% if user_poll_done == 1 %}disabled{% endif %}>Spara</button>
+	<button type="submit" class="btn" {% if user_poll_done == 1 %}disabled{% endif %}>Spara</button>
 </form>
 {% endblock %}
