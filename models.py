@@ -237,10 +237,11 @@ class StudentPollDialect(Base):
 	r_student_poll_point = db.relationship('StudentPollPoint', backref='StudentPollDialect')
 	r_student_poll_assigned_group = db.relationship('StudentPollAssignedGroups', backref='StudentPollDialect')
 
-	def __init__(self, id=None, dialect=None):
+	def __init__(self, id=None, dialect=None, max_students=None):
 		"""The constructor"""
 		self.id = id
 		self.dialect = dialect
+		self.max_students = max_students
 		return
 
 class StudentPollPoint(Base):
