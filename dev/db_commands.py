@@ -108,8 +108,9 @@ def create_student_poll():
 			db_session.add(models.StudentPollQuestion(index, q))
 
 	# Add dialects
+	max_students = StudentPoll.get_max_students()
 	for index, d in StudentPoll.get_dialects().iteritems():
-		db_session.add(models.StudentPollDialect(index, d))
+		db_session.add(models.StudentPollDialect(index, d, max_students[index]))
 
 	# Add points
 	# Get the points from the CSV file
@@ -124,9 +125,6 @@ def create_student_poll():
 
 	db_session.commit()
 	return 'Student poll prefixes and questions added'
-
-# def gen_pw(clear_pw):
-# 	return config.bcrypt.generate_password_hash(clear_pw)
 
 def add_contact(name, phonenumber, email, role, school_class, link):
 	contact = models.Contact(name, phonenumber, email, role, school_class, link)
@@ -268,9 +266,18 @@ def add_student_poll_prefix(db_student_poll_dict):
 		return False
 
 def add_student_poll_question(db_student_poll_dict):
+	print db_student_poll_dict
 	try:
 		new_question = models.StudentPollQuestion(db_student_poll_dict['prefix'], db_student_poll_dict['question'])
 		db_session.add(new_question)
+		db_session.commit()
+		return True
+	except:
+		return False
+
+def add_student_poll_max_students(db_student_poll_dict):
+	try:
+		models.StudentPollDialect.query.filter_by(id=db_student_poll_dict['id']).update({'max_students':db_student_poll_dict['max_students']})
 		db_session.commit()
 		return True
 	except:
