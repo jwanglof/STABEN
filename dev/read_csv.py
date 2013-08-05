@@ -103,8 +103,8 @@ class ReadStudentPollCsvFile():
 			
 ## Run example:
 # x = ReadStudentPollCsvFile('studentpoll.csv')
-# print x.get_prefixes()	## {1: 'Har med sig', 2: 'Gillar', ....}
-# print x.get_questions()	## {1: ['dattamaskin', 'blabla', 'bla'], 2: ['dddd', 'ddd'], ....}
-# print x.get_dialects()	## {1: 'Idolbok', 2: 'MacGyver', ....}
-# print x.get_points()		## {1: ['dattamaskin', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '1', '', '', '', '1', '', '', '', '', '', '', '2', ''], ....}
-# print x.get_max_students()
+# print x.get_prefixes()		## {1: 'Har med sig', 2: 'Gillar', ....}
+# print x.get_questions()		## {1: ['dattamaskin', 'blabla', 'bla'], 2: ['dddd', 'ddd'], ....}
+# print x.get_dialects()		## {1: 'Idolbok', 2: 'MacGyver', ....}
+# print x.get_points()			## {1: ['dattamaskin', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '1', '', '', '', '1', '', '', '', '', '', '', '2', ''], ....}
+# print x.get_max_students()	## {1: '8', 2: '8', ....}
