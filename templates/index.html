@@ -2,9 +2,9 @@
 {% block active_index %}active{% endblock %}
 {% block content %}
         <p class='no_javascript'>
-            <span class="stabenfont">STABEN</span> ser att <span class="nollanfont">{{ nollan }}</span>
-            inte har Javascript aktiverat. Om <span class="nollanfont">{{ nollan }}</span> vill kunna använda
-            <span class="stabenfont">STABEN</span>s hemsida till fullo bör <span class="nollanfont">{{ nollan }}</span>
+            {{ st['staben']|safe }} ser att {{ st['nollan']|safe }}
+            inte har Javascript aktiverat. Om {{ st['nollan']|safe }} vill kunna använda
+            {{ st['staben']|safe }}s hemsida till fullo bör {{ st['nollan']|safe }}
             aktivera Javascript.
         </p>
     </div>
@@ -15,19 +15,19 @@
     </div>
     <div class="span7 offset1">
         <h3>
-            Goddag och välkommen <span class="nollanfont">{{ nollan }}</span>
+            Goddag och välkommen {{ st['nollan']|safe }}
         </h3>
         <br>
         <p style="font-size: large">
-            Detta är <span class="stabenfont">STABEN</span>s eminenta hemsida.
+            Detta är {{ st['staben']|safe }}s eminenta hemsida.
             <br><br>
-            Här har <span class="stabenfont">STABEN</span> samlat viktig information så som schema och
-            kontaktuppgifter men också sådant som <span class="nollanfont">{{ nollan }}</span> kommer producera i sina nolleuppdrag.
+            Här har {{ st['staben']|safe }} samlat viktig information så som schema och
+            kontaktuppgifter men också sådant som {{ st['nollan']|safe }} kommer producera i sina nolleuppdrag.
             <br><br>
             Kolla in schemat och gör dig bekant med dagarna. Glöm inte att kolla priser som står med i schemat
-            så att <span class="nollanfont">{{ nollan }}</span> vet hur mycket ca$h som måste tas med.
+            så att {{ st['nollan']|safe }} vet hur mycket ca$h som måste tas med.
             <br><br>
-            Segla försiktigt <span class="nollanfont">{{ nollan }}</span> och kom ihåg, <span class="stabenfont">STABEN</span> ser dig alltid.
+            Segla försiktigt {{ st['nollan']|safe }} och kom ihåg, {{ st['staben']|safe }} ser dig alltid.
         </p>
     </div>
     <div class="span3">
