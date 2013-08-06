@@ -139,9 +139,12 @@ def add_login_count(db_user_email):
 	db_session.commit()
 
 def add_user_information(db_user_id):
-	db_session.add(models.UserInformation(db_user_id, ''))
-	db_session.commit()
-	return True
+	try:
+		db_session.add(models.UserInformation(db_user_id, ''))
+		db_session.commit()
+		return True
+	except:
+		return False
 
 def get_class_mates(db_user_email):
 	db_user = models.Users.query.filter_by(email=db_user_email).first()
@@ -168,7 +171,7 @@ def get_db_user(user_id=None,db_user_email=None,db_user_password=None):
 		# Check to see if a user is signing in
 		if db_user_password is not None:
 			if config.bcrypt.check_password_hash(db_user.password, db_user_password):
-				return db_user
+				return db_user_info
 			else:
 				return False
 		else:
@@ -217,7 +220,6 @@ def register_user(db_user_dict):
 		new_user = models.Users(db_user_dict['email'], config.bcrypt.generate_password_hash(db_user_dict['password']))
 		db_session.add(new_user)
 		db_session.commit()
-
 		return True
 	except:
 		return False
@@ -232,12 +234,10 @@ def save_student_poll(db_user_email, db_student_poll_dict):
 	except:
 		return False
 
-def update_db_user(db_user_email, db_user_dict, phonenumber_vis=None):
+def update_db_user(db_user_email, db_user_dict):
 	try:
 		db_user = models.Users.query.filter_by(email=db_user_email).first()
 		models.UserInformation.query.filter_by(fk_user_id=db_user.id).update(db_user_dict)
-		if phonenumber_vis != None:
-			models.UserInformation.query.filter_by(fk_user_id=db_user.id).update({'phonenumber_vis': phonenumber_vis})
 		db_session.commit()
 		return True
 	except:
