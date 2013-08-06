@@ -3,10 +3,10 @@ $(document).ready(function() {
 	$('.no_javascript').hide();
 
 	$('#profile_edit').validate({
+		errorLabelContainer: $("#errorMessages"),
 		rules: {
 			firstname: 'required',
 			lastname: 'required'
-
 		},
 		messages: {
 			firstname: 'Skriv ditt förnamn',
