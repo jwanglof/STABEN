@@ -19,7 +19,6 @@ För att {{ st['staben']|safe }} ska kunna göra nolle-p till en rolig och minne
 			{% endfor %}
 		</fieldset>
 	{% endfor %}
-	<fieldset>
 		<legend>{{ st['nollan']|safe }} lovar att</legend>
 		<ul>
 			<li>inte bära solglasögon</li>
@@ -31,15 +30,12 @@ För att {{ st['staben']|safe }} ska kunna göra nolle-p till en rolig och minne
 			<li>sjunga nollesången högst, bäst och vackrast</li>
 			<li>alltid bära sitt nolleankare</li>
 		</ul>
-	</fieldset>
-	<fieldset>
 		<legend>{{ st['staben']|safe }} lovar att</legend>
 		<ul>
 			<li>{{ st['nollan']|safe }} gör bäst i att hålla vad {{ st['nollan']|safe }} lovar</li>
 			<li>nolle-p blir roligast om {{ st['nollan']|safe }} fyllt i nolleenkäten seriöst och riktigt</li>
 			<li>{{ st['staben']|safe }} ska ta väl hand om {{ st['nollan']|safe }}</li>
 		</ul>
-	</fieldset>
 	<h4>Genom att skicka in enkäten svär {{ st['nollan']|safe }} vid allt som är heligt och dyrt, oheligt och gratis, samt vid {{ st['nollan']|safe }} eget ankare att {{ st['nollan']|safe }} fyllt i enkäten sanningsenligt och riktigt.</h4>
 	<button type="submit" class="btn btn-primary" {% if user_poll_done == 1 %}disabled{% endif %}>Skicka in</button>
 </form>
