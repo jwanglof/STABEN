@@ -379,15 +379,16 @@ def admin_insert_user_to_group():
 
 	dialect_md = config.MultiDict()
 	rest_md = config.MultiDict()
+	student_poll_dialects = get_student_poll_dialects()
 	for user_id, content in admin_get_top_three_groups().iteritems():
 		for i, dialect_id in enumerate(content['top_score']):
 			# Add 1 to i because i starts with 0
 			position = i+1
 
 			# Check so there is not more than 5 students in a group.
-			# If there are more than 5 students they will be added to rest_list
-			# to be dealt with later.
-			if len(dialect_md.getlist(dialect_id)) < 5: # Change to 5!
+			# If there are more than student_poll_dialects[dialect_id].max_students
+			# students they will be added to rest_list to be dealt with later.
+			if len(dialect_md.getlist(dialect_id)) < student_poll_dialects[dialect_id].max_students:
 				dialect_md.add(dialect_id, {user_id: position})
 			else:
 				# If dialect_id is full in dialect_md,
