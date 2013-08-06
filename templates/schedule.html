@@ -1,6 +1,7 @@
 {% extends "template.html" %}
 {% block active_schedule %}active{% endblock %}
 {% block content %}
+<br>
 <h3 style="display: inline">Ange vecka </h3>
 <div class="pagination">
     <ul>
@@ -28,8 +29,8 @@
     </ul>
 </div>
 <br>
+<p>För en sammanfattning av priser till de olika evenemangen se <a href="{{ url_for('prices') }}">Priser</a>.</p>
 <br>
-
 <div class="tabbable tabs-left">
     <ul class="nav nav-tabs">
         {% for schedule_tab in schedule %}
