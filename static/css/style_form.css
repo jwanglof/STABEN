@@ -8,7 +8,7 @@ form.stabForm fieldset ol {
 }
 
 form.stabForm fieldset li {
-	list-style-type: square;
+	list-style-type: none;
 	margin: 0px;
 	padding: 5px;
 }
@@ -35,6 +35,10 @@ div#errorMessages {
 	border: 1px solid #cc0;
 	border-radius: 5px;
 	padding: 0px 15px;
+}
+
+fieldset li {
+	list-style-type: circle;
 }
 
 div#flashMessages {
