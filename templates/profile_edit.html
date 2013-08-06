@@ -2,6 +2,7 @@
 {% block active_profile %}active{% endblock %}
 {% block content %}
 <h1>Redigera profil</h1>
+{{ st['staben']|safe }} hoppas verkligen {{ st['nollan']|safe }} åtminstone fyller i sitt namn, om {{ st['nollan']|safe }} har någon allergi och om {{ st['nollan']|safe }} är vegan eller vegetarian, men {{ st['staben']|safe }} blir juh självklart kanonlyckliga om {{ st['nollan']|safe }} fyller i alla sina uppgifter!
 <form method='post' action='{{ url_for('profile_save', user_email=session['email']) }}' id='profile_edit'>
 	<h4>Nolleuppgifter</h4>
 	Förnamn <br />
@@ -20,7 +21,7 @@
 	Telefonnummer <br />
 	<input type='text' name='phonenumber' value='{{ user_info.phonenumber }}' /> <br />
 	<input type='checkbox' name='phonenumber_vis' {% if user_info.phonenumber_vis == 1 %}value='0' checked='checked'{% elif user_info.phonenumber_vis == 0 %}value='1'{% endif %} /> Visa mitt telefonnummer på min profil <br /> <br />
-	Länk till din facebookprofil <br />
+	Facebookanvändarnamn [<a href='https://www.facebook.com/help/211813265517027/' target='_blank'>?</a>] <br />
 	<input type='text' name='facebook_url' value='{{ user_info.facebook_url }}' /> <br />
 	Vilken adress kommer du ha i Linköping? <br />
 	<input type='text' name='current_city' value='{{ user_info.current_city }}' /> <br />

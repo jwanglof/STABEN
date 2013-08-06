@@ -1,10 +1,10 @@
 {% extends "template.html" %}
 {% block content %}
 <h1>Nolleenkät</h1>
-<h4>Observera! Du kan bara fylla i denna en gång. Om du vill ändra något svar måste du göra detta första dagen under nolle-p!</h4>
-För att <span class="stabenfont">STABEN</span> ska kunna göra nolle-p till en rolig och minnesvärd tid i <span class="nollanfont">{{ nollan }}</span> liv, behöver <span class="stabenfont">STABEN</span> veta lite saker om <span class="nollanfont">{{ nollan }}</span> innan <span class="nollanfont">{{ nollan }}</span> kommer till Linkeboda, därför bör <span class="nollanfont">{{ nollan }}</span> ta sig tid att fylla i den här enkäten. Det är ganska många frågor <span class="nollanfont">{{ nollan }}</span>, men <span class="nollanfont">{{ nollan }}</span> kan vara säker på att <span class="nollanfont">{{ nollan }}</span> får igen tiden det tar att fylla i enkäten när nolle-p har börjat då <span class="nollanfont">{{ nollan }}</span> som allra helst vill ha tid till alla roliga aktiviteter <span class="stabenfont">STABEN</span> har planerat för <span class="nollanfont">{{ nollan }}</span>!
+<h4>Observera att {{ st['nollan']|safe }} bara kan fylla i denna enkät en gång, så {{ st['staben']|safe }} hoppas att {{ st['nollan']|safe }} fyller i enkäten seriöst och riktigt, juh!</h4>
+För att {{ st['staben']|safe }} ska kunna göra nolle-p till en rolig och minnesvärd tid i {{ st['nollan']|safe }} liv, behöver {{ st['staben']|safe }} veta lite saker om {{ st['nollan']|safe }} innan {{ st['nollan']|safe }} kommer till Linkeboda, därför bör {{ st['nollan']|safe }} ta sig tid att fylla i den här enkäten. Det är ganska många frågor {{ st['nollan']|safe }}, men {{ st['nollan']|safe }} kan vara säker på att {{ st['nollan']|safe }} får igen tiden det tar att fylla i enkäten när nolle-p har börjat då {{ st['nollan']|safe }} som allra helst vill ha tid till alla roliga aktiviteter {{ st['staben']|safe }} har planerat för {{ st['nollan']|safe }}!
 <p>
-<span class="nollanfont">{{ nollan }}</span> kan självklart välja många alternativ på denna enkät och nolle-p blir roligast om <span class="nollanfont">{{ nollan }}</span> fyller i enkäten seriöst och riktigt, ju.
+{{ st['nollan']|safe }} kan självklart välja många alternativ på denna enkät och nolle-p blir roligast om {{ st['nollan']|safe }} fyller i enkäten seriöst och riktigt, ju.
 </p>
 <form method='post' action='{{ url_for('profile_save_student_poll', user_email=session['email']) }}' class='stabForm' id='student_poll_form'>
 	{% for prefix in student_poll_prefixes %}
@@ -19,7 +19,28 @@ För att <span class="stabenfont">STABEN</span> ska kunna göra nolle-p till en 
 			{% endfor %}
 		</fieldset>
 	{% endfor %}
-	<h4>Observera! Du kan bara fylla i denna en gång. Om du vill ändra något svar måste du göra detta första dagen under nolle-p!</h4>
-	<button type="submit" class="btn" {% if user_poll_done == 1 %}disabled{% endif %}>Spara</button>
+	<fieldset>
+		<legend>{{ st['nollan']|safe }} lovar att</legend>
+		<ul>
+			<li>inte bära solglasögon</li>
+			<li>repetera matematiken ordentligt innan {{ st['nollan']|safe }} kommer till Linkeboda</li>
+			<li>aldrig bära solglasögon</li>
+			<li>aldrig göra {{ st['staben']|safe }} upprörd</li>
+			<li>aldrig någonsin bära solgasögon</li>
+			<li>räkna fett med matte hela nolle-p</li>
+			<li>sjunga nollesången högst, bäst och vackrast</li>
+			<li>alltid bära sitt nolleankare</li>
+		</ul>
+	</fieldset>
+	<fieldset>
+		<legend>{{ st['staben']|safe }} lovar att</legend>
+		<ul>
+			<li>{{ st['nollan']|safe }} gör bäst i att hålla vad {{ st['nollan']|safe }} lovar</li>
+			<li>nolle-p blir roligast om {{ st['nollan']|safe }} fyllt i nolleenkäten seriöst och riktigt</li>
+			<li>{{ st['staben']|safe }} ska ta väl hand om {{ st['nollan']|safe }}</li>
+		</ul>
+	</fieldset>
+	<h4>Genom att skicka in enkäten svär {{ st['nollan']|safe }} vid allt som är heligt och dyrt, oheligt och gratis, samt vid {{ st['nollan']|safe }} eget ankare att {{ st['nollan']|safe }} fyllt i enkäten sanningsenligt och riktigt.</h4>
+	<button type="submit" class="btn btn-primary" {% if user_poll_done == 1 %}disabled{% endif %}>Skicka in</button>
 </form>
 {% endblock %}

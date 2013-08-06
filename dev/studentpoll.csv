@@ -1,4 +1,4 @@
-,Idolbok,MacGyver,Mission Impossible,Ta-Reda-På,Poängnollan,G^3,Guckel,Bakis,Pimp-my-ride,Måla,Stabnapp,D-Cup,Nollenapp,Bus,Lek,Foto,Atlet,Spex,Spionnollan,Gunnies,Middagsnollan,Challange accepted,Blogg,Konstruktör,Filmnollan,Staben kopia,Stabify,Feeders,Skattjakt,Vaktnollan,BRAK
+,Idolbok,MacGyver,Mission Impossible,Ta-Reda-På,Poängnollan,G^3,Guckel,Bakis,MacLaurin-stallet,Måla,Stabnapp,D-Cup,Nollenapp,Bus,Lek,Foto,Atlet,Spex,Spionnollan,Gunnies,Gourmenollan,Challange accepted,Blogg,Båtnollan,Filmnollan,Staben kopia,Stabify,Feeders,Skattjakt,Vaktnollan,BRAK
 Har med sig,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 dattamaskin,,,,,,,,,,,,,,,,,,,1,,,,1,,,,,,,2,
 verktygslåda,,2,,,,,,,3,,,,,,,,,,,,,,,3,,2,,,,,
@@ -126,3 +126,4 @@ staben approve lekledare,,,,,,,,,,,,7,,,,,,,,,,,,,,,,,,,7
 staben approve badass,,,,,,,,,,,,,,,,,,,,,,7,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 Summa,27,27,27,32,21,37,43,23,30,37,26,39,27,34,33,29,33,39,29,24,20,28,23,25,21,35,27,31,26,20,39
+max_students,8,8,8,8,8,7,9,8,9,8,8,8,9,8,7,8,10,8,8,9,8,6,6,9,6,8,6,8,9,8,8

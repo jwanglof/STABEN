@@ -44,7 +44,6 @@ class ReadStudentPollCsvFile():
 		question_list = []
 		questions = {}
 
-		# Change staben to <span class='stabenfont'>STABEN</span>
 		with open(self.filename, 'rb') as csvfile:
 			reader = csv.reader(csvfile)
 			for row in reader:
@@ -88,10 +87,24 @@ class ReadStudentPollCsvFile():
 			points[i+1] = {point_list[i][0]: point_list[i][1:]}
 		return points
 
+	def get_max_students(self):
+		max_students_w_dialect = {}
 
+		with open(self.filename, 'rb') as csvfile:
+			reader = csv.reader(csvfile, dialect='commas')
+			# [-1] = Take the last column in the file
+			# [1:] = Remove the first element (which in this case is max_students)
+			max_student_list = [y for y in reader][-1][1:]
+
+		for d_id, dialect in (self.get_dialects()).iteritems():
+			max_students_w_dialect[d_id] = max_student_list[d_id-1]
+
+		return max_students_w_dialect
+			
 ## Run example:
 # x = ReadStudentPollCsvFile('studentpoll.csv')
-# print x.get_prefixes()	## {1: 'Har med sig', 2: 'Gillar', ....}
-# print x.get_questions()	## {1: ['dattamaskin', 'blabla', 'bla'], 2: ['dddd', 'ddd'], ....}
-# print x.get_dialects()	## {1: 'Idolbok', 2: 'MacGyver', ....}
-# print x.get_points()		## {1: ['dattamaskin', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '1', '', '', '', '1', '', '', '', '', '', '', '2', ''], ....}
+# print x.get_prefixes()		## {1: 'Har med sig', 2: 'Gillar', ....}
+# print x.get_questions()		## {1: ['dattamaskin', 'blabla', 'bla'], 2: ['dddd', 'ddd'], ....}
+# print x.get_dialects()		## {1: 'Idolbok', 2: 'MacGyver', ....}
+# print x.get_points()			## {1: ['dattamaskin', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '1', '', '', '', '1', '', '', '', '', '', '', '2', ''], ....}
+# print x.get_max_students()	## {1: '8', 2: '8', ....}

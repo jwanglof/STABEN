@@ -108,8 +108,9 @@ def create_student_poll():
 			db_session.add(models.StudentPollQuestion(index, q))
 
 	# Add dialects
+	max_students = StudentPoll.get_max_students()
 	for index, d in StudentPoll.get_dialects().iteritems():
-		db_session.add(models.StudentPollDialect(index, d))
+		db_session.add(models.StudentPollDialect(index, d, max_students[index]))
 
 	# Add points
 	# Get the points from the CSV file
@@ -125,9 +126,6 @@ def create_student_poll():
 	db_session.commit()
 	return 'Student poll prefixes and questions added'
 
-# def gen_pw(clear_pw):
-# 	return config.bcrypt.generate_password_hash(clear_pw)
-
 def add_contact(name, phonenumber, email, role, school_class, link):
 	contact = models.Contact(name, phonenumber, email, role, school_class, link)
 	db_session.add(contact)
@@ -141,9 +139,21 @@ def add_login_count(db_user_email):
 	db_session.commit()
 
 def add_user_information(db_user_id):
-	db_session.add(models.UserInformation(db_user_id, ''))
-	db_session.commit()
-	return True
+	try:
+		db_session.add(models.UserInformation(db_user_id, ''))
+		db_session.commit()
+		return True
+	except:
+		return False
+
+def check_role(db_user_email):
+	return models.Users.query.filter_by(email=db_user_email).first().role
+
+def check_if_email_exist(email):
+	if models.Users.query.filter_by(email=email).first():
+		return True
+	else:
+		print False
 
 def get_class_mates(db_user_email):
 	db_user = models.Users.query.filter_by(email=db_user_email).first()
@@ -170,7 +180,7 @@ def get_db_user(user_id=None,db_user_email=None,db_user_password=None):
 		# Check to see if a user is signing in
 		if db_user_password is not None:
 			if config.bcrypt.check_password_hash(db_user.password, db_user_password):
-				return db_user
+				return db_user_info
 			else:
 				return False
 		else:
@@ -219,7 +229,6 @@ def register_user(db_user_dict):
 		new_user = models.Users(db_user_dict['email'], config.bcrypt.generate_password_hash(db_user_dict['password']))
 		db_session.add(new_user)
 		db_session.commit()
-
 		return True
 	except:
 		return False
@@ -234,12 +243,10 @@ def save_student_poll(db_user_email, db_student_poll_dict):
 	except:
 		return False
 
-def update_db_user(db_user_email, db_user_dict, phonenumber_vis=None):
+def update_db_user(db_user_email, db_user_dict):
 	try:
 		db_user = models.Users.query.filter_by(email=db_user_email).first()
 		models.UserInformation.query.filter_by(fk_user_id=db_user.id).update(db_user_dict)
-		if phonenumber_vis != None:
-			models.UserInformation.query.filter_by(fk_user_id=db_user.id).update({'phonenumber_vis': phonenumber_vis})
 		db_session.commit()
 		return True
 	except:
@@ -268,9 +275,18 @@ def add_student_poll_prefix(db_student_poll_dict):
 		return False
 
 def add_student_poll_question(db_student_poll_dict):
+	print db_student_poll_dict
 	try:
 		new_question = models.StudentPollQuestion(db_student_poll_dict['prefix'], db_student_poll_dict['question'])
 		db_session.add(new_question)
+		db_session.commit()
+		return True
+	except:
+		return False
+
+def add_student_poll_max_students(db_student_poll_dict):
+	try:
+		models.StudentPollDialect.query.filter_by(id=db_student_poll_dict['id']).update({'max_students':db_student_poll_dict['max_students']})
 		db_session.commit()
 		return True
 	except:
@@ -352,11 +368,6 @@ def admin_get_user_poll_answer(user_id):
 	#, 4: admin_calc_user_points(user_id)
 	return {1: userinfo_w_answers_MD, 2: pref_w_ques_w_point_OMD}
 
-def admin_check(db_user_email):
-	# Check only role!
-	user_info = models.Users.query.filter_by(email=db_user_email).first()
-	return user_info.role
-
 def admin_get_all_users():
 	return {'user': models.Users.query.all(), 'info': models.UserInformation.query.all()}
 
@@ -372,15 +383,16 @@ def admin_insert_user_to_group():
 
 	dialect_md = config.MultiDict()
 	rest_md = config.MultiDict()
+	student_poll_dialects = get_student_poll_dialects()
 	for user_id, content in admin_get_top_three_groups().iteritems():
 		for i, dialect_id in enumerate(content['top_score']):
 			# Add 1 to i because i starts with 0
 			position = i+1
 
 			# Check so there is not more than 5 students in a group.
-			# If there are more than 5 students they will be added to rest_list
-			# to be dealt with later.
-			if len(dialect_md.getlist(dialect_id)) < 5: # Change to 5!
+			# If there are more than student_poll_dialects[dialect_id].max_students
+			# students they will be added to rest_list to be dealt with later.
+			if len(dialect_md.getlist(dialect_id)) < student_poll_dialects[dialect_id].max_students:
 				dialect_md.add(dialect_id, {user_id: position})
 			else:
 				# If dialect_id is full in dialect_md,

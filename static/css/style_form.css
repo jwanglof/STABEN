@@ -8,7 +8,7 @@ form.stabForm fieldset ol {
 }
 
 form.stabForm fieldset li {
-	list-style: none;
+	list-style-type: square;
 	margin: 0px;
 	padding: 5px;
 }
@@ -16,6 +16,7 @@ form.stabForm fieldset li {
 form.stabForm legend {
 	padding: 0px 2px;
 	font-weight: bold;
+	color: #c0c0c0;
 }
 
 form.stabForm label {

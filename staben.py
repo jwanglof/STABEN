@@ -16,7 +16,7 @@ redirect = config.redirect
 
 debug = debug.debug
 
-nollan = 'minus'
+static_texts = {'nollan': '<span class="nollanfont">minus</span>', 'staben': '<span class="stabenfont">STABEN</span>'}
 
 # DEV OPTIONS
 # NEEDS TO BE REMOVED IN PRODUCTION MODE
@@ -59,13 +59,26 @@ def db_student_poll():
 	return db_commands.create_student_poll()
 
 def add_session(db_user):
-	config.session['email'] = db_user.email
-	config.session['role'] = db_user.role
+	config.session['email'] = db_user['user'].email
+	config.session['role'] = db_user['user'].role
+
+	if db_user['info'].finished_profile:
+		config.session['finished_profile'] = True
+	else:
+		config.session['finished_profile'] = False
+
+	if db_user['info'].poll_done:
+		config.session['poll_done'] = True
+	else:
+		config.session['poll_done'] = False
 	return True
+
+def edit_session(session_value, value):
+	config.session[session_value] = value
 
 @app.route('/')
 def index():
-	return render('index.html', session=session, bla=config.user_roles, nollan=nollan)
+	return render('index.html', session=session, bla=config.user_roles, st=static_texts)
 
 @app.route('/prices')
 def prices():
@@ -92,7 +105,11 @@ def contact(show_page='contact'):
 	role_studie = 1
 	klassforestandare = db_commands.get_contacts(role_klass)
 	studievagledning = db_commands.get_contacts(role_studie)
-	return render('contact.html', show=show_page, klassforestandare=klassforestandare, studievagledning=studievagledning)
+	return render('contact.html', \
+		show=show_page, \
+		klassforestandare=klassforestandare, \
+		studievagledning=studievagledning, \
+		st=static_texts)
 
 @app.route('/user/login', methods=['POST'])
 def login():
@@ -105,7 +122,15 @@ def login():
 				# user_info['info'] contains all the user's information (from the table userInformation)
 				if add_session(user):
 					db_commands.add_login_count(request.form['email'])
-					return redirect(url_for('profile', user_email=request.form['email']))
+
+					if not session['finished_profile']:
+						redirect_to = 'profile_edit'
+					elif not session['poll_done']:
+						redirect_to = 'profile_student_poll'
+					else:
+						redirect_to = 'profile'
+
+					return redirect(url_for(redirect_to, user_email=request.form['email']))
 			else:
 				return render('login.html', login=False)
 		else:
@@ -121,36 +146,51 @@ def signout():
 @app.route('/register', methods=['POST', 'GET'])
 def register():
 	if request.method == 'POST':
-		if request.form['email'] != '' and str(request.form['regCode']) == str(db_commands.get_register_code().code):
-			debug('register', 'email och code funkar')
-			if request.form['password'] == request.form['rep_password']:
-				debug('register', 'Passwords are the same')
-				if db_commands.register_user(request.form):
-					debug('register', 'Registration succeeded')
-					user = db_commands.get_db_user(db_user_email=request.form['email'], db_user_password=request.form['password'])
+		if not db_commands.check_if_email_exist(request.form['email']):
+			forbidden_chars = [u'å', u'ä', u'ö']
+			forbidden_chars_email = [x for x in forbidden_chars if x in request.form['email']]
 
-					if user:
-						db_commands.add_user_information(user.id)
-						add_session(user)
-						return redirect(url_for('profile_edit', user_email=user.email))
+			if len(forbidden_chars_email) == 0:
+				if request.form['email'] != '' and str(request.form['regCode']) == str(db_commands.get_register_code().code):
+					debug('register', 'email och code funkar')
+					if request.form['password'] == request.form['rep_password']:
+						debug('register', 'Passwords are the same')
+						if db_commands.register_user(request.form):
+							user = db_commands.get_db_user(db_user_email=request.form['email'], db_user_password=request.form['password'])['user']
+
+							if user:
+								if db_commands.add_user_information(user.id):
+									debug('register', 'Registration succeeded')
+									user = db_commands.get_db_user(user_id=user.id)
+									add_session(user)
+									return redirect(url_for('profile_edit', user_email=user['user'].email))
+								else:
+									debug('register', 'Error, could not add user information')
+									return redirect(url_for('register'))
+							else:
+								debug('register', 'Error, could not get user')
+								return redirect(url_for('register'))
+						else:
+							debug('register', 'Error, could not register user')
+							return redirect(url_for('register'))
 					else:
-						debug('register', 'Error, could not get user')
+						debug('register', 'Error, the password did not match')
+						flash(u'Du måste ange samma lösenord i båda rutorna.')
 						return redirect(url_for('register'))
 				else:
-					debug('register', 'Error, could not register user')
+					debug('register', 'Error, the user did not type his email and register code')
+					flash(u'Du måste ange din e-mail och registreringskod!')
 					return redirect(url_for('register'))
 			else:
-				debug('register', 'Error, the password did not match')
-				flash(u'Du måste ange samma lösenord i båda rutorna.')
+				debug('register', 'Error, the user typed a forbidden character as his e-mail')
+				flash(u'Din e-post får inte innehålla å, ä eller ö!')
 				return redirect(url_for('register'))
 		else:
-			debug('register', 'Error, the user did not type his email and register code')
-			flash(u'Du måste ange din e-mail och registreringskod!')
+			debug('register', 'Error, the email already exists')
+			flash(u'E-posten du angav är redan registrerad!')
 			return redirect(url_for('register'))
 	else:
 		return render('register.html')
-	# 	classes = db_commands.get_school_classes()
-	# 	return render('register.html', classes=classes)
 
 '''
 	*
@@ -177,7 +217,8 @@ def profile_edit(user_email):
 			user=user['user'], \
 			user_info=user['info'], \
 			school_programs=school_programs,
-			school_classes=db_commands.get_school_classes())
+			school_classes=db_commands.get_school_classes(), \
+			st=static_texts)
 	else:
 		return render('login.html', login=False)
 
@@ -185,12 +226,21 @@ def profile_edit(user_email):
 @app.route('/profile/<user_email>/save/', methods=['POST'])
 def profile_save(user_email):
 	if session and user_email == session['email']:
-		# Need this check since checkboxes doesn't return anything if it's unchecked!
-		phonenumber_vis = 0
-		if 'phonenumber_vis' in request.form:
-			phonenumber_vis = 1
-		db_commands.update_db_user(user_email, request.form, phonenumber_vis)
-		return redirect(url_for('profile', user_email=user_email))
+		if request.form['firstname'] != '' and request.form['lastname'] != '':
+			copy_request_form = request.form.copy()
+			copy_request_form.add('phonenumber_vis', 1 if 'phonenumber_vis' in request.form else 0)
+			copy_request_form.add('finished_profile', 1)
+
+			if session['finished_profile']:
+				redirect_to = 'profile'
+			else:
+				redirect_to = 'profile_student_poll'
+
+			edit_session('finished_profile', True)
+			db_commands.update_db_user(user_email, copy_request_form)
+			return redirect(url_for(redirect_to, user_email=user_email))
+		else:
+			return redirect(url_for('profile_edit', user_email=user_email))
 	else:
 		return render('login.html', login=False)
 
@@ -227,7 +277,7 @@ def profile_student_poll(user_email):
 			student_poll_questions=db_commands.get_student_poll_question(), \
 			user_poll_done=user['info'].poll_done, \
 			student_poll_user_answers=student_poll_user_answers, \
-			nollan=nollan)
+			st=static_texts)
 	else:
 		return render('login.html', login=False)
 
@@ -239,6 +289,7 @@ def profile_save_student_poll(user_email):
 		if db_commands.get_db_user(db_user_email=session['email'])['info'].poll_done == 0:
 			if db_commands.update_db_user(user_email, config.ImmutableMultiDict([('poll_done', u'1')])):
 				if db_commands.save_student_poll(user_email, request.form):
+					edit_session('poll_done', True)
 					return redirect(url_for('profile_student_poll', user_email=user_email))
 				else:
 					debug('profile_save_student_poll', 'Could not save the student poll')
@@ -259,14 +310,14 @@ def profile_save_student_poll(user_email):
 @app.route('/admin/pages/')
 def admin_pages():
 	# Need to check that the user is signed in and is an admin
-	if db_commands.admin_check(session['email']) == 0:
+	if db_commands.check_role(session['email']) == 0:
 		return render('admin_pages.html')
 	else:
 		return render('admin_fail.html')
 
 @app.route('/admin/addcontact/', methods=['GET', 'POST'])
 def admin_addcontact():
-	if db_commands.admin_check(session['email']) is 0:
+	if db_commands.check_role(session['email']) is 0:
 		if request.method == 'POST':
 			result = db_commands.add_contact(request.form['name'], request.form['phonenumber'],
 											 request.form['email'],request.form['role'],
@@ -280,7 +331,7 @@ def admin_addcontact():
 @app.route('/admin/users/')
 def admin_get_all_users():
 	# Need to check that the user is signed in and is an admin
-	if db_commands.admin_check(session['email']) is 0:
+	if db_commands.check_role(session['email']) is 0:
 		users = db_commands.admin_get_all_users()
 		return render('admin_get_all_users.html', users=users)
 	else:
@@ -288,8 +339,10 @@ def admin_get_all_users():
 
 @app.route('/admin/student_poll/')
 def admin_student_poll():
-	if db_commands.admin_check(session['email']) is 0:
-		return render('admin_student_poll.html', prefixes=db_commands.get_student_poll_prefix())
+	if db_commands.check_role(session['email']) is 0:
+		return render('admin_student_poll.html', \
+			prefixes=db_commands.get_student_poll_prefix(), \
+			dialects=db_commands.get_student_poll_dialects())
 	else:
 		return render('admin_fail.html')
 
@@ -302,6 +355,9 @@ def admin_student_poll_save(command):
 		elif command == 'question':
 			flash(u'Fråga inlagd.')
 			result = db_commands.add_student_poll_question(request.form)
+		elif command == 'max_students':
+			flash(u'Max antal studenter inlagt.')
+			result = db_commands.add_student_poll_max_students(request.form)
 
 		if result:
 			# Perhaps add some kind of alert here to show that the
@@ -312,7 +368,7 @@ def admin_student_poll_save(command):
 
 @app.route('/admin_student_poll_result')
 def admin_student_poll_result():
-	if db_commands.admin_check(session['email']) is 0:
+	if db_commands.check_role(session['email']) is 0:
 		# print db_commands.admin_get_top_three_groups()[1]['user'].firstname
 		return render('admin_student_poll_result.html', \
 			users_info=db_commands.admin_get_all_users_w_poll_done(), \
@@ -323,7 +379,7 @@ def admin_student_poll_result():
 
 @app.route('/admin_show_student_poll_result/<user_id>')
 def admin_show_student_poll_result(user_id):
-	if db_commands.admin_check(session['email']) is 0:
+	if db_commands.check_role(session['email']) is 0:
 		alot_of_info = db_commands.admin_get_user_poll_answer(user_id)
 		return render('admin_student_poll_user_result.html', \
 			user=alot_of_info[1], \

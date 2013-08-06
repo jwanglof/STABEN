@@ -1,26 +1,31 @@
 {% extends "template.html" %}
 {% block active_index %}active{% endblock %}
 {% block content %}
-    <p class='no_javascript'>
-        <span class="stabenfont">STABEN</span> ser att <span class="nollanfont">{{ nollan }}</span>
-        inte har Javascript aktiverat. Om <span class="nollanfont">{{ nollan }}</span> vill kunna använda
-        <span class="stabenfont">STABEN</span>s hemsida till fullo bör <span class="nollanfont">{{ nollan }}</span>
-        aktivera Javascript.
-    </p>
-    <img src="{{ url_for('static', filename='img/sidhuvud.png') }}">
-    <div class="span6" style='border: 0px solid #fff; margin: 0px'>
+        <p class='no_javascript'>
+            {{ st['staben']|safe }} ser att {{ st['nollan']|safe }}
+            inte har Javascript aktiverat. Om {{ st['nollan']|safe }} vill kunna använda
+            {{ st['staben']|safe }}s hemsida till fullo bör {{ st['nollan']|safe }}
+            aktivera Javascript.
+        </p>
+    </div>
+    <div class="span12">
+        <div style="text-align: center;">
+            <img src="../static/img/sidhuvud.png">
+        </div>
+    </div>
+    <div class="span7 offset1">
         <h3>
-            Goddag och välkommen <span class="nollanfont">{{ nollan }}</span>
+            Goddag och välkommen {{ st['nollan']|safe }}
         </h3>
-        Detta är <span class="stabenfont">STABEN</span>s eminenta hemsida.
-        <br><br>
-        Här har <span class="stabenfont">STABEN</span> samlat viktig information så som schema och
-        kontaktuppgifter men också sådant som <span class="nollanfont">{{ nollan }}</span> kommer producera i sina nolleuppdrag.
-        <br><br>
-        Kolla in schemat och gör dig bekant med dagarna. Glöm inte att kolla priser som står med i schemat
-        så att <span class="nollanfont">{{ nollan }}</span> vet hur mycket ca$h som måste tas med.
-        <br><br>
-        Segla försiktigt <span class="nollanfont">{{ nollan }}</span> och kom ihåg, <span class="stabenfont">STABEN</span> ser dig alltid.
+            Detta är {{ st['staben']|safe }}s eminenta hemsida.
+            <br><br>
+            Här har {{ st['staben']|safe }} samlat viktig information så som schema och
+            kontaktuppgifter men också sådant som {{ st['nollan']|safe }} kommer producera i sina nolleuppdrag.
+            <br><br>
+            Kolla in schemat och gör dig bekant med dagarna. Glöm inte att kolla priser som står med i schemat
+            så att {{ st['nollan']|safe }} vet hur mycket ca$h som måste tas med.
+            <br><br>
+            Segla försiktigt {{ st['nollan']|safe }} och kom ihåg, {{ st['staben']|safe }} ser dig alltid.
     </div>
     <div class="span4" style='margin-left: 25px; margin-top: 20px; border: 0px solid #fff'>
         <a class="twitter-timeline" data-theme="dark" height="500px" data-dnt="true" href="https://twitter.com/fadderi_staben" data-widget-id="339411237781794816">Tweets av @fadderi_staben</a>
