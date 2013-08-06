@@ -16,7 +16,7 @@ redirect = config.redirect
 
 debug = debug.debug
 
-nollan = 'minus'
+static_texts = {'nollan': '<span class="nollanfont">minus</span>', 'staben': '<span class="stabenfont">STABEN</span>'}
 
 # DEV OPTIONS
 # NEEDS TO BE REMOVED IN PRODUCTION MODE
@@ -65,7 +65,7 @@ def add_session(db_user):
 
 @app.route('/')
 def index():
-	return render('index.html', session=session, bla=config.user_roles, nollan=nollan)
+	return render('index.html', session=session, bla=config.user_roles, st=static_texts)
 
 @app.route('/prices')
 def prices():
@@ -92,7 +92,11 @@ def contact(show_page='contact'):
 	role_studie = 1
 	klassforestandare = db_commands.get_contacts(role_klass)
 	studievagledning = db_commands.get_contacts(role_studie)
-	return render('contact.html', show=show_page, klassforestandare=klassforestandare, studievagledning=studievagledning)
+	return render('contact.html', \
+		show=show_page, \
+		klassforestandare=klassforestandare, \
+		studievagledning=studievagledning, \
+		st=static_texts)
 
 @app.route('/user/login', methods=['POST'])
 def login():
@@ -177,7 +181,8 @@ def profile_edit(user_email):
 			user=user['user'], \
 			user_info=user['info'], \
 			school_programs=school_programs,
-			school_classes=db_commands.get_school_classes())
+			school_classes=db_commands.get_school_classes(), \
+			st=static_texts)
 	else:
 		return render('login.html', login=False)
 
@@ -227,7 +232,7 @@ def profile_student_poll(user_email):
 			student_poll_questions=db_commands.get_student_poll_question(), \
 			user_poll_done=user['info'].poll_done, \
 			student_poll_user_answers=student_poll_user_answers, \
-			nollan=nollan)
+			st=static_texts)
 	else:
 		return render('login.html', login=False)
 
