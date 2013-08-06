@@ -55,7 +55,7 @@
                         </li>
                         <li><a href="{{ url_for('signout') }}">Logga ut</a></li>
                         {% if not session['poll_done'] and session['finished_profile'] %}
-                            <li><a href='/profile/{{ session['email'] }}/student_poll' style='font-style: italic; color: #ff0000'>Fyll i din nollenekät</a></li>
+                            <li><a href='/profile/{{ session['email'] }}/student_poll' style='font-style: italic; color: #ff0000'>Fyll i din nollenekät!</a></li>
                         {% endif %}
                     {% else %}
                         <li class='dropdown'>
