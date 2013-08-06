@@ -146,6 +146,15 @@ def add_user_information(db_user_id):
 	except:
 		return False
 
+def check_role(db_user_email):
+	return models.Users.query.filter_by(email=db_user_email).first().role
+
+def check_if_email_exist(email):
+	if models.Users.query.filter_by(email=email).first():
+		return True
+	else:
+		print False
+
 def get_class_mates(db_user_email):
 	db_user = models.Users.query.filter_by(email=db_user_email).first()
 	user_info = models.UserInformation.query.filter_by(fk_user_id=db_user.id).first()
@@ -358,11 +367,6 @@ def admin_get_user_poll_answer(user_id):
 			userinfo_w_answers_MD.add(answer.fk_student_poll_question_id, answer.fk_student_poll_question_id)
 	#, 4: admin_calc_user_points(user_id)
 	return {1: userinfo_w_answers_MD, 2: pref_w_ques_w_point_OMD}
-
-def admin_check(db_user_email):
-	# Check only role!
-	user_info = models.Users.query.filter_by(email=db_user_email).first()
-	return user_info.role
 
 def admin_get_all_users():
 	return {'user': models.Users.query.all(), 'info': models.UserInformation.query.all()}
