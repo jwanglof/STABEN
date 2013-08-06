@@ -142,40 +142,46 @@ def signout():
 @app.route('/register', methods=['POST', 'GET'])
 def register():
 	if request.method == 'POST':
-		if request.form['email'] != '' and str(request.form['regCode']) == str(db_commands.get_register_code().code):
-			debug('register', 'email och code funkar')
-			if request.form['password'] == request.form['rep_password']:
-				debug('register', 'Passwords are the same')
-				if db_commands.register_user(request.form):
-					user = db_commands.get_db_user(db_user_email=request.form['email'], db_user_password=request.form['password'])['user']
+		forbidden_chars = [u'å', u'ä', u'ö']
+		forbidden_chars = [x for x in forbidden_chars if x in request.form['email']]
 
-					if user:
-						if db_commands.add_user_information(user.id):
-							debug('register', 'Registration succeeded')
-							user = db_commands.get_db_user(user_id=user.id)
-							add_session(user)
-							return redirect(url_for('profile_edit', user_email=user['user'].email))
+		if len(forbidden_chars) == 0:
+			if request.form['email'] != '' and str(request.form['regCode']) == str(db_commands.get_register_code().code):
+				debug('register', 'email och code funkar')
+				if request.form['password'] == request.form['rep_password']:
+					debug('register', 'Passwords are the same')
+					if db_commands.register_user(request.form):
+						user = db_commands.get_db_user(db_user_email=request.form['email'], db_user_password=request.form['password'])['user']
+
+						if user:
+							if db_commands.add_user_information(user.id):
+								debug('register', 'Registration succeeded')
+								user = db_commands.get_db_user(user_id=user.id)
+								add_session(user)
+								return redirect(url_for('profile_edit', user_email=user['user'].email))
+							else:
+								debug('register', 'Error, could not add user information')
+								return redirect(url_for('register'))
 						else:
-							debug('register', 'Error, could not add user information')
+							debug('register', 'Error, could not get user')
 							return redirect(url_for('register'))
 					else:
-						debug('register', 'Error, could not get user')
+						debug('register', 'Error, could not register user')
 						return redirect(url_for('register'))
 				else:
-					debug('register', 'Error, could not register user')
+					debug('register', 'Error, the password did not match')
+					flash(u'Du måste ange samma lösenord i båda rutorna.')
 					return redirect(url_for('register'))
 			else:
-				debug('register', 'Error, the password did not match')
-				flash(u'Du måste ange samma lösenord i båda rutorna.')
+				debug('register', 'Error, the user did not type his email and register code')
+				flash(u'Du måste ange din e-mail och registreringskod!')
 				return redirect(url_for('register'))
 		else:
-			debug('register', 'Error, the user did not type his email and register code')
-			flash(u'Du måste ange din e-mail och registreringskod!')
+			debug('register', 'Error, the user typed a forbidden character as his e-mail')
+			flash(u'Din e-post får inte innehålla å, ä eller ö!')
 			return redirect(url_for('register'))
 	else:
 		return render('register.html')
-	# 	classes = db_commands.get_school_classes()
-	# 	return render('register.html', classes=classes)
 
 '''
 	*
