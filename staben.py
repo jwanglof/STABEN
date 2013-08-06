@@ -369,7 +369,6 @@ def admin_student_poll_save(command):
 @app.route('/admin_student_poll_result')
 def admin_student_poll_result():
 	if db_commands.check_role(session['email']) is 0:
-		# print db_commands.admin_get_top_three_groups()[1]['user'].firstname
 		return render('admin_student_poll_result.html', \
 			users_info=db_commands.admin_get_all_users_w_poll_done(), \
 			dialects=db_commands.get_student_poll_dialects(), \
