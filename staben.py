@@ -59,9 +59,22 @@ def db_student_poll():
 	return db_commands.create_student_poll()
 
 def add_session(db_user):
-	config.session['email'] = db_user.email
-	config.session['role'] = db_user.role
+	config.session['email'] = db_user['user'].email
+	config.session['role'] = db_user['user'].role
+
+	if db_user['info'].finished_profile:
+		config.session['finished_profile'] = True
+	else:
+		config.session['finished_profile'] = False
+
+	if db_user['info'].poll_done:
+		config.session['poll_done'] = True
+	else:
+		config.session['poll_done'] = False
 	return True
+
+def edit_session(session_value, value):
+	config.session[session_value] = value
 
 @app.route('/')
 def index():
@@ -109,7 +122,11 @@ def login():
 				# user_info['info'] contains all the user's information (from the table userInformation)
 				if add_session(user):
 					db_commands.add_login_count(request.form['email'])
-					return redirect(url_for('profile', user_email=request.form['email']))
+					if session['finished_profile']:
+						redirect_to = 'profile'
+					else:
+						redirect_to = 'profile_edit'
+					return redirect(url_for(redirect_to, user_email=request.form['email']))
 			else:
 				return render('login.html', login=False)
 		else:
@@ -130,13 +147,17 @@ def register():
 			if request.form['password'] == request.form['rep_password']:
 				debug('register', 'Passwords are the same')
 				if db_commands.register_user(request.form):
-					debug('register', 'Registration succeeded')
-					user = db_commands.get_db_user(db_user_email=request.form['email'], db_user_password=request.form['password'])
+					user = db_commands.get_db_user(db_user_email=request.form['email'], db_user_password=request.form['password'])['user']
 
 					if user:
-						db_commands.add_user_information(user.id)
-						add_session(user)
-						return redirect(url_for('profile_edit', user_email=user.email))
+						if db_commands.add_user_information(user.id):
+							debug('register', 'Registration succeeded')
+							user = db_commands.get_db_user(user_id=user.id)
+							add_session(user)
+							return redirect(url_for('profile_edit', user_email=user['user'].email))
+						else:
+							debug('register', 'Error, could not add user information')
+							return redirect(url_for('register'))
 					else:
 						debug('register', 'Error, could not get user')
 						return redirect(url_for('register'))
@@ -190,12 +211,21 @@ def profile_edit(user_email):
 @app.route('/profile/<user_email>/save/', methods=['POST'])
 def profile_save(user_email):
 	if session and user_email == session['email']:
-		# Need this check since checkboxes doesn't return anything if it's unchecked!
-		phonenumber_vis = 0
-		if 'phonenumber_vis' in request.form:
-			phonenumber_vis = 1
-		db_commands.update_db_user(user_email, request.form, phonenumber_vis)
-		return redirect(url_for('profile', user_email=user_email))
+		if request.form['firstname'] != '' and request.form['lastname'] != '':
+			copy_request_form = request.form.copy()
+			copy_request_form.add('phonenumber_vis', 1 if 'phonenumber_vis' in request.form else 0)
+			copy_request_form.add('finished_profile', 1)
+
+			if session['finished_profile']:
+				redirect_to = 'profile'
+			else:
+				redirect_to = 'profile_student_poll'
+
+			edit_session('finished_profile', True)
+			db_commands.update_db_user(user_email, copy_request_form)
+			return redirect(url_for(redirect_to, user_email=user_email))
+		else:
+			return redirect(url_for('profile_edit', user_email=user_email))
 	else:
 		return render('login.html', login=False)
 
@@ -244,6 +274,7 @@ def profile_save_student_poll(user_email):
 		if db_commands.get_db_user(db_user_email=session['email'])['info'].poll_done == 0:
 			if db_commands.update_db_user(user_email, config.ImmutableMultiDict([('poll_done', u'1')])):
 				if db_commands.save_student_poll(user_email, request.form):
+					edit_session('poll_done', True)
 					return redirect(url_for('profile_student_poll', user_email=user_email))
 				else:
 					debug('profile_save_student_poll', 'Could not save the student poll')
