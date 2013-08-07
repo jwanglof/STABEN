@@ -305,7 +305,7 @@ class Users(Base):
 	email = db.Column(db.String(100), index=True, unique=True)
 	password = db.Column(db.String(254), index=True)
 	role = db.Column(db.SmallInteger(), default=ROLE_USER)
-	user_information = db.relationship('UserInformation', backref='Users', uselist=False)
+	user_information = db.relationship('UserInformation', backref='Users', uselist=False, lazy='joined')
 	student_poll = db.relationship('StudentPollAnswer', backref='Users', lazy='dynamic')
 	r_student_poll_assigned_group = db.relationship('StudentPollAssignedGroups', backref='Users')
 
@@ -339,6 +339,7 @@ class UserInformation(Base):
 	login_count = db.Column(db.Integer(), default=0)
 	poll_done = db.Column(db.SmallInteger(), default=0)
 	finished_profile = db.Column(db.SmallInteger(), default=0)
+	recover_code = db.Column(db.String(50))
 	fk_student_dialect = db.Column(db.Integer, db.ForeignKey('student_poll_dialect.id'))
 
 	def __init__(self, user_id=None, presentation=None):
