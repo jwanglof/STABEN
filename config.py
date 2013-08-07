@@ -4,6 +4,7 @@
 from flask import Flask, request, session, g, redirect, url_for, render_template, flash
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.bcrypt import Bcrypt
+from flask.ext.mail import Mail, Message
 from sqlalchemy import Table, Column, Integer, String, Date, Time, Text, create_engine
 from sqlalchemy.orm import relationship, backref, scoped_session, sessionmaker, aliased
 from sqlalchemy.ext.declarative import declarative_base
@@ -42,6 +43,17 @@ app.debug = DEBUG
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 bcrypt = Bcrypt(app)
 db = SQLAlchemy(app)
+app.config.setdefault('MAIL_SERVER', 'smtp.gmail.com')
+app.config.setdefault('MAIL_PORT', 465)
+# app.config.setdefault('MAIL_USE_TSL', True)
+app.config.setdefault('MAIL_USE_SSL', True)
+# app.config.setdefault('MAIL_USERNAME', 'c30g@c.lintek.liu.se')
+# app.config.setdefault('MAIL_PASSWORD', 'WpD0cJhwQj2')
+app.config.setdefault('MAIL_USERNAME', 'staben.no.reply@gmail.com')
+app.config.setdefault('MAIL_PASSWORD', 'zFpgai3g')
+app.config.setdefault('MAIL_DEFAULT_SENDER', ('STABENs ultimata epost no-reply e-post', 'staben.no.reply@gmail.com'))
+mail = Mail(app)
+
 user_roles = [u'Admin', u'Överfadder', u'Fadder', u'Klassföreståndare', u'Användare']
 
 # TODO
