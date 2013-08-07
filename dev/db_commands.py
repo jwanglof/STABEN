@@ -153,7 +153,7 @@ def check_if_email_exist(email):
 	if models.Users.query.filter_by(email=email).first():
 		return True
 	else:
-		print False
+		return False
 
 def get_class_mates(db_user_email):
 	db_user = models.Users.query.filter_by(email=db_user_email).first()
@@ -275,7 +275,6 @@ def add_student_poll_prefix(db_student_poll_dict):
 		return False
 
 def add_student_poll_question(db_student_poll_dict):
-	print db_student_poll_dict
 	try:
 		new_question = models.StudentPollQuestion(db_student_poll_dict['prefix'], db_student_poll_dict['question'])
 		db_session.add(new_question)

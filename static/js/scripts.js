@@ -18,29 +18,27 @@ $(document).ready(function() {
 	});
 
 	$('#school_program').change(function() {
-		$('#school_program option:selected').each(function() {
-			/*
-				Show all #school_class that have school_program == school_program_id
-			*/
-			// var school_class_selected_id = $('#school_class option').val().split('|');
-			var school_program_id = $(this).val();
+		var chosen_school_program = $('#school_program').children(':selected').val();
+		var select_objects = new Array();
 
-			$('#school_class option').each(function() {
-				var school_class_value = $(this).val().split('|');
-				var chosen_school_class = school_class_value[1]
-				var chosen_one = $(this)
-				// Show all classes
+		$('#school_class').children('option').each(function() {
+			var school_class_program = $(this).val().split('|')[1];
+
+			// Hide all options
+			$(this).hide();
+			if (school_class_program == chosen_school_program) {
+				// Show the correct school class option(s)
 				$(this).show();
-				if (chosen_school_class != school_program_id) {
-					// Hide the classes that does not belong to
-					$(this).hide();
-				}
-			});
-			$(chosen_one).attr('selected', true);
-
-			// alert(school_class_selected_id);
-			// alert(school_program_id);
+				
+				// Add all HTML objects to the array
+				// If there are more than one class for a program
+				// the select-list will always choose the first one
+				select_objects.push(this);
+			}
 		});
+
+		// Select the first HTML object in the array
+		$(select_objects[0]).prop('selected', true);
 	});
 
 	$('#school_class').change(function() {
@@ -100,4 +98,3 @@ $(document).ready(function() {
 		}
 	});
 });
-
