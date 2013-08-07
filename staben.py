@@ -3,8 +3,12 @@
 
 import config
 #import model
-from dev import db_commands
-from dev import debug
+from dev import db_commands, debug, decorators
+# from dev import debug
+
+# Used for new_password()
+import string
+import random
 
 app = config.app
 render = config.render_template
@@ -15,6 +19,7 @@ flash = config.flash
 redirect = config.redirect
 
 debug = debug.debug
+async = decorators.async
 
 static_texts = {'nollan': '<span class="nollanfont">minus</span>', 'staben': '<span class="stabenfont">STABEN</span>'}
 
@@ -192,12 +197,73 @@ def register():
 	else:
 		return render('register.html')
 
+@app.route('/forgot_password', defaults={'code': ''}, methods=['POST', 'GET'])
+@app.route('/forgot_password/<code>', methods=['POST', 'GET'])
+def forgot_password(code=None):
+	print db_commands.get_db_user({'id': 1})
+	if code:
+		recover_user = db_commands.get_recover_user(code)
+		if recover_user:
+			new_password = random_string()
+			new_password_bcrypt = config.bcrypt.generate_password_hash(new_password)
+			recover_code_md = config.MultiDict([('recover_code', '')])
+			print recover_user
+			# db_commands.update_db_user(request.form['email'], recover_code_md)
+		else:
+			return 'NOOOPE'
+	if request.method == 'POST':
+		if db_commands.check_if_email_exist(request.form['email']):
+			if request.form['email'] != '':
+				# Send en e-mail to request.form['email'] with an url that will reset the user's password
+				recover_code = random_string(25)
+				body = '''<b>Hej nollan!</b>
+					<br />
+					Tryck <a href='http://www.staben.info/forgot_password/%s' target='_blank'>här</a> för att få nytt lösenord på www.staben.info
+					<br /><br />
+					<b>OBS! Om du ej har förfrågat att få ditt lösenord återställt kan du bortse från detta e-brev!</b>
+					''' % (recover_code)
+				if send_email([request.form['email']], 'Glömt lösenord på staben.info', html_body=body):
+					recover_code_md = config.MultiDict([('recover_code', recover_code)])
+					db_commands.update_db_user(request.form['email'], recover_code_md)
+
+					flash(u'Ett e-post har blivit skickad till %s med en återställningslänk som du måste följa för att återställa ditt lösenord.' % (request.form['email']))
+					return render('forgot_password.html')
+			else:
+				flash(u'Du måste ange en e-post.')
+				return render('forgot_password.html')
+		else:
+			flash(u'Den angivna e-posten finns inte i databasen.')
+			return render('forgot_password.html')
+	else:
+		return render('forgot_password.html')
+
+def random_string(length=12):
+	lst = [random.choice(string.ascii_letters + string.digits) for n in xrange(length)]
+	return ''.join(lst)
+
+def send_email(recipients, subject, email_body=None, html_body=None):
+	try:
+		msg = config.Message(subject)
+		msg.recipients = recipients
+		if email_body:
+			msg.body = email_body
+		elif html_body:
+			msg.html = html_body
+		send_async_email(msg)
+		return True
+	except:
+		return False
+
+@async
+def send_async_email(msg):
+	config.mail.send(msg)
+
 '''
 	*
 	* User profile
 	*
 '''
-@app.route('/profile/', defaults={'user_email': ''})
+@app.route('/profile', defaults={'user_email': ''})
 @app.route('/profile/<user_email>/')
 def profile(user_email):
 	if session and user_email == session['email']:
