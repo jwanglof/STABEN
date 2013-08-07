@@ -38,10 +38,10 @@
                                 <b class="caret"></b>
                             </a>
                             <ul class='dropdown-menu'>
-                                <li><a href="{% if session['finished_profile'] %}/profile/{{ session['email'] }}{% else %}#{% endif %}">Se profil</a></li>
-                                <li><a href="/profile/{{ session['email'] }}/edit">Redigera</a></li>
-                                <li><a href="{% if session['finished_profile'] %}/profile/{{ session['email'] }}/class{% else %}#{% endif %}">Min skolklass</a></li>
-                                <li><a href="{% if session['finished_profile'] %}/profile/{{ session['email'] }}/student_poll{% else %}#{% endif %}">Nolleenkät</a></li>
+                                <li><a href="{% if session['finished_profile'] %}{{ url_for('profile', user_email=session['email']) }}{% else %}#{% endif %}">Se profil</a></li>
+                                <li><a href="{{ url_for('profile_edit', user_email=session['email']) }}">Redigera</a></li>
+                                <li><a href="{% if session['finished_profile'] %}{{ url_for('profile_class', user_email=session['email']) }}{% else %}#{% endif %}">Min skolklass</a></li>
+                                <li><a href="{% if session['finished_profile'] %}{{ url_for('profile_student_poll', user_email=session['email']) }}{% else %}#{% endif %}">Nolleenkät</a></li>
                                 {% if session.role == 0 %}
                                     <br />
                                     <span class="help-block">Admin verktyg</span>
@@ -69,9 +69,9 @@
                                         <input type="email" name="email" placeholder="E-post">
                                         <input type="password" name="password" placeholder="Lösenord">
                                         <button type="submit" class="btn">Logga in</button>
-                                        <span class="help-block">Glömt lösenord</span>
                                     </fieldset>
                                 </form>
+                                <li><a href='{{ url_for('forgot_password', code=None) }}'>Glömt lösenord</a></li>
                             </ul>
                         </li>
                         <li class='{% block active_register %}{% endblock %}'><a href="{{ url_for('register') }}">Registrera</a></li>
