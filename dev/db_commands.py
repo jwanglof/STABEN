@@ -168,7 +168,7 @@ def get_contacts(role):
 		contacts = models.Contacts.query.filter_by(role=role).all()
 	return contacts
 
-def get_db_user(user_id=None,db_user_email=None,db_user_password=None):
+def get_db_user(user_id=None, db_user_email=None, db_user_password=None):
 	if db_user_email != None:
 		db_user = models.Users.query.filter_by(email=db_user_email).first()
 	elif user_id != None:
@@ -187,6 +187,9 @@ def get_db_user(user_id=None,db_user_email=None,db_user_password=None):
 			return db_user_info
 	else:
 		return False
+
+def get_recover_user(db_user_recover_code):
+	return models.UserInformation.query.filter_by(recover_code=db_user_recover_code).first()
 
 def get_register_code():
 	return models.RegisterCode.query.first()
