@@ -321,7 +321,9 @@ def profile_save(user_email):
 			copy_request_form.add('phonenumber_vis', 1 if 'phonenumber_vis' in request.form else 0)
 			copy_request_form.add('finished_profile', 1)
 
-			if session['finished_profile']:
+			if session['finished_profile'] and not session['poll_done']:
+				redirect_to = 'profile_student_poll'
+			elif session['finished_profile']:
 				redirect_to = 'profile'
 			else:
 				redirect_to = 'profile_student_poll'
