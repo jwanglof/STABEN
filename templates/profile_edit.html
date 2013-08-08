@@ -11,7 +11,6 @@
 	Och kom ihåg {{ st['nollan']|safe }}, {{ st['staben']|safe }} ser {{ st['nollan']|safe }} alltid, juh!
 	</p>
 {% endif %}
-{#{{ st['staben']|safe }} hoppas verkligen {{ st['nollan']|safe }} åtminstone fyller i sitt namn, om {{ st['nollan']|safe }} har någon allergi och om {{ st['nollan']|safe }} är vegan eller vegetarian, men {{ st['staben']|safe }} blir juh självklart kanonlyckliga om {{ st['nollan']|safe }} fyller i alla sina uppgifter!#}
 <form method='post' action='{{ url_for('profile_save', user_email=session['email']) }}' id='profile_edit'>
 	<h4>{{ st['nollan']|safe }}uppgifter</h4>
 	Förnamn <br />
@@ -48,7 +47,7 @@
 	<br />
 	Klass <br />
 	<select name='school_class' id='school_class'>
-		<option value='0'></option>
+		<option value='0|0'></option>
 		{%- for classes in school_classes %}
 		<option value='{{ classes.id }}|{{ classes.fk_school_program_id }}' {% if user_info.school_class == classes.id %}selected{% endif %}>
 			{{ classes.name }}

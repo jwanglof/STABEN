@@ -13,9 +13,12 @@ from sqlalchemy.ext.declarative import declarative_base
 from werkzeug.datastructures import ImmutableMultiDict, MultiDict, OrderedMultiDict
 
 dbhost = '127.0.0.1'
-dbuser = 'STABEN'
-dbpass = 'generalhenrik'
-dbname = 'STABEN'
+# dbuser = 'STABEN'
+# dbpass = 'generalhenrik'
+# dbname = 'STABEN'
+dbuser = 'dstaben'
+dbpass = 'cjnW5A82YhcBWAcK'
+dbname = 'dstaben'
 
 # URI is needed for migrations
 # We don't use this right now
