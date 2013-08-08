@@ -3,7 +3,7 @@
 
 import config
 #import model
-from dev import db_commands, debug, decorators
+from dev import db_commands, debug
 # from dev import debug
 
 # Used for new_password()
@@ -275,6 +275,7 @@ def send_email(recipients, subject, email_body=None, html_body=None):
 		elif html_body:
 			msg.html = html_body
 		send_async_email(msg)
+		# config.mail.send(msg)
 		return True
 	except:
 		return False
