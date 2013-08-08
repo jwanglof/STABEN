@@ -186,7 +186,6 @@ def get_db_user(user_id=None, db_user_email=None, db_user_password=None, recover
 
 		# Check to see if a user is signing in
 		if db_user_password is not None:
-			print db_user.password, db_user_password
 			if config.bcrypt.check_password_hash(db_user.password, db_user_password):
 				return db_user_info
 			else:
