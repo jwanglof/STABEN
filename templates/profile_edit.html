@@ -2,9 +2,18 @@
 {% block active_profile %}active{% endblock %}
 {% block content %}
 <h1>Redigera profil</h1>
-{{ st['staben']|safe }} hoppas verkligen {{ st['nollan']|safe }} åtminstone fyller i sitt namn, om {{ st['nollan']|safe }} har någon allergi och om {{ st['nollan']|safe }} är vegan eller vegetarian, men {{ st['staben']|safe }} blir juh självklart kanonlyckliga om {{ st['nollan']|safe }} fyller i alla sina uppgifter!
+{% if not session['finished_profile'] %}
+	<p>
+	{{ st['staben']|safe }} har märkt genom sina vältränade ögon att {{ st['nollan']|safe }} ej har fyllt i sin profil som {{ st['staben']|safe }} vill. Innan {{ st['nollan']|safe }} kan använda {{ st['staben']|safe }}s underbara hemsida måste {{ st['nollan']|safe }} fylla i åtminstonde sitt namn, både för- och efternamn såklart {{ st['nollan']|safe }}, om {{ st['nollan']|safe }} är allergisk mot något och om {{ st['nollan']|safe }} är vegetarian eller vegan. Självklart blir {{ st['staben']|safe }} kanonlyckliga om {{ st['nollan']|safe }} fyller i alla hela sin profil, och som {{ st['nollan']|safe }} vet, om {{ st['staben']|safe }} blir kanonlyckliga kommer {{ st['staben']|safe }} kunna göra {{ st['nollan']|safe }} nolle-p mycket roligare!
+	<br />
+	Se till att göra detta snabbt {{ st['nollan']|safe }} så {{ st['nollan']|safe }} kan använda {{ st['staben']|safe }}s underbara hemsida i all sin allsmäktighet!
+	<br />
+	Och kom ihåg {{ st['nollan']|safe }}, {{ st['staben']|safe }} ser {{ st['nollan']|safe }} alltid, juh!
+	</p>
+{% endif %}
+{#{{ st['staben']|safe }} hoppas verkligen {{ st['nollan']|safe }} åtminstone fyller i sitt namn, om {{ st['nollan']|safe }} har någon allergi och om {{ st['nollan']|safe }} är vegan eller vegetarian, men {{ st['staben']|safe }} blir juh självklart kanonlyckliga om {{ st['nollan']|safe }} fyller i alla sina uppgifter!#}
 <form method='post' action='{{ url_for('profile_save', user_email=session['email']) }}' id='profile_edit'>
-	<h4>Nolleuppgifter</h4>
+	<h4>{{ st['nollan']|safe }}uppgifter</h4>
 	Förnamn <br />
 	<input type='text' id='firstname' name='firstname' value='{{ user_info.firstname }}' /> <br />
 	Efternamn <br />
@@ -36,7 +45,6 @@
 		{%- endfor %}
 	</select>
 	<br />
-	{# {"foo": {{ classes.id }}, "bar": {{ classes.fk_school_program_id }}} #}
 	Klass <br />
 	<select name='school_class' id='school_class'>
 		{%- for classes in school_classes %}
@@ -51,7 +59,7 @@
 		<textarea rows='10' name='presentation'>{{ user_info.presentation }}</textarea>
 	</p>
 	
-	<h5>Du kan inte ändra din e-post, kontakta webmaster vid önskad ändring!</h5>
+	<h5>Du kan inte ändra din e-post, <a href='{{ url_for('contact') }}'>kontakta</a> en webbadministratör vid önskad ändring!</h5>
 	E-post
 	<br />
 	<input type='text' id='email' name='email' value='{{ user.email }}' disabled />
@@ -60,7 +68,7 @@
 </form>
 
 <form method='post' action='{{ url_for('profile_save_password', user_email=session['email']) }}' id='profile_password'>
-	<h4>Lösenord</h4>
+	<h4>Ändra lösenord</h4>
 	<input type='password' name='current_password' placeholder='Nuvarande lösenord' />
 	<br />
 	<input type='password' name='new_password' placeholder='Nytt lösenord' />
