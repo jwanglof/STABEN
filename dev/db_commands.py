@@ -203,7 +203,7 @@ def get_register_code():
 	return models.RegisterCode.query.first()
 
 def get_schedule(week):
-	return models.Schedule.query.filter_by(week=week).order_by(models.Schedule.week).all()
+	return models.Schedule.query.filter_by(week=week).order_by(asc(models.Schedule.id)).all()
 
 def get_school_programs():
 	return models.SchoolProgram.query.all()
