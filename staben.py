@@ -82,7 +82,7 @@ def index():
 
 @app.route('/prices')
 def prices():
-	return render('prices.html')
+	return render('prices.html', st=static_texts)
 
 @app.route('/schedule')
 @app.route('/schedule/<show_week>')
