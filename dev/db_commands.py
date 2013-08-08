@@ -16,8 +16,8 @@ db_session = config.db_session
 
 debug = debug.debug
 
-import locale
-debug('locale', str(locale.getdefaultlocale()))
+# import locale
+# debug('locale', str(locale.getdefaultlocale()))
 
 import os
 
@@ -99,6 +99,8 @@ def create_contacts():
 	return "Contacts added"
 
 def create_student_poll():
+	# '/www/dstaben/htdocs/dev/studentpoll.csv'
+	#
 	StudentPoll = read_csv.ReadStudentPollCsvFile(os.getcwd() + '/dev/studentpoll.csv')
 
 	# Add prefixes
@@ -125,7 +127,6 @@ def create_student_poll():
 					dialect_id = dialect_index+1
 					question_id = index_in_db
 					db_session.add(models.StudentPollPoint(dialect_id, question_id, point))
-
 	db_session.commit()
 	return 'Student poll prefixes and questions added'
 
