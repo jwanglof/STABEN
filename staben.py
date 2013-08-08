@@ -352,8 +352,11 @@ def profile_save_password(user_email):
 def profile_class(user_email):
 	if session and user_email == session['email']:
 		class_mates = db_commands.get_class_mates(user_email)
-		school_programs = db_commands.get_user_school_program(user_email)
-		return render('profile_class.html', class_mates=class_mates, school_programs=school_programs)
+		if class_mates:
+			school_programs = db_commands.get_user_school_program(user_email)
+			return render('profile_class.html', class_mates=class_mates, school_programs=school_programs)
+		else:
+			return render('profile_class.html', class_mates=False)
 	else:
 		return render('login.html', login=False)
 
