@@ -157,8 +157,10 @@ def check_if_email_exist(email):
 def get_class_mates(db_user_email):
 	db_user = models.Users.query.filter_by(email=db_user_email).first()
 	user_info = models.UserInformation.query.filter_by(fk_user_id=db_user.id).first()
-	class_mates = models.UserInformation.query.filter_by(school_class=user_info.school_class).all()
-	return class_mates
+	if user_info.school_program > 0:
+		return models.UserInformation.query.filter_by(school_class=user_info.school_class).all()
+	else:
+		return False
 
 def get_contacts(role):
 	if role is 0:
