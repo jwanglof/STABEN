@@ -3,8 +3,12 @@
 
 import config
 #import model
-from dev import db_commands
-from dev import debug
+from dev import db_commands, debug, decorators
+# from dev import debug
+
+# Used for new_password()
+import string
+import random
 
 app = config.app
 render = config.render_template
@@ -15,6 +19,7 @@ flash = config.flash
 redirect = config.redirect
 
 debug = debug.debug
+async = decorators.async
 
 static_texts = {'nollan': '<span class="nollanfont">minus</span>', 'staben': '<span class="stabenfont">STABEN</span>'}
 
@@ -192,12 +197,97 @@ def register():
 	else:
 		return render('register.html')
 
+@app.route('/forgot_password', defaults={'code': ''}, methods=['POST', 'GET'])
+@app.route('/forgot_password/<code>', methods=['POST', 'GET'])
+def forgot_password(code=None):
+	# bla = config.MultiDict([('recover_code', 'ZO9tnKQsv6nyjMptXbDYFN8k5')])
+	# print db_commands.get_db_user(recover_code='ZO9tnKQsv6nyjMptXbDYFN8k5')
+	if code:
+		# Query with the correct e-mail as well
+		# This can be done when the function is fixed to be more general!
+		recover_user = db_commands.get_db_user(recover_code=code)
+
+		if recover_user:
+			new_password = random_string()
+			new_password_bcrypt = config.bcrypt.generate_password_hash(new_password)
+			recover_code_md = config.MultiDict([('recover_code', '')])
+			if db_commands.update_db_user(recover_user.email, recover_code_md):
+				password_dict = {'new_password': new_password, 'repeat_password': new_password, 'current_password': recover_user.password}
+				if db_commands.update_db_pw_from_code(recover_user.email, password_dict):
+					body = '''<b>Hej igen nollan!</b>
+					<br />
+					Ditt nya lösenord är: %s
+					<br />
+					Se till att bevara detta väl, men kom ihåg, STABEN ser allt!
+					''' % (new_password)
+					if send_email([recover_user.email], 'Ditt nya lösenord på staben.info', html_body=body):
+						return 'Hej'
+					else:
+						debug('forgot_password', 'Error, could not send the recovery e-mail')
+						return render('forgot_password.html')
+				else:
+					debug('forgot_password', 'Error, could not update password')
+					return render('forgot_password.html')
+			else:
+				debug('forgot_password', 'Error, could not update user')
+				return render('forgot_password.html')
+		else:
+			flash(u'Återställningskoden finns ej.')
+			return render('forgot_password.html')
+
+	elif request.method == 'POST':
+		if db_commands.check_if_email_exist(request.form['email']):
+			if request.form['email'] != '':
+				# Send en e-mail to request.form['email'] with an url that will reset the user's password
+				recover_code = random_string(25)
+				body = '''<b>Hej nollan!</b>
+					<br />
+					Tryck <a href='http://www.staben.info/forgot_password/%s' target='_blank'>här</a> för att få nytt lösenord på www.staben.info
+					<br /><br />
+					<b>OBS! Om du ej har förfrågat att få ditt lösenord återställt kan du bortse från detta e-brev!</b>
+					''' % (recover_code)
+				if send_email([request.form['email']], 'Glömt lösenord på staben.info', html_body=body):
+					recover_code_md = config.MultiDict([('recover_code', recover_code)])
+					db_commands.update_db_user(request.form['email'], recover_code_md)
+
+					flash(u'Ett e-post har blivit skickad till %s med en återställningslänk som du måste följa för att återställa ditt lösenord.' % (request.form['email']))
+					return render('forgot_password.html')
+			else:
+				flash(u'Du måste ange en e-post.')
+				return render('forgot_password.html')
+		else:
+			flash(u'Den angivna e-posten finns inte i databasen.')
+			return render('forgot_password.html')
+	else:
+		return render('forgot_password.html')
+
+def random_string(length=12):
+	lst = [random.choice(string.ascii_letters + string.digits) for n in xrange(length)]
+	return ''.join(lst)
+
+def send_email(recipients, subject, email_body=None, html_body=None):
+	try:
+		msg = config.Message(subject)
+		msg.recipients = recipients
+		if email_body:
+			msg.body = email_body
+		elif html_body:
+			msg.html = html_body
+		send_async_email(msg)
+		return True
+	except:
+		return False
+
+@async
+def send_async_email(msg):
+	config.mail.send(msg)
+
 '''
 	*
 	* User profile
 	*
 '''
-@app.route('/profile/', defaults={'user_email': ''})
+@app.route('/profile', defaults={'user_email': ''})
 @app.route('/profile/<user_email>/')
 def profile(user_email):
 	if session and user_email == session['email']:
@@ -231,7 +321,9 @@ def profile_save(user_email):
 			copy_request_form.add('phonenumber_vis', 1 if 'phonenumber_vis' in request.form else 0)
 			copy_request_form.add('finished_profile', 1)
 
-			if session['finished_profile']:
+			if session['finished_profile'] and not session['poll_done']:
+				redirect_to = 'profile_student_poll'
+			elif session['finished_profile']:
 				redirect_to = 'profile'
 			else:
 				redirect_to = 'profile_student_poll'
@@ -246,7 +338,7 @@ def profile_save(user_email):
 
 @app.route('/profile/<user_email>/save/password', methods=['POST'])
 def profile_save_password(user_email):
-	if session and user_email == session['email']:
+	if session and user_email == session['email']:#vXr6EFXs36Bf
 		if db_commands.update_db_pw(user_email, request.form):
 			return redirect(url_for('profile', user_email=user_email))
 		else:
@@ -395,6 +487,13 @@ def admin_insert_user_to_group():
 		db_commands.admin_insert_user_to_group()
 		flash(u'ALLA ANVÄNDARE HAR EN EGEN GRUPP. WOOOOOOHOOOOOOOOOO!!')
 		return redirect(url_for('admin_student_poll'))
+
+@app.errorhandler(403)
+@app.errorhandler(404)
+@app.errorhandler(410)
+@app.errorhandler(500)
+def page_not_found(e):
+    return render('error.html', st=static_texts)
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):

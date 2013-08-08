@@ -331,14 +331,15 @@ class UserInformation(Base):
 	phonenumber = db.Column(db.String(15), index=True, default='')
 	phonenumber_vis = db.Column(db.SmallInteger, index=True, default=0)
 	facebook_url = db.Column(db.String(100), index=True, default='')
-	school_program = db.Column(db.SmallInteger(), index=True, default=1)
-	school_class = db.Column(db.SmallInteger(), index=True, default=1)
+	school_program = db.Column(db.SmallInteger(), index=True, default=0)
+	school_class = db.Column(db.SmallInteger(), index=True, default=0)
 	current_city = db.Column(db.String(100), index=True, default='')
 	where_from = db.Column(db.String(100), index=True, default='')
 	presentation = db.Column(db.UnicodeText())
 	login_count = db.Column(db.Integer(), default=0)
 	poll_done = db.Column(db.SmallInteger(), default=0)
 	finished_profile = db.Column(db.SmallInteger(), default=0)
+	recover_code = db.Column(db.String(50))
 	fk_student_dialect = db.Column(db.Integer, db.ForeignKey('student_poll_dialect.id'))
 
 	def __init__(self, user_id=None, presentation=None):

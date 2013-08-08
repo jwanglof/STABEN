@@ -1,6 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+# READ
+# http://www.blog.pythonlibrary.org/2010/02/03/another-step-by-step-sqlalchemy-tutorial-part-2-of-2/
+
 import models
 import config
 import math
@@ -168,17 +171,22 @@ def get_contacts(role):
 		contacts = models.Contacts.query.filter_by(role=role).all()
 	return contacts
 
-def get_db_user(user_id=None,db_user_email=None,db_user_password=None):
+def get_db_user(user_id=None, db_user_email=None, db_user_password=None, recover_code=None):
+	# models.Users.query.filter_by(id=1).first().user_information.fk_user_id
 	if db_user_email != None:
 		db_user = models.Users.query.filter_by(email=db_user_email).first()
 	elif user_id != None:
 		db_user = models.Users.query.filter_by(id=user_id).first()
+	elif recover_code != None:
+		# return db_session.query(models.Users, models.UserInformation).join('user_information').filter_by(recover_code=recover_code).first()
+		return models.Users.query.join(models.Users.user_information).filter_by(recover_code=recover_code).first()
 
 	if db_user is not None:
 		db_user_info = {'user': db_user, 'info': models.UserInformation.query.filter_by(fk_user_id=db_user.id).first()}
 
 		# Check to see if a user is signing in
 		if db_user_password is not None:
+			print db_user.password, db_user_password
 			if config.bcrypt.check_password_hash(db_user.password, db_user_password):
 				return db_user_info
 			else:
@@ -187,6 +195,9 @@ def get_db_user(user_id=None,db_user_email=None,db_user_password=None):
 			return db_user_info
 	else:
 		return False
+
+def get_recover_user(db_user_recover_code):
+	return models.UserInformation.query.filter_by(recover_code=db_user_recover_code).first()
 
 def get_register_code():
 	return models.RegisterCode.query.first()
@@ -247,6 +258,8 @@ def update_db_user(db_user_email, db_user_dict):
 	try:
 		db_user = models.Users.query.filter_by(email=db_user_email).first()
 		models.UserInformation.query.filter_by(fk_user_id=db_user.id).update(db_user_dict)
+		# models.Users.query.join(models.Users.user_information).filter_by(recover_code=recover_code).first()
+		# models.Users.query.join(models.Users.user_information).filter_by(id=db_user.id).update({'recover_code': 'fff', 'firstname': 'asd'})
 		db_session.commit()
 		return True
 	except:
@@ -254,12 +267,22 @@ def update_db_user(db_user_email, db_user_dict):
 
 def update_db_pw(db_user_email, db_user_dict):
 	db_user = models.Users.query.filter_by(email=db_user_email).first()
-	if db_user_dict['new_password'] == db_user_dict['repeat_password'] and db_user_dict['current_password'] == db_user.password:
-		models.Users.query.filter_by(email=db_user_email).update({'password': db_user_dict['new_password']})
+	if db_user_dict['new_password'] == db_user_dict['repeat_password'] and \
+	config.bcrypt.check_password_hash(db_user.password, db_user_dict['current_password']):
+		models.Users.query.filter_by(email=db_user_email).update({'password': config.bcrypt.generate_password_hash(db_user_dict['new_password'])})
 		db_session.commit()
 		return True
 	else:
 		return False
+
+def update_db_pw_from_code(db_user_email, db_user_dict):
+	try:
+		db_user = models.Users.query.filter_by(email=db_user_email).first()
+		models.Users.query.filter_by(email=db_user_email).update({'password': config.bcrypt.generate_password_hash(db_user_dict['new_password'])})
+		db_session.commit()
+		return True
+	except:
+		return False	
 
 
 ##############

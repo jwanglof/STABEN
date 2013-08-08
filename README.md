@@ -30,6 +30,7 @@ REQUIREMENTS
 [in pip] flask-sqlalchemy (be sure to install version 0.16!)
 [in pip] flask-mysql
 [in pip] sqlalchemy-migrate
+[in pip] flask-mail
 
 PROFILE PAGE
 ======

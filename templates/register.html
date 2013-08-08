@@ -2,13 +2,13 @@
 {% block active_register %}active{% endblock %}
 {% block content %}
 <h4>Fält med * är obligatoriska!</h4>
-	{% with messages = get_flashed_messages() %}
-		{% if messages %}
-			{% for message in messages %}
-				{{ message }}
-			{% endfor %}
-		{% endif %}
-	{% endwith %}
+{% with messages = get_flashed_messages() %}
+	{% if messages %}
+		{% for message in messages %}
+			{{ message }}
+		{% endfor %}
+	{% endif %}
+{% endwith %}
 <form method='post' action='{{ url_for('register') }}' class='stabForm' id='register_form'>
 	<fieldset>
 		<ol>
