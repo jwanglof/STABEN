@@ -16,11 +16,6 @@ db_session = config.db_session
 
 debug = debug.debug
 
-# import locale
-# debug('locale', str(locale.getdefaultlocale()))
-
-import os
-
 # initial users
 admin_users2 = []
 admin_users2.append(models.Users('jwanglof@gmail.com', 'tmppass', 0))
@@ -100,8 +95,8 @@ def create_contacts():
 
 def create_student_poll():
 	# '/www/dstaben/htdocs/dev/studentpoll.csv'
-	#
-	StudentPoll = read_csv.ReadStudentPollCsvFile(os.getcwd() + '/dev/studentpoll.csv')
+	# os.getcwd() + '/dev/studentpoll.csv'
+	StudentPoll = read_csv.ReadStudentPollCsvFile(config.host_option.student_poll_file)
 
 	# Add prefixes
 	for index, p in StudentPoll.get_prefixes().iteritems():
@@ -203,7 +198,7 @@ def get_register_code():
 	return models.RegisterCode.query.first()
 
 def get_schedule(week):
-	return models.Schedule.query.filter_by(week=week).order_by(asc(models.Schedule.id)).all()
+	return models.Schedule.query.filter_by(week=week).order_by(config.asc(models.Schedule.id)).all()
 
 def get_school_programs():
 	return models.SchoolProgram.query.all()
