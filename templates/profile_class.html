@@ -1,7 +1,7 @@
 {% extends "template.html" %}
 {% block content %}
 {% if class_mates %}
-	<h1>Min skolklass ({{ school_programs }})</h1>
+	<h1>Mitt program ({{ school_programs }})</h1>
 	{% for mate in class_mates %}
 		<div class='school_mate' id='{{ mate.id }}'>
 			<b>{{ mate.firstname + ' ' + mate.lastname }}</b>
