@@ -200,18 +200,42 @@ def register():
 @app.route('/forgot_password', defaults={'code': ''}, methods=['POST', 'GET'])
 @app.route('/forgot_password/<code>', methods=['POST', 'GET'])
 def forgot_password(code=None):
-	print db_commands.get_db_user({'id': 1})
+	# bla = config.MultiDict([('recover_code', 'ZO9tnKQsv6nyjMptXbDYFN8k5')])
+	# print db_commands.get_db_user(recover_code='ZO9tnKQsv6nyjMptXbDYFN8k5')
 	if code:
-		recover_user = db_commands.get_recover_user(code)
+		# Query with the correct e-mail as well
+		# This can be done when the function is fixed to be more general!
+		recover_user = db_commands.get_db_user(recover_code=code)
+
 		if recover_user:
 			new_password = random_string()
 			new_password_bcrypt = config.bcrypt.generate_password_hash(new_password)
 			recover_code_md = config.MultiDict([('recover_code', '')])
-			print recover_user
-			# db_commands.update_db_user(request.form['email'], recover_code_md)
+			if db_commands.update_db_user(recover_user.email, recover_code_md):
+				password_dict = {'new_password': new_password, 'repeat_password': new_password, 'current_password': recover_user.password}
+				if db_commands.update_db_pw_from_code(recover_user.email, password_dict):
+					body = '''<b>Hej igen nollan!</b>
+					<br />
+					Ditt nya lösenord är: %s
+					<br />
+					Se till att bevara detta väl, men kom ihåg, STABEN ser allt!
+					''' % (new_password)
+					if send_email([recover_user.email], 'Ditt nya lösenord på staben.info', html_body=body):
+						return 'Hej'
+					else:
+						debug('forgot_password', 'Error, could not send the recovery e-mail')
+						return render('forgot_password.html')
+				else:
+					debug('forgot_password', 'Error, could not update password')
+					return render('forgot_password.html')
+			else:
+				debug('forgot_password', 'Error, could not update user')
+				return render('forgot_password.html')
 		else:
-			return 'NOOOPE'
-	if request.method == 'POST':
+			flash(u'Återställningskoden finns ej.')
+			return render('forgot_password.html')
+
+	elif request.method == 'POST':
 		if db_commands.check_if_email_exist(request.form['email']):
 			if request.form['email'] != '':
 				# Send en e-mail to request.form['email'] with an url that will reset the user's password
@@ -312,7 +336,7 @@ def profile_save(user_email):
 
 @app.route('/profile/<user_email>/save/password', methods=['POST'])
 def profile_save_password(user_email):
-	if session and user_email == session['email']:
+	if session and user_email == session['email']:#vXr6EFXs36Bf
 		if db_commands.update_db_pw(user_email, request.form):
 			return redirect(url_for('profile', user_email=user_email))
 		else:
