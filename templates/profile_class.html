@@ -1,31 +1,29 @@
 {% extends "template.html" %}
 {% block content %}
-<div class="row" id="content">
-    <div class="span10">
-		<h1>Min skolklass ({{ school_programs }})</h1>
-		{% for mate in class_mates %}
-			<div class='school_mate' id='{{ mate.id }}'>
-				<b>{{ mate.firstname + ' ' + mate.lastname }}</b>
-				<div class='school_mate_collapse' id='collapsed{{ mate.id }}'>Tryck för mer info</div>
+{% if class_mates %}
+	<h1>Min skolklass ({{ school_programs }})</h1>
+	{% for mate in class_mates %}
+		<div class='school_mate' id='{{ mate.id }}'>
+			<b>{{ mate.firstname + ' ' + mate.lastname }}</b>
+			<div class='school_mate_collapse' id='collapsed{{ mate.id }}'>Tryck för mer info</div>
 
-				<div class='school_mate_info' id='{{ mate.id }}'>
-					Ålder: {{ mate.age }} <br />
-					{% if mate.phonenumber_vis %}
-						Telefonnummer: {{ mate.phonenumber }} <br />
-					{% endif %}
-					{% if mate.facebook_url %}
-						<a href='http://www.facebook.com/{{ mate.facebook_url }}' target='_blank'>Facebook</a> <br />
-					{% endif %}
-					<br />
-					Från: {{ mate.where_from }} <br />
-					Bor: {{ mate.current_city }} <br />
-					<br />
-					<p>
-						{{ mate.presentation }}
-					</p>
-				</div>
+			<div class='school_mate_info' id='{{ mate.id }}'>
+				Ålder: {{ mate.age }} <br />
+				{% if mate.phonenumber_vis %}
+					Telefonnummer: {{ mate.phonenumber }} <br />
+				{% endif %}
+				{% if mate.facebook_url %}
+					<a href='http://www.facebook.com/{{ mate.facebook_url }}' target='_blank'>Facebook</a> <br />
+				{% endif %}
+				<br />
+				Från: {{ mate.where_from }} <br />
+				Bor: {{ mate.current_city }} <br />
+				<br />
+				<p>
+					{{ mate.presentation }}
+				</p>
 			</div>
-		{% endfor %}
-	</div>
-</div>
+		</div>
+	{% endfor %}
+{% endif %}
 {% endblock %}
