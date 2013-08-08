@@ -305,7 +305,7 @@ class Users(Base):
 	email = db.Column(db.String(100), index=True, unique=True)
 	password = db.Column(db.String(254), index=True)
 	role = db.Column(db.SmallInteger(), default=ROLE_USER)
-	user_information = db.relationship('UserInformation', backref='Users', uselist=False, lazy='joined')
+	user_information = db.relationship('UserInformation', backref='Users', uselist=False)
 	student_poll = db.relationship('StudentPollAnswer', backref='Users', lazy='dynamic')
 	r_student_poll_assigned_group = db.relationship('StudentPollAssignedGroups', backref='Users')
 
