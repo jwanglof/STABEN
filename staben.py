@@ -490,11 +490,17 @@ def admin_insert_user_to_group():
 		return redirect(url_for('admin_student_poll'))
 
 @app.errorhandler(403)
+def page_not_found(e):
+    return render('error.html', st=static_texts), 403
 @app.errorhandler(404)
+def page_not_found(e):
+    return render('error.html', st=static_texts), 404
 @app.errorhandler(410)
+def page_not_found(e):
+    return render('error.html', st=static_texts), 410
 @app.errorhandler(500)
 def page_not_found(e):
-    return render('error.html', st=static_texts)
+    return render('error.html', st=static_texts), 500
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
