@@ -1,0 +1,4 @@
+{% extends "template.html" %}
+{% block content %}
+Oj oj, nu gick det för snabbt på ett de sju haven {{ st['nollan']|safe }}. {{ st['staben']|safe }} hänger inte riktigt med var {{ st['nollan']|safe }} vill åka men {{ st['staben']|safe }} tycker att <a href='{{ url_for('index') }}'>startsidan</a> är en bra utgångspunkt. 
+{% endblock %}
