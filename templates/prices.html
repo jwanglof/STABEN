@@ -1,5 +1,50 @@
 {% extends "template.html" %}
 {% block active_prices %}active{% endblock %}
 {% block content %}
-Prices
+    <h1>Prisinformation</h1>
+    <br>
+    <h3>Nolleavgiften 350 kr</h3>
+    <p>
+        I {{ st['nollan']|safe }} nollebok står det att {{ st['nollan']|safe }} skall ha med sig pengar till den frivilliga,
+        men ack så viktiga nolleavgiften. Denna avgift är frivillig i den bemärkelse att det är
+        frivilligt att deltaga under nolleperioden.
+        <br>
+        Alltså, för att få deltaga på aktiviteterna under nolleperioden måste man betala en avgift på 350 kronor.
+        Avgiften går till att kunna bedriva de aktiviteter som äger rum under dessa två veckor,
+        samt att den hjälper till att hålla priserna nere för de arrangemang som kräver en ytterligare avgift.
+        Utöver aktiviteter så får du som betalar avgiften en kanonfin sektionsväska samt lunch första dagen.
+        <br>
+        Ett urval av de aktiviteter som betalas med avgiften följer nedan:
+    </p>
+    <ul>
+        <li>Campusvandringen</li>
+        <li>Stadssvandringen</li>
+        <li>Hajk</li>
+        <li>ACATs föreläsningsserie</li>
+        <li>Faddermiddagar</li>
+        <li>Capslabb</li>
+        <li>Gasquelabb</li>
+        <li>Brännbollskväll</li>
+        <li>Lunchtävlingar</li>
+    </ul>
+    <br>
+    <p>Nedan följer prisinformation för de evenemang som {{ st['nollan']|safe }} kan medverka på under nolle-p.</p>
+    <h3>Priser till {{ st['staben']|safe }}s evenemang:</h3>
+    <ul>
+        <li><p>Överfaddrarnas sittning 26/8 - 60 kr</p></li>
+        <li><p>Nolledisco, {{ st['staben']|safe }} & Gudfadderiet 26/8 - 60 kr</p></li>
+        <li><p>Redovisningskväll 3/9 - 60 kr</p></li>
+        <li><p>Nollesittning med nollephest 6/9 - 300 kr</p></li>
+    </ul>
+    <br>
+    <h3>Priser till andras evenemang:</h3>
+    <ul>
+        <li><p>Nolledisco, YF & Mpire 21/8 - 60 kr</p></li>
+        <li><p>Nolledisco, CM & TackLing & UrF 23/8 - 60 kr</p></li>
+        <li><p><a href="http://munchenhoben.lintek.liu.se/" target="_blank">München Hoben</a> 28/8 - 80 kr</p></li>
+        <li><p><a href="http://www.lintek.liu.se/gemenskap/studentliv/lintek-and-fortes-utedisco/" target="_blank">
+            SOF & fortes utedisco</a> - 80 kr</p></li>
+    </ul>
+    <br>
+    <br>
 {% endblock %}
