@@ -38,6 +38,7 @@
 	<input type='text' name='where_from' value='{{ user_info.where_from }}' /> <br />
 	Program <br />
 	<select name='school_program' id='school_program'>
+		<option value='0'></option>
 		{%- for program in school_programs %}
 		<option value='{{ program.id }}' {% if user_info.school_program == program.id %}selected{% endif %}>
 			{{ program.name }} ({{ program.abbreviation }})
@@ -47,6 +48,7 @@
 	<br />
 	Klass <br />
 	<select name='school_class' id='school_class'>
+		<option value='0'></option>
 		{%- for classes in school_classes %}
 		<option value='{{ classes.id }}|{{ classes.fk_school_program_id }}' {% if user_info.school_class == classes.id %}selected{% endif %}>
 			{{ classes.name }}
