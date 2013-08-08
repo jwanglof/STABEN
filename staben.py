@@ -21,7 +21,7 @@ redirect = config.redirect
 debug = debug.debug
 async = decorators.async
 
-static_texts = {'nollan': '<span class="nollanfont">minus</span>', 'staben': '<span class="stabenfont">STABEN</span>'}
+static_texts = {'nollan': '<span class="nollanfont">minus</span>', 'nollans': '<span class="nollanfont">nollans</span>', 'staben': '<span class="stabenfont">STABEN</span>'}
 
 # DEV OPTIONS
 # NEEDS TO BE REMOVED IN PRODUCTION MODE
