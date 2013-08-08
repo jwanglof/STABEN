@@ -163,8 +163,8 @@ class Schedule(Base):
 	place = db.Column(db.String(100), index=True)
 	href_div_id = db.Column(db.String(4), index=True)
 	# Two different for two paragrahps
-	activity_info_day = db.Column(db.UnicodeText(), index=True)
-	activity_info_evening = db.Column(db.UnicodeText(), index=True)
+	activity_info_day = db.Column(db.UnicodeText())
+	activity_info_evening = db.Column(db.UnicodeText())
 
 	def __init__(self, week=None, date=None, weekday=None, href_div_id=None,
 				 img_url=None, time=None, place=None, activity_info_day=None, activity_info_evening=None):
