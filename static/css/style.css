@@ -8,16 +8,8 @@ body {
     background: transparent;
 }
 
-#content{
-    color: #FFFFFF;
-}
-
-.row {
+.container {
     color: #ffffff;
-}
-
-.content {
-	padding-top: 20px;
 }
 
 .school_mate {
@@ -65,10 +57,6 @@ p.no_javascript {
 	text-decoration: underline;
 }
 
-.pagination {
-    display: inline;
-}
-
 .pagination ul > li > a {
     background-color: #1F1F1F;
 }
@@ -114,3 +102,8 @@ dd {
 .student_poll .percent_width {width: 250%;}
 .student_poll .dialect_margin {margin-left: 230px;}
 .student_poll .dialect_dialect {width: 100px; height: 40px; float: left; border-left: 1px solid #000; text-align: center;}
+
+.border {border: 1px solid #fff;}
+.border_red {border: 1px solid #ff0000;}
+.border_green {border: 1px solid #00ff00;}
+.border_yellow {border: 1px solid #ffff00;}
