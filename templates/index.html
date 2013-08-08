@@ -1,6 +1,13 @@
 {% extends "template.html" %}
 {% block active_index %}active{% endblock %}
 {% block content %}
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    {% endif %}
+{% endwith %}
         <p class='no_javascript'>
             {{ st['staben']|safe }} ser att {{ st['nollan']|safe }}
             inte har Javascript aktiverat. Om {{ st['nollan']|safe }} vill kunna använda
