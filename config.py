@@ -38,7 +38,7 @@ PASSWORD = 'default'
 HOST = '127.0.0.1'
 
 UPLOAD_FOLDER = 'upload'
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+# ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg']
 
 app = Flask(__name__)
 app.secret_key = SECRET_KEY
