@@ -54,8 +54,10 @@
                             </ul>
                         </li>
                         <li><a href="{{ url_for('signout') }}">Logga ut</a></li>
-                        {% if not session['poll_done'] and session['finished_profile'] %}
-                            <li><a href='/profile/{{ session['email'] }}/student_poll' style='font-style: italic; color: #ff0000'>Fyll i din nollenekät!</a></li>
+                        {% if not session['finished_profile'] %}
+                            <li><a href='{{ url_for('profile_edit', user_email=session['email']) }}' style='font-style: italic; color: #ff0000'>Fyll i din profil!</a></li>
+                        {% elif not session['poll_done'] and session['finished_profile'] %}
+                            <li><a href='{{ url_for('profile_student_poll', user_email=session['email']) }}' style='font-style: italic; color: #ff0000'>Fyll i din nollenekät!</a></li>
                         {% endif %}
                     {% else %}
                         <li class='dropdown'>
