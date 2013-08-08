@@ -488,6 +488,13 @@ def admin_insert_user_to_group():
 		flash(u'ALLA ANVÄNDARE HAR EN EGEN GRUPP. WOOOOOOHOOOOOOOOOO!!')
 		return redirect(url_for('admin_student_poll'))
 
+@app.errorhandler(403)
+@app.errorhandler(404)
+@app.errorhandler(410)
+@app.errorhandler(500)
+def page_not_found(e):
+    return render('error.html', st=static_texts)
+
 @app.teardown_appcontext
 def shutdown_session(exception=None):
 	config.db_session.remove()
