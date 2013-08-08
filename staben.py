@@ -3,7 +3,7 @@
 
 import config
 #import model
-from dev import db_commands, debug
+from dev import db_commands, debug, decorators
 # from dev import debug
 
 # Used for new_password()
