@@ -47,7 +47,7 @@
 	<br />
 	Klass <br />
 	<select name='school_class' id='school_class'>
-		<option value='0'></option>
+		<option value='0|0'></option>
 		{%- for classes in school_classes %}
 		<option value='{{ classes.id }}|{{ classes.fk_school_program_id }}' {% if user_info.school_class == classes.id %}selected{% endif %}>
 			{{ classes.name }}
