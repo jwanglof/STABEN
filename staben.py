@@ -221,7 +221,8 @@ def forgot_password(code=None):
 					Se till att bevara detta väl, men kom ihåg, STABEN ser allt!
 					''' % (new_password)
 					if send_email([recover_user.email], 'Ditt nya lösenord på staben.info', html_body=body):
-						return 'Hej'
+						flash(u'Ditt nya lösenord har blivit skickat till din e-post.')
+						return redirect(url_for('index'))
 					else:
 						debug('forgot_password', 'Error, could not send the recovery e-mail')
 						return render('forgot_password.html')
