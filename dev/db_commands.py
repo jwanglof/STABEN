@@ -8,6 +8,7 @@ import models
 import config
 import math
 import read_csv
+import read_quotes
 import debug
 
 db = config.db
@@ -47,6 +48,8 @@ contacts.append(models.Contacts('Tony Fredriksson', '070-6745520', 'tonfr314@stu
 contacts.append(models.Contacts('Gustav Bylund', '073-0262686', 'gusby403@student.liu.se', 0, 'IP0',''))
 contacts.append(models.Contacts('Alex Telon', '070-2647531', 'alete471@student.liu.se', 0, 'U0',''))
 contacts.append(models.Contacts('Siv Söderlund', '013-282836', 'siv.soderlund@liu.se', 1, '', 'http://www.liu.se/personal/tfk/sivso41?l=sv'))
+
+quotes = []
 
 # Should check if the DB is created successfully or not!
 def create_db():
@@ -125,6 +128,19 @@ def create_student_poll():
 	db_session.commit()
 	return 'Student poll prefixes and questions added'
 
+def create_quotes():
+	try:
+		Quotes = read_quotes.ReadQuotes(config.host_option.quote_file)
+
+		# Add quotes
+		for quote in Quotes.get_quotes():
+			db_session.add(models.Quote(quote))
+
+		db_session.commit()
+		return 'Quotes added'
+	except:
+		return 'Could not add quotes'
+
 def add_contact(name, phonenumber, email, role, school_class, link):
 	contact = models.Contact(name, phonenumber, email, role, school_class, link)
 	db_session.add(contact)
@@ -192,6 +208,9 @@ def get_db_user(user_id=None, db_user_email=None, db_user_password=None, recover
 			return db_user_info
 	else:
 		return False
+		
+def get_quotes():
+	return models.Quote.query.all()
 
 def get_recover_user(db_user_recover_code):
 	return models.UserInformation.query.filter_by(recover_code=db_user_recover_code).first()
