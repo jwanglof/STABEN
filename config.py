@@ -14,12 +14,6 @@ from dev import host_option
 from werkzeug.datastructures import ImmutableMultiDict, MultiDict, OrderedMultiDict
 
 dbhost = '127.0.0.1'
-# dbuser = 'STABEN'
-# dbpass = 'generalhenrik'
-# dbname = 'STABEN'
-# dbuser = 'dstaben'
-# dbpass = 'cjnW5A82YhcBWAcK'
-# dbname = 'dstaben'
 
 # URI is needed for migrations
 # We don't use this right now
@@ -35,7 +29,7 @@ DEBUG = True
 SECRET_KEY = ':\xbe\xef\xc9\xbf\xf6\x86\x8d\xeb\x90\xa5!+\x97i\xa38\xe0\x98\x7f\xec\xca*\x8c'
 USERNAME = 'admin'
 PASSWORD = 'default'
-HOST = '127.0.0.1'
+HOST = '0.0.0.0'
 
 UPLOAD_FOLDER = 'upload'
 # ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg']
