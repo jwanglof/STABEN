@@ -359,3 +359,12 @@ class StudentPollAssignedGroups(Base):
 		self.fk_student_poll_dialect_id = fk_student_poll_dialect_id
 		self.fk_user_id = fk_user_id
 		self.position = position
+
+class Quote(Base):
+	__tablename__ = 'quotes'
+	id = db.Column(db.Integer(), primary_key=True)
+	quote = db.Column(db.String(254), index=True)
+
+	def __init__(self, quote):
+		"""The constructor"""
+		self.quote = quote
