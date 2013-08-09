@@ -10,7 +10,7 @@ class ReadQuotes():
 			elif line[-2] is '.':
 				line = line[:-2]
 
-			quote_list.append(line.replace('"', ''))
+			quote_list.append(line.replace('"', '').replace('staben', '<span class=\'stabenfont\'>STABEN</span>').replace('STABEN', '<span class=\'stabenfont\'>STABEN</span>'))
 		return quote_list
 
 ## Run example:
