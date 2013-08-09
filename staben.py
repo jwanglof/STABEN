@@ -23,6 +23,12 @@ async = decorators.async
 
 static_texts = {'nollan': '<span class="nollanfont">minus</span>', 'nollans': '<span class="nollanfont">nollans</span>', 'staben': '<span class="stabenfont">STABEN</span>'}
 
+# Make get_quote() callable from a template. Used in template.html
+def get_quote():
+	quotes = db_commands.get_quotes()
+	return quotes[random.randrange(len(quotes))].quote
+config.app.jinja_env.globals.update(get_quote=get_quote)
+
 # DEV OPTIONS
 # NEEDS TO BE REMOVED IN PRODUCTION MODE
 @app.route('/db_all')
@@ -506,6 +512,7 @@ def page_not_found(e):
 @app.errorhandler(500)
 def page_not_found(e):
     return render('error.html', st=static_texts), 500
+
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
