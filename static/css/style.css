@@ -1,12 +1,13 @@
-html {
+html, body {
     overflow-y: scroll;
     background: #000 url(../img/background.png) no-repeat fixed center bottom;
     height: 100%;
 }
-
+/*
 body {
     background: transparent;
 }
+*/
 
 .container {
     color: #ffffff;
@@ -107,3 +108,7 @@ dd {
 .border_red {border: 1px solid #ff0000;}
 .border_green {border: 1px solid #00ff00;}
 .border_yellow {border: 1px solid #ffff00;}
+
+.footer {
+    text-align: center;
+}
