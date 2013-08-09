@@ -28,12 +28,13 @@ static_texts = {'nollan': '<span class="nollanfont">minus</span>', 'nollans': '<
 @app.route('/db_all')
 def db_all():
 	try:
-		db_create()
-		db_programs()
-		db_classes()
-		db_contacts()
-		db_code()
-		db_student_poll()
+		db_commands.create_db()
+		db_commands.create_school_programs()
+		db_commands.create_school_classes()
+		db_commands.create_contacts()
+		db_commands.create_secret_code()
+		db_commands.create_student_poll()
+		db_commands.create_quotes()
 		return 'SUUUUUUUUCCESS!!!!!'
 	except:
 		return 'NOOOOOO SUUUUUUUUCCESS!!!!!!!'
