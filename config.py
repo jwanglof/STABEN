@@ -13,14 +13,7 @@ from dev import host_option
 # Need this to make ImmutableMultiDict's that can be inserted into the database
 from werkzeug.datastructures import ImmutableMultiDict, MultiDict, OrderedMultiDict
 
-dbhost = '127.0.0.1'
-
-# URI is needed for migrations
-# We don't use this right now
-# SQLALCHEMY_DATABASE_URI = 'mysql://' + dbuser + ':' + dbpass + '@' + dbhost + '/' +dbname
-# SQLALCHEMY_MIGRATE_REPO = 'db_repo'
-
-engine = create_engine('mysql://' + host_option.dbuser + ':' + host_option.dbpass + '@' + dbhost + '/' + host_option.dbname + '?charset=utf8', convert_unicode=True)
+engine = create_engine('mysql://' + host_option.dbuser + ':' + host_option.dbpass + '@' + host_option.dbhost + '/' + host_option.dbname + '?charset=utf8', convert_unicode=True)
 db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
 Base = declarative_base()
 Base.query = db_session.query_property()
@@ -37,7 +30,6 @@ UPLOAD_FOLDER = 'upload'
 app = Flask(__name__)
 app.secret_key = SECRET_KEY
 app.debug = DEBUG
-# app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 bcrypt = Bcrypt(app)
 db = SQLAlchemy(app)
@@ -45,15 +37,9 @@ app.config.setdefault('MAIL_SERVER', 'smtp.gmail.com')
 app.config.setdefault('MAIL_PORT', 465)
 # app.config.setdefault('MAIL_USE_TSL', True)
 app.config.setdefault('MAIL_USE_SSL', True)
-# app.config.setdefault('MAIL_USERNAME', 'c30g@c.lintek.liu.se')
-# app.config.setdefault('MAIL_PASSWORD', 'WpD0cJhwQj2')
 app.config.setdefault('MAIL_USERNAME', 'staben.no.reply@gmail.com')
 app.config.setdefault('MAIL_PASSWORD', 'zFpgai3g')
 app.config.setdefault('MAIL_DEFAULT_SENDER', ('STABENs ultimata epost no-reply e-post', 'staben.no.reply@gmail.com'))
 mail = Mail(app)
 
 user_roles = [u'Admin', u'Överfadder', u'Fadder', u'Klassföreståndare', u'Användare']
-
-# TODO
-# Fix DB migration!
-# http://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-iv-database
