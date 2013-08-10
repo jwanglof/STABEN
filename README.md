@@ -81,3 +81,9 @@ TODO
 EER
 ======
 http://www.databasteknik.se/webbkursen/er/
+
+TODO AAAAAFTER
+======
+- https://github.com/mitsuhiko/flask/tree/website
+- http://flask.pocoo.org/docs/blueprints/
+- Alembic
