@@ -17,37 +17,8 @@ $(document).ready(function() {
 		}
 	});
 
-	$('#school_program').change(function() {
-		var chosen_school_program = $('#school_program').children(':selected').val();
-		var select_objects = new Array();
-
-		$('#school_class').children('option').each(function() {
-			var school_class_program = $(this).val().split('|')[1];
-
-			// Hide all options
-			$(this).hide();
-			if (school_class_program == chosen_school_program) {
-				// Show the correct school class option(s)
-				$(this).show();
-				
-				// Add all HTML objects to the array
-				// If there are more than one class for a program
-				// the select-list will always choose the first one
-				select_objects.push(this);
-			}
-		});
-
-		// Select the first HTML object in the array
-		$(select_objects[0]).prop('selected', true);
-	});
-
-	$('#school_class').change(function() {
-		$('#school_class option:selected').each(function() {
-			var school_program_id = $(this).val().split('|')[1]
-			// Hide all IDs that are not chosen
-			// $('#school_class option').hide()
-		});
-	});
+	$('#school_program').ready(function() {show_school_class();});
+	$('#school_program').change(function() {show_school_class();});
 
 	$('#register_form').validate({
 		errorLabelContainer: $("#errorMessages"),
@@ -98,3 +69,27 @@ $(document).ready(function() {
 		}
 	});
 });
+
+function show_school_class() {
+	var chosen_school_program = $('#school_program').children(':selected').val();
+	var select_objects = new Array();
+
+	$('#school_class').children('option').each(function() {
+		var school_class_program = $(this).val().split('|')[1];
+
+		// Hide all options
+		$(this).hide();
+		if (school_class_program == chosen_school_program) {
+			// Show the correct school class option(s)
+			$(this).show();
+			
+			// Add all HTML objects to the array
+			// If there are more than one class for a program
+			// the select-list will always choose the first one
+			select_objects.push(this);
+		}
+	});
+
+	// Select the first HTML object in the array
+	$(select_objects[0]).prop('selected', true);
+}
