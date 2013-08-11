@@ -1,0 +1,7 @@
+{% extends "template.html" %}
+{% block content %}
+Ladda hem mallen till din nollebricka <a href='{{ url_for('static', filename='downloads/nollebricka.pdf') }}'>här</a>
+<p>
+<img src='{{ url_for('static', filename='img/student/student_badge_white.png') }}' height='80%' width='80%' />
+</p>
+{% endblock %}
