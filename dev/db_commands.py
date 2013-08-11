@@ -17,15 +17,6 @@ db_session = config.db_session
 
 debug = debug.debug
 
-# initial users
-admin_users2 = []
-admin_users2.append(models.Users('jwanglof@gmail.com', 'tmppass', 0))
-admin_users2.append(models.Users('simis.linden@gmail.com', 'tmppass', 0))
-
-admin_users_info = []
-admin_users_info.append(models.UserInformation('Johan'))
-admin_users_info.append(models.UserInformation('Simon'))
-
 school_program = []
 school_program.append(models.SchoolProgram(1, 'D', 'Datateknik'))
 school_program.append(models.SchoolProgram(2, 'IT', 'Informationsteknologi'))
@@ -41,15 +32,13 @@ school_class.append(models.SchoolClass(name='IP0', fk_school_program_id='3'))
 school_class.append(models.SchoolClass(name='U0', fk_school_program_id='4'))
 
 contacts = []
-contacts.append(models.Contacts('Patrik Hillgren', '070-0434527', 'pathi747@student.liu.se', 0, 'IT0',''))
-contacts.append(models.Contacts('Alicia Tonolli', '070-4237004', 'alito938@student.liu.se', 0, 'D0a',''))
-contacts.append(models.Contacts('Johan Falk', '070-8468608', 'johfa808@student.liu.se', 0, 'D0b',''))
-contacts.append(models.Contacts('Tony Fredriksson', '070-6745520', 'tonfr314@student.liu.se', 0, 'D0c',''))
-contacts.append(models.Contacts('Gustav Bylund', '073-0262686', 'gusby403@student.liu.se', 0, 'IP0',''))
-contacts.append(models.Contacts('Alex Telon', '070-2647531', 'alete471@student.liu.se', 0, 'U0',''))
-contacts.append(models.Contacts('Siv Söderlund', '013-282836', 'siv.soderlund@liu.se', 1, '', 'http://www.liu.se/personal/tfk/sivso41?l=sv'))
-
-quotes = []
+contacts.append(models.Contact('Patrik Hillgren', '070-0434527', 'pathi747@student.liu.se', 0, 'IT0',''))
+contacts.append(models.Contact('Alicia Tonolli', '070-4237004', 'alito938@student.liu.se', 0, 'D0a',''))
+contacts.append(models.Contact('Johan Falk', '070-8468608', 'johfa808@student.liu.se', 0, 'D0b',''))
+contacts.append(models.Contact('Tony Fredriksson', '070-6745520', 'tonfr314@student.liu.se', 0, 'D0c',''))
+contacts.append(models.Contact('Gustav Bylund', '073-0262686', 'gusby403@student.liu.se', 0, 'IP0',''))
+contacts.append(models.Contact('Alex Telon', '070-2647531', 'alete471@student.liu.se', 0, 'U0',''))
+contacts.append(models.Contact('Siv Söderlund', '013-282836', 'siv.soderlund@liu.se', 1, '', 'http://www.liu.se/personal/tfk/sivso41?l=sv'))
 
 # Should check if the DB is created successfully or not!
 def create_db():
@@ -60,19 +49,8 @@ def delete_db():
 	config.Base.metadata.drop_all(bind=config.engine)
 	return "JAAAA"
 
-def create_admin_users():
-	# TODO: Call to register_user instead with a dict!!
-	for admin in admin_users2:
-		db_session.add(admin)
-
-	'''for admin_info in admin_users_info:
-		db_session.add(admin_info)'''
-
-	db_session.commit()
-	return "Admin users added"
-
 def create_secret_code():
-	db_session.add(models.RegisterCode('asd'))
+	db_session.add(models.RegisterCode('two_weevil'))
 	db_session.commit()
 	return 'Secret code added'
 	# Add the secret code to the DB!
@@ -148,7 +126,7 @@ def add_contact(name, phonenumber, email, role, school_class, link):
 	return 'success'
 
 def add_login_count(db_user_email):
-	db_user = models.Users.query.filter_by(email=db_user_email).first()
+	db_user = models.User.query.filter_by(email=db_user_email).first()
 	user_info = models.UserInformation.query.filter_by(fk_user_id=db_user.id).first()
 	user_info.login_count += 1
 	db_session.commit()
@@ -162,16 +140,16 @@ def add_user_information(db_user_id):
 		return False
 
 def check_role(db_user_email):
-	return models.Users.query.filter_by(email=db_user_email).first().role
+	return models.User.query.filter_by(email=db_user_email).first().role
 
 def check_if_email_exist(email):
-	if models.Users.query.filter_by(email=email).first():
+	if models.User.query.filter_by(email=email).first():
 		return True
 	else:
 		return False
 
 def get_class_mates(db_user_email):
-	db_user = models.Users.query.filter_by(email=db_user_email).first()
+	db_user = models.User.query.filter_by(email=db_user_email).first()
 	user_info = models.UserInformation.query.filter_by(fk_user_id=db_user.id).first()
 	if user_info.school_program > 0:
 		return models.UserInformation.query.filter_by(school_class=user_info.school_class).all()
@@ -180,20 +158,20 @@ def get_class_mates(db_user_email):
 
 def get_contacts(role):
 	if role is 0:
-		contacts = models.Contacts.query.filter_by(role=role).order_by(models.Contacts.school_class).all()
+		contacts = models.Contact.query.filter_by(role=role).order_by(models.Contact.school_class).all()
 	else:
-		contacts = models.Contacts.query.filter_by(role=role).all()
+		contacts = models.Contact.query.filter_by(role=role).all()
 	return contacts
 
 def get_db_user(user_id=None, db_user_email=None, db_user_password=None, recover_code=None):
-	# models.Users.query.filter_by(id=1).first().user_information.fk_user_id
+	# models.User.query.filter_by(id=1).first().user_information.fk_user_id
 	if db_user_email != None:
-		db_user = models.Users.query.filter_by(email=db_user_email).first()
+		db_user = models.User.query.filter_by(email=db_user_email).first()
 	elif user_id != None:
-		db_user = models.Users.query.filter_by(id=user_id).first()
+		db_user = models.User.query.filter_by(id=user_id).first()
 	elif recover_code != None:
-		# return db_session.query(models.Users, models.UserInformation).join('user_information').filter_by(recover_code=recover_code).first()
-		return models.Users.query.join(models.Users.user_information).filter_by(recover_code=recover_code).first()
+		# return db_session.query(models.User, models.UserInformation).join('user_information').filter_by(recover_code=recover_code).first()
+		return models.User.query.join(models.User.user_information).filter_by(recover_code=recover_code).first()
 
 	if db_user is not None:
 		db_user_info = {'user': db_user, 'info': models.UserInformation.query.filter_by(fk_user_id=db_user.id).first()}
@@ -246,14 +224,14 @@ def get_student_poll_question():
 	return models.StudentPollQuestion.query.filter(models.StudentPollQuestion.fk_student_poll_prefix_id != admin_prefix_id).order_by(models.StudentPollQuestion.id).all()
 
 def get_user_school_program(db_user_email):
-	db_user = models.Users.query.filter_by(email=db_user_email).first()
+	db_user = models.User.query.filter_by(email=db_user_email).first()
 	user_info = models.UserInformation.query.filter_by(fk_user_id=db_user.id).first()
 	school_program = models.SchoolProgram.query.filter_by(id=user_info.school_program).first()
 	return school_program.abbreviation
 
 def register_user(db_user_dict):
 	try:
-		new_user = models.Users(db_user_dict['email'], config.bcrypt.generate_password_hash(db_user_dict['password']))
+		new_user = models.User(db_user_dict['email'], config.bcrypt.generate_password_hash(db_user_dict['password']))
 		db_session.add(new_user)
 		db_session.commit()
 		return True
@@ -262,7 +240,7 @@ def register_user(db_user_dict):
 
 def save_student_poll(db_user_email, db_student_poll_dict):
 	try:
-		db_user = models.Users.query.filter_by(email=db_user_email).first()
+		db_user = models.User.query.filter_by(email=db_user_email).first()
 		for x in db_student_poll_dict:
 			db_session.add(models.StudentPollAnswer(db_user.id, x))
 		db_session.commit()
@@ -272,20 +250,20 @@ def save_student_poll(db_user_email, db_student_poll_dict):
 
 def update_db_user(db_user_email, db_user_dict):
 	try:
-		db_user = models.Users.query.filter_by(email=db_user_email).first()
+		db_user = models.User.query.filter_by(email=db_user_email).first()
 		models.UserInformation.query.filter_by(fk_user_id=db_user.id).update(db_user_dict)
-		# models.Users.query.join(models.Users.user_information).filter_by(recover_code=recover_code).first()
-		# models.Users.query.join(models.Users.user_information).filter_by(id=db_user.id).update({'recover_code': 'fff', 'firstname': 'asd'})
+		# models.User.query.join(models.User.user_information).filter_by(recover_code=recover_code).first()
+		# models.User.query.join(models.User.user_information).filter_by(id=db_user.id).update({'recover_code': 'fff', 'firstname': 'asd'})
 		db_session.commit()
 		return True
 	except:
 		return False
 
 def update_db_pw(db_user_email, db_user_dict):
-	db_user = models.Users.query.filter_by(email=db_user_email).first()
+	db_user = models.User.query.filter_by(email=db_user_email).first()
 	if db_user_dict['new_password'] == db_user_dict['repeat_password'] and \
 	config.bcrypt.check_password_hash(db_user.password, db_user_dict['current_password']):
-		models.Users.query.filter_by(email=db_user_email).update({'password': config.bcrypt.generate_password_hash(db_user_dict['new_password'])})
+		models.User.query.filter_by(email=db_user_email).update({'password': config.bcrypt.generate_password_hash(db_user_dict['new_password'])})
 		db_session.commit()
 		return True
 	else:
@@ -293,8 +271,8 @@ def update_db_pw(db_user_email, db_user_dict):
 
 def update_db_pw_from_code(db_user_email, db_user_dict):
 	try:
-		db_user = models.Users.query.filter_by(email=db_user_email).first()
-		models.Users.query.filter_by(email=db_user_email).update({'password': config.bcrypt.generate_password_hash(db_user_dict['new_password'])})
+		db_user = models.User.query.filter_by(email=db_user_email).first()
+		models.User.query.filter_by(email=db_user_email).update({'password': config.bcrypt.generate_password_hash(db_user_dict['new_password'])})
 		db_session.commit()
 		return True
 	except:
@@ -330,11 +308,21 @@ def add_student_poll_max_students(db_student_poll_dict):
 	except:
 		return False
 
+def admin_add_quote(form_value):
+	try:
+		# !!!!!!
+		# Need to check for STABEN fonts and shiiiiet
+		new_quote = models.Quote(form_value['quote'])
+		db_session.add(new_quote)
+		db_session.commit()
+		return True
+	except:
+		return False
+
 def admin_get_all_student_poll_answers():
 	# asd = models.StudentPollAnswer.query.order_by(models.StudentPollAnswer.fk_user_id).all()
 	# db_user_info = {'user': db_user, 'info': models.UserInformation.query.filter_by(fk_user_id=db_user.id).first()}
-	asd = models.StudentPollAnswer.query.order_by(models.StudentPollAnswer.fk_user_id).all()
-	return asd
+	return models.StudentPollAnswer.query.order_by(models.StudentPollAnswer.fk_user_id).all()
 
 def admin_calc_user_points(user_id, order=False):
 	points = models.StudentPollPoint.query.all()
@@ -382,7 +370,7 @@ def admin_calc_user_points(user_id, order=False):
 	return dialect_w_total_points_md
 
 def admin_get_user_poll_answer(user_id):
-	userinfo_w_answers = models.Users.query.filter_by(id=user_id).join(models.Users.user_information).join(models.Users.student_poll).all()
+	userinfo_w_answers = models.User.query.filter_by(id=user_id).join(models.User.user_information).join(models.User.student_poll).all()
 	prefixes_w_questions_w_points = models.StudentPollPrefix.query.order_by(models.StudentPollPrefix.id).all()
 
 	pref_w_ques_w_point_OMD = config.OrderedMultiDict()
@@ -407,7 +395,7 @@ def admin_get_user_poll_answer(user_id):
 	return {1: userinfo_w_answers_MD, 2: pref_w_ques_w_point_OMD}
 
 def admin_get_all_users():
-	return {'user': models.Users.query.all(), 'info': models.UserInformation.query.all()}
+	return {'user': models.User.query.all(), 'info': models.UserInformation.query.all()}
 
 def admin_get_all_users_w_poll_done():
 	return models.UserInformation.query.filter_by(poll_done=1).all()
