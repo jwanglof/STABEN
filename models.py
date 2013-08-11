@@ -7,7 +7,7 @@
 
 '''
 To be able to delete all tables
-SET FOREIGN_KEY_CHECKS=0;TRUNCATE users;TRUNCATE student_poll_prefix;TRUNCATE student_poll_question;TRUNCATE student_poll_answer;SET FOREIGN_KEY_CHECKS=1;
+SET FOREIGN_KEY_CHECKS=0;TRUNCATE user;TRUNCATE student_poll_prefix;TRUNCATE student_poll_question;TRUNCATE student_poll_answer;SET FOREIGN_KEY_CHECKS=1;
 SET FOREIGN_KEY_CHECKS=0;TRUNCATE student_poll_prefix;TRUNCATE student_poll_question;TRUNCATE student_poll_answer;SET FOREIGN_KEY_CHECKS=1;
 '''
 
@@ -34,49 +34,50 @@ class Blog(Base):
 	
 	__tablename__ = 'blog'
 	id = db.Column(db.Integer(), primary_key=True)
+	fk_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+	fk_gallery_album_id = db.Column(db.Integer(), db.ForeignKey('gallery_album.id'), default=0)
 	title = db.Column(db.String(100), index=True, unique=False)
 	text = db.Column(db.UnicodeText())
 	date = db.Column(db.Date(), index=True, unique=True)
 	time = db.Column(db.Time(), index=True)
-	author = db.Column(db.String(40), index=True)
+	r_blog_comment = db.relationship('BlogComment', backref='Blog')
 
-	def __init__(self, title=None, text=None, date=None, time=None, author=None):
+	def __init__(self, fk_user_id, fk_gallery_album_id, title, text, date, time):
 		"""The constructor"""
 		self.title = title
 		self.text = text
 		self.date = date
 		self.time = time
-		self.author = author
 
-class BlogComments(Base):
+class BlogComment(Base):
 	"""Blog comments-table
 
 	Contains the comments to a blog. Connected with Blog with fk_blog_id
 	"""
 	
-	__tablename__ = 'blog_comments'
+	__tablename__ = 'blog_comment'
 	id = db.Column(db.Integer(), primary_key=True)
+	fk_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 	fk_blog_id = db.Column(db.Integer, db.ForeignKey('blog.id'))
 	comment = db.Column(db.String(250), index=True)
 	date = db.Column(db.Date(), index=True)
 	time = db.Column(db.Time(), index=True)
-	author = db.Column(db.String(40), index=True)
 
-	def __init__(self, belong_to_id=0, comment=None, date=None, time=None, author=None):
+	def __init__(self, fk_user_id, fk_blog_id, comment, date, time):
 		"""The constructor"""
-		self.belong_to_id = belong_to_id
+		self.fk_user_id = fk_user_id
+		self.fk_blog_id = fk_blog_id
 		self.comment = comment
 		self.date = date
 		self.time = time
-		self.author = author
 
-class Contacts(Base):
-	"""Conacts-table
+class Contact(Base):
+	"""Contact-table
 
 	Contains the information for the school personnel that doesn't need a login.
 	"""
 
-	__tablename__ = 'contacts'
+	__tablename__ = 'contact'
 	id = db.Column(db.Integer(), primary_key=True)
 	name = db.Column(db.String(30), index=True, unique=True)
 	phone = db.Column(db.String(30), index=True)
@@ -97,6 +98,62 @@ class Contacts(Base):
 		self.role = role
 		self.school_class = school_class
 		self.link = link
+		
+class GalleryAlbum(Base):
+	__tablename__ = 'gallery_album'
+	id = db.Column(db.Integer(), primary_key=True)
+	fk_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+	date = db.Column(db.Date(), index=True)
+	time = db.Column(db.Time(), index=True)
+	title = db.Column(db.String(100), index=True)
+	description = db.Column(db.String(200), index=True)
+	r_gallery_picture = db.relationship('GalleryPicture', backref='GalleryAlbum')
+	r_gallery_comment = db.relationship('GalleryComment', backref='GalleryAlbum')
+	r_blog = db.relationship('Blog', backref='GalleryAlbum')
+
+	def __init__(self, fk_user_id, date, time, title, description=None):
+		"""The constructor"""
+		self.fk_user_id = fk_user_id
+		self.date = date
+		self.time = time
+		self.title = title
+		self.description = description
+
+class GalleryPicture(Base):
+	__tablename__ = 'gallery_picture'
+	id = db.Column(db.Integer(), primary_key=True)
+	fk_user_id = db.Column(db.Integer(), db.ForeignKey('user.id'))
+	fk_gallery_album_id = db.Column(db.Integer(), db.ForeignKey('gallery_album.id'))
+	description = db.Column(db.String(200), index=True)
+	date = db.Column(db.Date(), index=True)
+	time = db.Column(db.Time(), index=True)
+	path = db.Column(db.String(254), index=True)
+
+	def __init__(self, fk_user_id, fk_gallery_album_id, date, time, path, description=None):
+		"""The constructor"""
+		self.fk_user_id = fk_user_id
+		self.fk_gallery_album_id = fk_gallery_album_id
+		self.date = date
+		self.time = time
+		self.path = path
+		self.description = description
+
+class GalleryComment(Base):
+	__tablename__ = 'gallery_comment'
+	id = db.Column(db.Integer(), primary_key=True)
+	fk_user_id = db.Column(db.Integer(), db.ForeignKey('user.id'))
+	fk_gallery_album_id = db.Column(db.Integer(), db.ForeignKey('gallery_album.id'))
+	comment = db.Column(db.String(254), index=True)
+	date = db.Column(db.Date(), index=True)
+	time = db.Column(db.Time(), index=True)
+
+	def __init__(self, fk_user_id, fk_gallery_album_id, comment, date, time):
+		"""The constructor"""
+		self.fk_user_id = fk_user_id
+		self.fk_gallery_album_id = fk_gallery_album_id
+		self.comment = comment
+		self.date = date
+		self.time = time
 
 class Motd(Base):
 	"""Message of the Day-table
@@ -116,13 +173,13 @@ class Motd(Base):
 		self.message = message
 		self.show_on_date = show_on_date
 
-class Prices(Base):
-	"""Prices-table
+class Price(Base):
+	"""Price-table
 
 	Contains all the prices that are used
 	"""
 	
-	__tablename__ = 'prices'
+	__tablename__ = 'price'
 	id = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String(100), index=True, unique=True)
 	information = db.Column(db.UnicodeText())
@@ -131,6 +188,15 @@ class Prices(Base):
 	def __init__(self):
 		"""The constructor"""
 		return
+
+class Quote(Base):
+	__tablename__ = 'quote'
+	id = db.Column(db.Integer(), primary_key=True)
+	quote = db.Column(db.String(254), index=True)
+
+	def __init__(self, quote):
+		"""The constructor"""
+		self.quote = quote
 
 class RegisterCode(Base):
 	"""Register code-table
@@ -214,7 +280,7 @@ class SchoolProgram(Base):
 class StudentPollAnswer(Base):
 	__tablename__ = 'student_poll_answer'
 	id = db.Column(db.Integer, primary_key=True)
-	fk_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+	fk_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 	fk_student_poll_question_id = db.Column(db.Integer, db.ForeignKey('student_poll_question.id'))
 
 	# This will return the question id as an int instead of a
@@ -229,13 +295,26 @@ class StudentPollAnswer(Base):
 		self.fk_student_poll_question_id = fk_student_poll_question_id
 		return
 
+class StudentPollAssignedGroup(Base):
+	__tablename__ = 'student_poll_assigned_group'
+	id = db.Column(db.Integer(), primary_key=True)
+	fk_student_poll_dialect_id = db.Column(db.Integer, db.ForeignKey('student_poll_dialect.id'))
+	fk_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+	position = db.Column(db.Integer())
+
+	def __init__(self, fk_student_poll_dialect_id=None, fk_user_id=None, position=None):
+		"""The constructor"""
+		self.fk_student_poll_dialect_id = fk_student_poll_dialect_id
+		self.fk_user_id = fk_user_id
+		self.position = position
+
 class StudentPollDialect(Base):
 	__tablename__ = 'student_poll_dialect'
 	id = db.Column(db.Integer, primary_key=True)
 	dialect = db.Column(db.String(100), index=True, unique=True)
 	max_students = db.Column(db.Integer(), default=0)
 	r_student_poll_point = db.relationship('StudentPollPoint', backref='StudentPollDialect')
-	r_student_poll_assigned_group = db.relationship('StudentPollAssignedGroups', backref='StudentPollDialect')
+	r_student_poll_assigned_group = db.relationship('StudentPollAssignedGroup', backref='StudentPollDialect')
 
 	def __init__(self, id=None, dialect=None, max_students=None):
 		"""The constructor"""
@@ -294,20 +373,22 @@ class StudentPollQuestion(Base):
 	* Bloggnollan							   (role=6)
 	* Nollan                                   (ROLE_USER)
 '''
-class Users(Base):
-	"""Users-table
+class User(Base):
+	"""User-table
 
 	Contains all the registered users
 	"""
 	
-	__tablename__ = 'users'
+	__tablename__ = 'user'
 	id = db.Column(db.Integer(), primary_key=True)
 	email = db.Column(db.String(100), index=True, unique=True)
 	password = db.Column(db.String(254), index=True)
 	role = db.Column(db.SmallInteger(), default=ROLE_USER)
-	user_information = db.relationship('UserInformation', backref='Users', uselist=False)
-	student_poll = db.relationship('StudentPollAnswer', backref='Users', lazy='dynamic')
-	r_student_poll_assigned_group = db.relationship('StudentPollAssignedGroups', backref='Users')
+	r_user_information = db.relationship('UserInformation', backref='User', uselist=False)
+	r_student_poll = db.relationship('StudentPollAnswer', backref='User', lazy='dynamic')
+	r_student_poll_assigned_group = db.relationship('StudentPollAssignedGroup', backref='User')
+	r_gallery_album = db.relationship('GalleryAlbum', backref='User')
+	r_gallery_picture = db.relationship('GalleryPicture', backref='User')
 
 	def __init__(self, email=None, password=None, role=ROLE_USER):
 		"""The constructor"""
@@ -318,12 +399,12 @@ class Users(Base):
 class UserInformation(Base):
 	"""User information-table
 
-	Contains a user's information. Connected with Users with fk_user_id
+	Contains a user's information. Connected with User with fk_user_id
 	"""
 	
 	__tablename__ = 'user_information'
 	id = db.Column(db.Integer(), primary_key=True)
-	fk_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+	fk_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 	firstname = db.Column(db.String(100), index=True, default='')
 	lastname = db.Column(db.String(100), index=True, default='')
 	allergies = db.Column(db.String(254), index=True, default='')
@@ -346,25 +427,3 @@ class UserInformation(Base):
 		"""The constructor"""
 		self.fk_user_id = user_id
 		self.presentation = presentation
-
-class StudentPollAssignedGroups(Base):
-	__tablename__ = 'student_poll_assigned_groups'
-	id = db.Column(db.Integer(), primary_key=True)
-	fk_student_poll_dialect_id = db.Column(db.Integer, db.ForeignKey('student_poll_dialect.id'))
-	fk_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-	position = db.Column(db.Integer())
-
-	def __init__(self, fk_student_poll_dialect_id=None, fk_user_id=None, position=None):
-		"""The constructor"""
-		self.fk_student_poll_dialect_id = fk_student_poll_dialect_id
-		self.fk_user_id = fk_user_id
-		self.position = position
-
-class Quote(Base):
-	__tablename__ = 'quotes'
-	id = db.Column(db.Integer(), primary_key=True)
-	quote = db.Column(db.String(254), index=True)
-
-	def __init__(self, quote):
-		"""The constructor"""
-		self.quote = quote
