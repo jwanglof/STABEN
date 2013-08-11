@@ -51,9 +51,6 @@ def db_create():
 @app.route('/db_delete')
 def db_delete():
 	return db_commands.delete_db()
-@app.route('/db_admins')
-def db_admins():
-	return db_commands.create_admin_users()
 @app.route('/db_programs')
 def db_programs():
 	return db_commands.create_school_programs()
@@ -135,19 +132,16 @@ def login():
 				if add_session(user):
 					db_commands.add_login_count(request.form['email'])
 
-					if not session['finished_profile']:
-						redirect_to = 'profile_edit'
-					elif not session['poll_done']:
+					if not session['poll_done']:
 						redirect_to = 'profile_student_poll'
 					else:
-						redirect_to = 'profile'
+						redirect_to = 'profile_edit'
 
 					return redirect(url_for(redirect_to, user_email=request.form['email']))
 			else:
 				return render('login.html', login=False)
 		else:
-			# return render('profile.html', user_info=user_info, user_role=config.user_roles[user_info.role])
-			return redirect(url_for('profile', user_email=request.form['email']))
+			return redirect(url_for('profile_class', user_email=request.form['email']))
 	return render('login.html', login=False)
 
 @app.route('/user/signout')
@@ -291,20 +285,28 @@ def send_email(recipients, subject, email_body=None, html_body=None):
 def send_async_email(msg):
 	config.mail.send(msg)
 
+@app.route('/student_badge')
+def student_badge():
+	return render('student_badge.html')
+
+@app.route('/student_book')
+def student_book():
+	return render('student_book.html')
+
 '''
 	*
 	* User profile
 	*
 '''
-@app.route('/profile', defaults={'user_email': ''})
-@app.route('/profile/<user_email>/')
-def profile(user_email):
-	if session and user_email == session['email']:
-		user = db_commands.get_db_user(db_user_email=user_email)
-		return render('profile.html', user=user['user'], user_info=user['info'])
-		#return render('profile.html', user_info=user_info, user_role=config.user_roles[user_info.role])
-	else:
-		return render('login.html', login=False)
+# @app.route('/profile', defaults={'user_email': ''})
+# @app.route('/profile/<user_email>/')
+# def profile(user_email):
+# 	if session and user_email == session['email']:
+# 		user = db_commands.get_db_user(db_user_email=user_email)
+# 		return render('profile.html', user=user['user'], user_info=user['info'])
+# 		#return render('profile.html', user_info=user_info, user_role=config.user_roles[user_info.role])
+# 	else:
+# 		return render('login.html', login=False)
 
 #@app.route('/profile/<user_email>/edit', defaults={'user_email': ''})
 @app.route('/profile/<user_email>/edit/')
@@ -333,7 +335,7 @@ def profile_save(user_email):
 			if session['finished_profile'] and not session['poll_done']:
 				redirect_to = 'profile_student_poll'
 			elif session['finished_profile']:
-				redirect_to = 'profile'
+				redirect_to = 'profile_edit'
 			else:
 				redirect_to = 'profile_student_poll'
 
@@ -349,7 +351,7 @@ def profile_save(user_email):
 def profile_save_password(user_email):
 	if session and user_email == session['email']:#vXr6EFXs36Bf
 		if db_commands.update_db_pw(user_email, request.form):
-			return redirect(url_for('profile', user_email=user_email))
+			return redirect(url_for('profile_class', user_email=user_email))
 		else:
 			return "Not updated"
 	else:
@@ -418,6 +420,18 @@ def admin_pages():
 		return render('admin_pages.html')
 	else:
 		return render('admin_fail.html')
+
+@app.route('/admin/pages/save/<command>', methods=['GET', 'POST'])
+def admin_page_save(command):
+	if request.method == 'POST':
+		if command == 'quote':
+			flash(u'Citat inlagt.')
+			result = db_commands.admin_add_quote(request.form)
+
+		if result:
+			return redirect(url_for('admin_pages'))
+		else:
+			return 'Couldn\'t add quote'
 
 @app.route('/admin/addcontact/', methods=['GET', 'POST'])
 def admin_addcontact():
