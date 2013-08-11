@@ -1,4 +1,26 @@
 {% extends "template.html" %}
 {% block content %}
-HEJSAN
+<div id='flashMessages'>
+	{% with messages = get_flashed_messages() %}
+		{% if messages %}
+			{% for message in messages %}
+				{{ message }}
+			{% endfor %}
+		{% endif %}
+	{% endwith %}
+</div>
+<form method='post' action='{{ url_for('admin_page_save', command='quote') }}' class='stabForm' id='admin_pages_quote'>
+	<fieldset>
+		<legend>Lägg till ett nytt citat</legend>
+		<ol>
+			<li>
+				<label for="quote">Citat</label>
+				<input type="text" name="quote" id="quote" placeholder="Citat" />
+			</li>
+			<li>
+				<button type="submit" class="btn">Lägg till nytt citat</button>
+			</li>
+		</ol>
+	</fieldset>
+</form>
 {% endblock %}
