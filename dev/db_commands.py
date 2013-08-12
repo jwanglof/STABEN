@@ -40,84 +40,85 @@ contacts.append(models.Contact('Gustav Bylund', '073-0262686', 'gusby403@student
 contacts.append(models.Contact('Alex Telon', '070-2647531', 'alete471@student.liu.se', 0, 'U0',''))
 contacts.append(models.Contact('Siv Söderlund', '013-282836', 'siv.soderlund@liu.se', 1, '', 'http://www.liu.se/personal/tfk/sivso41?l=sv'))
 
-# Should check if the DB is created successfully or not!
-def create_db():
-	config.Base.metadata.create_all(bind=config.engine, checkfirst=True)
-	return "DB creation done"
+if config.host_option.dev:
+	# Should check if the DB is created successfully or not!
+	def create_db():
+		config.Base.metadata.create_all(bind=config.engine, checkfirst=True)
+		return "DB creation done"
 
-def delete_db():
-	config.Base.metadata.drop_all(bind=config.engine)
-	return "JAAAA"
+	def delete_db():
+		config.Base.metadata.drop_all(bind=config.engine)
+		return "JAAAA"
 
-def create_secret_code():
-	db_session.add(models.RegisterCode('two_weevil'))
-	db_session.commit()
-	return 'Secret code added'
-	# Add the secret code to the DB!
-	# two_weevil
-
-def create_school_classes():
-	for classes in school_class:
-		db_session.add(classes)
-	db_session.commit()
-	return "School classes added"
-
-def create_school_programs():
-	for program in school_program:
-		db_session.add(program)
-	db_session.commit()
-	return "School programs added"
-
-def create_contacts():
-	for contact in contacts:
-		db_session.add(contact)
-	db_session.commit()
-	return "Contacts added"
-
-def create_student_poll():
-	# '/www/dstaben/htdocs/dev/studentpoll.csv'
-	# os.getcwd() + '/dev/studentpoll.csv'
-	StudentPoll = read_csv.ReadStudentPollCsvFile(config.host_option.student_poll_file)
-
-	# Add prefixes
-	for index, p in StudentPoll.get_prefixes().iteritems():
-		db_session.add(models.StudentPollPrefix(index, p))
-
-	# Add questions
-	for index, dict_content in StudentPoll.get_questions().iteritems():
-		for q in dict_content:
-			db_session.add(models.StudentPollQuestion(index, q))
-
-	# Add dialects
-	max_students = StudentPoll.get_max_students()
-	for index, d in StudentPoll.get_dialects().iteritems():
-		db_session.add(models.StudentPollDialect(index, d, max_students[index]))
-
-	# Add points
-	# Get the points from the CSV file
-	for index_in_db, points_dict in StudentPoll.get_points().iteritems():
-		# Get the question and 
-		for question, point_list in points_dict.iteritems():
-			for dialect_index, point in enumerate(point_list):
-				if point != '':
-					dialect_id = dialect_index+1
-					question_id = index_in_db
-					db_session.add(models.StudentPollPoint(dialect_id, question_id, point))
-	db_session.commit()
-	return 'Student poll prefixes and questions added'
-
-def create_quotes():
-	try:
-		Quotes = read_quotes.ReadQuotes(config.host_option.quote_file)
-
-		# Add quotes
-		for quote in Quotes.get_quotes():
-			db_session.add(models.Quote(quote))
-
+	def create_secret_code():
+		db_session.add(models.RegisterCode('two_weevil'))
 		db_session.commit()
-		return 'Quotes added'
-	except:
-		return 'Could not add quotes'
+		return 'Secret code added'
+		# Add the secret code to the DB!
+		# two_weevil
+
+	def create_school_classes():
+		for classes in school_class:
+			db_session.add(classes)
+		db_session.commit()
+		return "School classes added"
+
+	def create_school_programs():
+		for program in school_program:
+			db_session.add(program)
+		db_session.commit()
+		return "School programs added"
+
+	def create_contacts():
+		for contact in contacts:
+			db_session.add(contact)
+		db_session.commit()
+		return "Contacts added"
+
+	def create_student_poll():
+		# '/www/dstaben/htdocs/dev/studentpoll.csv'
+		# os.getcwd() + '/dev/studentpoll.csv'
+		StudentPoll = read_csv.ReadStudentPollCsvFile(config.host_option.student_poll_file)
+
+		# Add prefixes
+		for index, p in StudentPoll.get_prefixes().iteritems():
+			db_session.add(models.StudentPollPrefix(index, p))
+
+		# Add questions
+		for index, dict_content in StudentPoll.get_questions().iteritems():
+			for q in dict_content:
+				db_session.add(models.StudentPollQuestion(index, q))
+
+		# Add dialects
+		max_students = StudentPoll.get_max_students()
+		for index, d in StudentPoll.get_dialects().iteritems():
+			db_session.add(models.StudentPollDialect(index, d, max_students[index]))
+
+		# Add points
+		# Get the points from the CSV file
+		for index_in_db, points_dict in StudentPoll.get_points().iteritems():
+			# Get the question and 
+			for question, point_list in points_dict.iteritems():
+				for dialect_index, point in enumerate(point_list):
+					if point != '':
+						dialect_id = dialect_index+1
+						question_id = index_in_db
+						db_session.add(models.StudentPollPoint(dialect_id, question_id, point))
+		db_session.commit()
+		return 'Student poll prefixes and questions added'
+
+	def create_quotes():
+		try:
+			Quotes = read_quotes.ReadQuotes(config.host_option.quote_file)
+
+			# Add quotes
+			for quote in Quotes.get_quotes():
+				db_session.add(models.Quote(quote))
+
+			db_session.commit()
+			return 'Quotes added'
+		except:
+			return 'Could not add quotes'
 
 def add_contact(name, phonenumber, email, role, school_class, link):
 	contact = models.Contact(name, phonenumber, email, role, school_class, link)
@@ -150,9 +151,17 @@ def check_if_email_exist(email):
 
 def get_class_mates(db_user_email):
 	db_user = models.User.query.filter_by(email=db_user_email).first()
-	user_info = models.UserInformation.query.filter_by(fk_user_id=db_user.id).first()
-	if user_info.school_program > 0:
-		return models.UserInformation.query.filter_by(school_class=user_info.school_class).all()
+	# print db_user.r_user_information.id
+	# user_info = models.UserInformation.query.filter_by(fk_user_id=db_user.id).first()
+	if db_user.r_user_information.school_program > 0:
+		# print models.User.r_user_information.school_program
+		# for x in models.User.query.filter(\
+		# 	models.User.role != 0, \
+		# 	models.UserInformation.school_program == 3
+		# 	).all():
+		# 	print x.id
+		return models.User.query.filter(models.User.role != 0, \
+			models.UserInformation.school_program == db_user.r_user_information.school_program).all()
 	else:
 		return False
 
@@ -188,7 +197,10 @@ def get_db_user(user_id=None, db_user_email=None, db_user_password=None, recover
 		return False
 		
 def get_quotes():
-	return models.Quote.query.all()
+	try:
+		return models.Quote.query.all()
+	except:
+		return False
 
 def get_recover_user(db_user_recover_code):
 	return models.UserInformation.query.filter_by(recover_code=db_user_recover_code).first()
