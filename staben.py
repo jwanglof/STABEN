@@ -26,46 +26,48 @@ static_texts = {'nollan': '<span class="nollanfont">minus</span>', 'nollans': '<
 # Make get_quote() callable from a template. Used in template.html
 def get_quote():
 	quotes = db_commands.get_quotes()
-	return quotes[random.randrange(len(quotes))].quote
+	if quotes:
+		return quotes[random.randrange(len(quotes))].quote
+	else:
+		return False
 config.app.jinja_env.globals.update(get_quote=get_quote)
 
-# DEV OPTIONS
-# NEEDS TO BE REMOVED IN PRODUCTION MODE
-@app.route('/db_all')
-def db_all():
-	try:
-		db_commands.create_db()
-		db_commands.create_school_programs()
-		db_commands.create_school_classes()
-		db_commands.create_contacts()
-		db_commands.create_secret_code()
-		db_commands.create_student_poll()
-		db_commands.create_quotes()
-		return 'SUUUUUUUUCCESS!!!!!'
-	except:
-		return 'NOOOOOO SUUUUUUUUCCESS!!!!!!!'
+if config.host_option.dev:
+	@app.route('/db_all')
+	def db_all():
+		try:
+			db_commands.create_db()
+			db_commands.create_school_programs()
+			db_commands.create_school_classes()
+			db_commands.create_contacts()
+			db_commands.create_secret_code()
+			db_commands.create_student_poll()
+			db_commands.create_quotes()
+			return 'SUUUUUUUUCCESS!!!!!'
+		except:
+			return 'NOOOOOO SUUUUUUUUCCESS!!!!!!!'
 
-@app.route('/db_create')
-def db_create():
-	return db_commands.create_db()
-@app.route('/db_delete')
-def db_delete():
-	return db_commands.delete_db()
-@app.route('/db_programs')
-def db_programs():
-	return db_commands.create_school_programs()
-@app.route('/db_classes')
-def db_classes():
-	return db_commands.create_school_classes()
-@app.route('/db_contacts')
-def db_contacts():
-	return db_commands.create_contacts()
-@app.route('/db_code')
-def db_code():
-	return db_commands.create_secret_code()
-@app.route('/db_student_poll')
-def db_student_poll():
-	return db_commands.create_student_poll()
+	@app.route('/db_create')
+	def db_create():
+		return db_commands.create_db()
+	@app.route('/db_delete')
+	def db_delete():
+		return db_commands.delete_db()
+	@app.route('/db_programs')
+	def db_programs():
+		return db_commands.create_school_programs()
+	@app.route('/db_classes')
+	def db_classes():
+		return db_commands.create_school_classes()
+	@app.route('/db_contacts')
+	def db_contacts():
+		return db_commands.create_contacts()
+	@app.route('/db_code')
+	def db_code():
+		return db_commands.create_secret_code()
+	@app.route('/db_student_poll')
+	def db_student_poll():
+		return db_commands.create_student_poll()
 
 def add_session(db_user):
 	config.session['email'] = db_user['user'].email
@@ -157,35 +159,40 @@ def register():
 			forbidden_chars_email = [x for x in forbidden_chars if x in request.form['email']]
 
 			if len(forbidden_chars_email) == 0:
-				if request.form['email'] != '' and str(request.form['regCode']) == str(db_commands.get_register_code().code):
-					debug('register', 'email och code funkar')
-					if request.form['password'] == request.form['rep_password']:
-						debug('register', 'Passwords are the same')
-						if db_commands.register_user(request.form):
-							user = db_commands.get_db_user(db_user_email=request.form['email'], db_user_password=request.form['password'])['user']
+				if request.form['email'] != '':
+					if str(request.form['regCode']) == str(db_commands.get_register_code().code):
+						debug('register', 'email och code funkar')
+						if request.form['password'] == request.form['rep_password']:
+							debug('register', 'Passwords are the same')
+							if db_commands.register_user(request.form):
+								user = db_commands.get_db_user(db_user_email=request.form['email'], db_user_password=request.form['password'])['user']
 
-							if user:
-								if db_commands.add_user_information(user.id):
-									debug('register', 'Registration succeeded')
-									user = db_commands.get_db_user(user_id=user.id)
-									add_session(user)
-									return redirect(url_for('profile_edit', user_email=user['user'].email))
+								if user:
+									if db_commands.add_user_information(user.id):
+										debug('register', 'Registration succeeded')
+										user = db_commands.get_db_user(user_id=user.id)
+										add_session(user)
+										return redirect(url_for('profile_edit', user_email=user['user'].email))
+									else:
+										debug('register', 'Error, could not add user information')
+										return redirect(url_for('register'))
 								else:
-									debug('register', 'Error, could not add user information')
+									debug('register', 'Error, could not get user')
 									return redirect(url_for('register'))
 							else:
-								debug('register', 'Error, could not get user')
+								debug('register', 'Error, could not register user')
 								return redirect(url_for('register'))
 						else:
-							debug('register', 'Error, could not register user')
+							debug('register', 'Error, the password did not match')
+							flash(u'Du måste ange samma lösenord i båda rutorna.')
 							return redirect(url_for('register'))
 					else:
-						debug('register', 'Error, the password did not match')
-						flash(u'Du måste ange samma lösenord i båda rutorna.')
+						debug('register', 'Error, the user did not type the correct register code')
+						flash(u'Du angav fel registreringskod! Denna kod ska du ha fått hem till din bokföringsadress i brevet från <span class="stabenfont">Generalen</span>')
 						return redirect(url_for('register'))
 				else:
-					debug('register', 'Error, the user did not type his email and register code')
-					flash(u'Du måste ange din e-mail och registreringskod!')
+					debug('register', 'Error, the user did not type his email')
+					flash(u'Du måste ange din e-mail!')
 					return redirect(url_for('register'))
 			else:
 				debug('register', 'Error, the user typed a forbidden character as his e-mail')
@@ -349,7 +356,7 @@ def profile_save(user_email):
 
 @app.route('/profile/<user_email>/save/password', methods=['POST'])
 def profile_save_password(user_email):
-	if session and user_email == session['email']:#vXr6EFXs36Bf
+	if session and user_email == session['email']:
 		if db_commands.update_db_pw(user_email, request.form):
 			return redirect(url_for('profile_class', user_email=user_email))
 		else:
