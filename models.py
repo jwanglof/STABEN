@@ -98,7 +98,7 @@ class Contact(Base):
 		self.role = role
 		self.school_class = school_class
 		self.link = link
-		
+
 class GalleryAlbum(Base):
 	__tablename__ = 'gallery_album'
 	id = db.Column(db.Integer(), primary_key=True)
@@ -107,6 +107,7 @@ class GalleryAlbum(Base):
 	time = db.Column(db.Time(), index=True)
 	title = db.Column(db.String(100), index=True)
 	description = db.Column(db.String(200), index=True)
+	approved = db.Column(db.SmallInteger(), default=0)
 	r_gallery_picture = db.relationship('GalleryPicture', backref='GalleryAlbum')
 	r_gallery_comment = db.relationship('GalleryComment', backref='GalleryAlbum')
 	r_blog = db.relationship('Blog', backref='GalleryAlbum')
