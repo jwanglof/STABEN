@@ -3,24 +3,24 @@
 {% if class_mates %}
 	<h1>Mitt program ({{ school_programs }})</h1>
 	{% for mate in class_mates %}
-		<div class='school_mate' id='{{ mate.id }}'>
-			<b>{{ mate.firstname + ' ' + mate.lastname }}</b>
-			<div class='school_mate_collapse' id='collapsed{{ mate.id }}'>Tryck för mer info</div>
+		<div class='school_mate' id='{{ mate.r_user_information.id }}'>
+			<b>{{ mate.r_user_information.firstname + ' ' + mate.r_user_information.lastname }}</b>
+			<div class='school_mate_collapse' id='collapsed{{ mate.r_user_information.id }}'>Tryck för mer info</div>
 
-			<div class='school_mate_info' id='{{ mate.id }}'>
-				Ålder: {{ mate.age }} <br />
-				{% if mate.phonenumber_vis %}
-					Telefonnummer: {{ mate.phonenumber }} <br />
+			<div class='school_mate_info' id='{{ mate.r_user_information.id }}'>
+				Ålder: {{ mate.r_user_information.age }} <br />
+				{% if mate.r_user_information.phonenumber_vis %}
+					Telefonnummer: {{ mate.r_user_information.phonenumber }} <br />
 				{% endif %}
-				{% if mate.facebook_url %}
-					<a href='http://www.facebook.com/{{ mate.facebook_url }}' target='_blank'>Facebook</a> <br />
+				{% if mate.r_user_information.facebook_url %}
+					<a href='http://www.facebook.com/{{ mate.r_user_information.facebook_url }}' target='_blank'>Facebook</a> <br />
 				{% endif %}
 				<br />
-				Från: {{ mate.where_from }} <br />
-				Bor: {{ mate.current_city }} <br />
+				Från: {{ mate.r_user_information.where_from }} <br />
+				Bor: {{ mate.r_user_information.current_city }} <br />
 				<br />
 				<p>
-					{{ mate.presentation }}
+					{{ mate.r_user_information.presentation }}
 				</p>
 			</div>
 		</div>
