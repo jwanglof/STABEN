@@ -345,7 +345,7 @@ def admin_calc_user_points(user_id, order=False):
 	questions_w_dialects_a_points = config.MultiDict()
 	for question in questions_w_points:
 		point_MD = config.MultiDict()
-		for point in question.question_point:
+		for point in question.r_question_point:
 			point_MD.add(point.fk_student_poll_dialect_id, point.point)
 		questions_w_dialects_a_points.add(question.id, point_MD)
 	
@@ -382,15 +382,15 @@ def admin_calc_user_points(user_id, order=False):
 	return dialect_w_total_points_md
 
 def admin_get_user_poll_answer(user_id):
-	userinfo_w_answers = models.User.query.filter_by(id=user_id).join(models.User.user_information).join(models.User.student_poll).all()
+	userinfo_w_answers = models.User.query.filter_by(id=user_id).join(models.User.r_user_information).join(models.User.r_student_poll).all()
 	prefixes_w_questions_w_points = models.StudentPollPrefix.query.order_by(models.StudentPollPrefix.id).all()
 
 	pref_w_ques_w_point_OMD = config.OrderedMultiDict()
 	for content in prefixes_w_questions_w_points:
 		questions_OMD = config.OrderedMultiDict()
-		for question in content.question:
+		for question in content.r_question:
 			dialect_id_w_points_OMD = config.OrderedMultiDict()
-			for point in question.question_point:
+			for point in question.r_question_point:
 				dialect_id_w_points_OMD.add(point.fk_student_poll_dialect_id, point.point)
 			inner_OMD = config.OrderedMultiDict()
 			inner_OMD.add('question', question.question)
@@ -400,8 +400,8 @@ def admin_get_user_poll_answer(user_id):
 	
 	userinfo_w_answers_MD = config.MultiDict()
 	for userinfo in userinfo_w_answers:
-		userinfo_w_answers_MD.add('userinfo', userinfo.user_information)
-		for answer in userinfo.student_poll:
+		userinfo_w_answers_MD.add('userinfo', userinfo.r_user_information)
+		for answer in userinfo.r_student_poll:
 			userinfo_w_answers_MD.add(answer.fk_student_poll_question_id, answer.fk_student_poll_question_id)
 	#, 4: admin_calc_user_points(user_id)
 	return {1: userinfo_w_answers_MD, 2: pref_w_ques_w_point_OMD}
