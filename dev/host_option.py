@@ -1,6 +1,7 @@
 import os
 
 local = True
+dev = True
 
 if local:
 	dbhost = '127.0.0.1'
