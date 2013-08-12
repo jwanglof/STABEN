@@ -342,7 +342,7 @@ class StudentPollPrefix(Base):
 	__tablename__ = 'student_poll_prefix'
 	id = db.Column(db.Integer, primary_key=True)
 	prefix = db.Column(db.String(100), index=True, unique=True)
-	question = db.relationship('StudentPollQuestion', backref='StudentPollPrefix', lazy='joined')
+	r_question = db.relationship('StudentPollQuestion', backref='StudentPollPrefix', lazy='joined')
 
 	def __init__(self, id=None, prefix=None):
 		"""The constructor"""
@@ -355,7 +355,7 @@ class StudentPollQuestion(Base):
 	id = db.Column(db.Integer, primary_key=True)
 	fk_student_poll_prefix_id = db.Column(db.Integer, db.ForeignKey('student_poll_prefix.id'))
 	question = db.Column(db.String(100), index=True)
-	question_point = db.relationship('StudentPollPoint', backref='StudentPollQuestion', lazy='joined')
+	r_question_point = db.relationship('StudentPollPoint', backref='StudentPollQuestion', lazy='joined')
 
 	def __init__(self, student_poll_prefix_id=None, question=None):
 		"""The constructor"""
@@ -385,11 +385,11 @@ class User(Base):
 	email = db.Column(db.String(100), index=True, unique=True)
 	password = db.Column(db.String(254), index=True)
 	role = db.Column(db.SmallInteger(), default=ROLE_USER)
-	r_user_information = db.relationship('UserInformation', backref='User', uselist=False)
-	r_student_poll = db.relationship('StudentPollAnswer', backref='User', lazy='dynamic')
-	r_student_poll_assigned_group = db.relationship('StudentPollAssignedGroup', backref='User')
-	r_gallery_album = db.relationship('GalleryAlbum', backref='User')
-	r_gallery_picture = db.relationship('GalleryPicture', backref='User')
+	r_user_information = db.relationship('UserInformation', backref='user', lazy='joined', uselist=False)
+	r_student_poll = db.relationship('StudentPollAnswer', backref='user', lazy='dynamic')
+	r_student_poll_assigned_group = db.relationship('StudentPollAssignedGroup', backref='user')
+	r_gallery_album = db.relationship('GalleryAlbum', backref='user')
+	r_gallery_picture = db.relationship('GalleryPicture', backref='user')
 
 	def __init__(self, email=None, password=None, role=ROLE_USER):
 		"""The constructor"""
