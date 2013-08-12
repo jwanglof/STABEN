@@ -133,3 +133,7 @@ dd {
       padding-right: 20px;
     }
 }
+
+.span7 p {
+    margin: 10px 0px;
+}
