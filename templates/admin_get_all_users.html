@@ -1,6 +1,47 @@
 {% extends "template.html" %}
 {% block content %}
+	<div class='span2' id='name'>
+		<h3>Namn</h3>
+	</div>
+	<div class='span4' id='allergies'>
+		<h3>Allergier</h3>
+	</div>
+	<div class='span3' id='food_preference'>
+		<h3>Vegan/Vegetarian</h3>
+	</div>
+	<div class='span2' id='current_city'>
+		<h3>Bor</h3>
+	</div>
+<div id='all_users'>
 {% for user in users %}
-	{{ user }} <br />
+	<div class='span2'>
+		{% if user.r_user_information.firstname %}
+			{{ user.r_user_information.firstname }} {{ user.r_user_information.lastname }}
+		{% else %}
+			<i>Inget namn, databasid: {{ user.id }}</i>
+		{% endif %}
+	</div>
+	<div class='span4'>
+		{% if user.r_user_information.allergies %}
+			{{ user.r_user_information.allergies }}
+		{% else %}
+			<i>Tomt i databasen</i>
+		{% endif %}
+	</div>
+	<div class='span3'>
+		{% if user.r_user_information.food_preference %}
+			{{ user.r_user_information.food_preference }}
+		{% else %}
+			<i>Tomt i databasen</i>
+		{% endif %}
+	</div>
+	<div class='span2'>
+		{% if user.r_user_information.current_city %}
+			{{ user.r_user_information.current_city }}
+		{% else %}
+			<i>Tomt i databasen</i>
+		{% endif %}
+	</div>
 {% endfor %}
+</div>
 {% endblock %}
