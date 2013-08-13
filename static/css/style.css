@@ -137,3 +137,15 @@ dd {
 .span7 p {
     margin: 10px 0px;
 }
+
+#all_users div {
+    /*float: left;
+    width: 230px;*/
+    /*border: 1px solid #fff;*/
+    height: 60px;
+    margin-bottom: 10px;
+}
+
+.clear_both {
+    clear: both;
+}
