@@ -151,16 +151,8 @@ def check_if_email_exist(email):
 
 def get_class_mates(db_user_email):
 	db_user = models.User.query.filter_by(email=db_user_email).first()
-	# print db_user.r_user_information.id
-	# user_info = models.UserInformation.query.filter_by(fk_user_id=db_user.id).first()
 	if db_user.r_user_information.school_program > 0:
-		# print models.User.r_user_information.school_program
-		# for x in models.User.query.filter(\
-		# 	models.User.role != 0, \
-		# 	models.UserInformation.school_program == 3
-		# 	).all():
-		# 	print x.id
-		return models.User.query.filter(models.User.role != 0, \
+		return models.User.query.join(models.UserInformation).filter(models.User.role != 0, \
 			models.UserInformation.school_program == db_user.r_user_information.school_program).all()
 	else:
 		return False
