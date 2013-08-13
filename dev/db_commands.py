@@ -399,7 +399,7 @@ def admin_get_user_poll_answer(user_id):
 	return {1: userinfo_w_answers_MD, 2: pref_w_ques_w_point_OMD}
 
 def admin_get_all_users():
-	return {'user': models.User.query.all(), 'info': models.UserInformation.query.all()}
+	return models.User.query.all()
 
 def admin_get_all_users_w_poll_done():
 	return models.UserInformation.query.filter_by(poll_done=1).all()
