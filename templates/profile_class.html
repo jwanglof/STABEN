@@ -1,27 +1,37 @@
 {% extends "template.html" %}
 {% block content %}
+<h4>
+Välj program: 
+<a href='{{ url_for('profile_class', user_email=session['email'], school_program='D') }}'>D</a>
+-
+<a href='{{ url_for('profile_class', user_email=session['email'], school_program='IT') }}'>IT</a>
+-
+<a href='{{ url_for('profile_class', user_email=session['email'], school_program='IP') }}'>IP</a>
+-
+<a href='{{ url_for('profile_class', user_email=session['email'], school_program='U') }}'>U</a>
+</h4>
+<h1>{% filter upper %}{{ chosen_school_program }}{% endfilter %} programmet</h1>
 {% if class_mates %}
-	<h1>{{ school_programs }} programmet</h1>
 	<hr />
-	{% for mate in class_mates %}
-		<div class='school_mate' id='{{ mate.r_user_information.id }}'>
-			<b>{{ mate.r_user_information.firstname + ' ' + mate.r_user_information.lastname }}</b>
-			<div class='school_mate_collapse' id='collapsed{{ mate.r_user_information.id }}'>Tryck för mer info</div>
+	{% for user in program_users %}
+		<div class='school_mate' id='{{ user.r_user_information.id }}'>
+			<b>{{ user.r_user_information.firstname + ' ' + user.r_user_information.lastname }}</b>
+			<div class='school_mate_collapse' id='collapsed{{ user.r_user_information.id }}'>Tryck för mer info</div>
 
-			<div class='school_mate_info' id='{{ mate.r_user_information.id }}'>
-				Ålder: {{ mate.r_user_information.age }} <br />
-				{% if mate.r_user_information.phonenumber_vis %}
-					Telefonnummer: {{ mate.r_user_information.phonenumber }} <br />
+			<div class='school_mate_info' id='{{ user.r_user_information.id }}'>
+				Ålder: {{ user.r_user_information.age }} <br />
+				{% if user.r_user_information.phonenumber_vis %}
+					Telefonnummer: {{ user.r_user_information.phonenumber }} <br />
 				{% endif %}
-				{% if mate.r_user_information.facebook_url %}
-					<a href='http://www.facebook.com/{{ mate.r_user_information.facebook_url }}' target='_blank'>Facebook</a> <br />
+				{% if user.r_user_information.facebook_url %}
+					<a href='http://www.facebook.com/{{ user.r_user_information.facebook_url }}' target='_blank'>Facebook</a> <br />
 				{% endif %}
 				<br />
-				Från: {{ mate.r_user_information.where_from }} <br />
-				Bor: {{ mate.r_user_information.current_city }} <br />
+				Från: {{ user.r_user_information.where_from }} <br />
+				Bor: {{ user.r_user_information.current_city }} <br />
 				<br />
 				<p>
-					{{ mate.r_user_information.presentation }}
+					{{ user.r_user_information.presentation }}
 				</p>
 			</div>
 		</div>
