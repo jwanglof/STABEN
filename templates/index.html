@@ -37,7 +37,7 @@
 
     <p>{{ st['staben']|safe }} rekommenderar:</p>
     <a href="http://bookify.se/" target="_blank">
-        <img src="../static/ads/bookify.png" width="246px" height="50px"></a>
+        <img src="{{ url_for('static', filename='ads/bookify.png') }}" width="246px" height="50px"></a>
 </div>
 <div class='span4' style='margin-top: 15px;'>
 	<a class="twitter-timeline" data-theme="dark" height="500px" data-dnt="true" href="https://twitter.com/fadderi_staben" data-widget-id="339411237781794816">Tweets av @fadderi_staben</a>
