@@ -12,14 +12,13 @@ TODO (x == finished)
 <dl>
 	<dt>SITES TO BE INCLUDED ON WEBSITE</dt>
 		<dd>[x] Layout page</dd>
-		<dd>[-] Home</dd>
+		<dd>[x] Home</dd>
 		<dd>[ ] Blog</dd>
-		<dd>[ ] Gallery</dd>
+		<dd>[/] Gallery</dd>
 		<dd>[x] Schedule</dd>
 		<dd>[x] Contact information</dd>
-		<dd>[?] Sponsor-footer</dd>
 		<dd>[-] 'Nolleportalen'</dd>
-		<dd>[ ] 'Nolleenkäten'</dd>
+		<dd>[x] 'Nolleenkäten'</dd>
 		<dd>[x] Register</dd>
 </dl>
 
