@@ -236,8 +236,7 @@ def get_user_school_program(db_user_email):
 	return school_program.abbreviation
 
 def get_school_program_users(school_program):
-	#return models.User.query.join(models.UserInformation).filter(models.User.role != 0, models.UserInformation.school_program == db_user.r_user_information.school_program).all()
-	return models.User.query.join(models.UserInformation).filter(models.UserInformation.school_program==get_school_programs(school_program).id).all()
+	return models.User.query.join(models.UserInformation).filter(models.UserInformation.school_program==get_school_programs(school_program).id).filter(models.User.role!=0).all()
 
 def register_user(db_user_dict):
 	try:
