@@ -323,12 +323,15 @@ def profile_edit(user_email):
 	if session and user_email == session['email']:
 		user = db_commands.get_db_user(db_user_email=session['email'])
 		school_programs = db_commands.get_school_programs()
+		db_selection = str(user['info'].school_class) + '|' + str(user['info'].school_program)
+
 		return render('profile_edit.html', \
 			user=user['user'], \
 			user_info=user['info'], \
 			school_programs=school_programs,
 			school_classes=db_commands.get_school_classes(), \
-			st=static_texts)
+			st=static_texts, \
+			db_selection=db_selection)
 	else:
 		return render('login.html', login=False)
 
