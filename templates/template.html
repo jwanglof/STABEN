@@ -39,7 +39,7 @@
                                     </a>
                                     <ul class='dropdown-menu'>
                                         <li><a href="{{ url_for('profile_edit', user_email=session['email']) }}">Redigera</a></li>
-                                        <li><a href="{% if session['finished_profile'] %}{{ url_for('profile_class', user_email=session['email']) }}{% else %}#{% endif %}">Min skolklass</a></li>
+                                        <li><a href="{% if session['finished_profile'] %}{{ url_for('profile_class', user_email=session['email'], school_program=session['school_program']) }}{% else %}#{% endif %}">Min skolklass</a></li>
                                         <li><a href="{% if session['finished_profile'] %}{{ url_for('profile_student_poll', user_email=session['email']) }}{% else %}#{% endif %}">Nolleenkät</a></li>
                                         <li><a href="{% if session['finished_profile'] %}{{ url_for('student_badge') }}{% else %}#{% endif %}">Nollebricka</a></li>
                                         <li><a href="{% if session['finished_profile'] %}{{ url_for('student_book') }}{% else %}#{% endif %}">Nollehandboken</a></li>
