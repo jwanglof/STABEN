@@ -11,7 +11,6 @@ Välj program:
 <a href='{{ url_for('profile_class', user_email=session['email'], school_program='U') }}'>U</a>
 </h4>
 <h1>{% filter upper %}{{ chosen_school_program }}{% endfilter %} programmet</h1>
-{% if class_mates %}
 	<hr />
 	{% for user in program_users %}
 		<div class='school_mate' id='{{ user.r_user_information.id }}'>
@@ -36,5 +35,4 @@ Välj program:
 			</div>
 		</div>
 	{% endfor %}
-{% endif %}
 {% endblock %}
