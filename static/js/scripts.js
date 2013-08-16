@@ -73,9 +73,14 @@ $(document).ready(function() {
 function show_school_class() {
 	var chosen_school_program = $('#school_program').children(':selected').val();
 	var select_objects = new Array();
+	var selected;
 
 	$('#school_class').children('option').each(function() {
 		var school_class_program = $(this).val().split('|')[1];
+
+		// if ($(this).is(':selected') && school_class_program == chosen_school_program) {
+		// 	selected = $(this);
+		// }
 
 		// Hide all options
 		$(this).hide();
@@ -90,6 +95,14 @@ function show_school_class() {
 		}
 	});
 
-	// Select the first HTML object in the array
-	$(select_objects[0]).prop('selected', true);
+	// If the array has more than 1 element it will selected the correct option
+	if (select_objects.length > 1) {
+		for (var i = 0; i < select_objects.length; i++)
+			if ($(select_objects[i]).val() == $('#default_class').val())
+				$(select_objects[i]).prop('selected', true);
+	}
+	else {
+		// Select the first HTML object in the array
+		$(select_objects[0]).prop('selected', true);
+	}
 }
