@@ -551,4 +551,4 @@ def shutdown_session(exception=None):
 	config.db_session.remove()
 
 if __name__ == '__main__':
-	app.run(host=config.HOST, debug=config.DEBUG)
+	app.run(host=config.HOST, debug=config.host_option.DEBUG)
