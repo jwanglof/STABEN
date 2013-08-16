@@ -32,6 +32,48 @@ def get_quote():
 		return False
 config.app.jinja_env.globals.update(get_quote=get_quote)
 
+def random_string(length=12):
+	lst = [random.choice(string.ascii_letters + string.digits) for n in xrange(length)]
+	return ''.join(lst)
+
+def send_email(recipients, subject, email_body=None, html_body=None):
+	try:
+		msg = config.Message(subject)
+		msg.recipients = recipients
+		if email_body:
+			msg.body = email_body
+		elif html_body:
+			msg.html = html_body
+		send_async_email(msg)
+		# config.mail.send(msg)
+		return True
+	except:
+		return False
+
+@async
+def send_async_email(msg):
+	config.mail.send(msg)
+
+def add_session(db_user):
+	config.session['email'] = db_user['user'].email
+	config.session['role'] = db_user['user'].role
+	config.session['school_program'] = db_commands.get_user_school_program(db_user['user'].email)
+
+	if db_user['info'].finished_profile:
+		config.session['finished_profile'] = True
+	else:
+		config.session['finished_profile'] = False
+
+	if db_user['info'].poll_done:
+		config.session['poll_done'] = True
+	else:
+		config.session['poll_done'] = False
+
+	return True
+
+def edit_session(session_value, value):
+	config.session[session_value] = value
+
 if config.host_option.dev:
 	@app.route('/db_all')
 	def db_all():
@@ -68,26 +110,6 @@ if config.host_option.dev:
 	@app.route('/db_student_poll')
 	def db_student_poll():
 		return db_commands.create_student_poll()
-
-def add_session(db_user):
-	config.session['email'] = db_user['user'].email
-	config.session['role'] = db_user['user'].role
-	config.session['school_program'] = db_commands.get_user_school_program(db_user['user'].email)
-
-	if db_user['info'].finished_profile:
-		config.session['finished_profile'] = True
-	else:
-		config.session['finished_profile'] = False
-
-	if db_user['info'].poll_done:
-		config.session['poll_done'] = True
-	else:
-		config.session['poll_done'] = False
-
-	return True
-
-def edit_session(session_value, value):
-	config.session[session_value] = value
 
 @app.route('/')
 def index():
@@ -142,6 +164,8 @@ def login():
 						redirect_to = 'profile_edit'
 
 					return redirect(url_for(redirect_to, user_email=request.form['email']))
+				else:
+					return 'Ojoj, detta var ju inte korrekt!'
 			else:
 				return render('login.html', login=False)
 		else:
@@ -272,28 +296,6 @@ def forgot_password(code=None):
 	else:
 		return render('forgot_password.html')
 
-def random_string(length=12):
-	lst = [random.choice(string.ascii_letters + string.digits) for n in xrange(length)]
-	return ''.join(lst)
-
-def send_email(recipients, subject, email_body=None, html_body=None):
-	try:
-		msg = config.Message(subject)
-		msg.recipients = recipients
-		if email_body:
-			msg.body = email_body
-		elif html_body:
-			msg.html = html_body
-		send_async_email(msg)
-		# config.mail.send(msg)
-		return True
-	except:
-		return False
-
-@async
-def send_async_email(msg):
-	config.mail.send(msg)
-
 @app.route('/student_badge')
 def student_badge():
 	return render('student_badge.html')
@@ -373,17 +375,12 @@ def profile_save_password(user_email):
 @app.route('/profile/<user_email>/class/<school_program>')
 def profile_class(user_email, school_program):
 	if session and user_email == session['email']:
-		class_mates = db_commands.get_class_mates(user_email)
 		program_users = db_commands.get_school_program_users(school_program)
-		if class_mates:
-			# user_school_program = db_commands.get_user_school_program(user_email)
-			return render('profile_class.html', \
-				class_mates=class_mates, \
-				user_school_program=session['school_program'], \
-				chosen_school_program=school_program, \
-				program_users=program_users)
-		else:
-			return render('profile_class.html', class_mates=False)
+		# Set school_program to D if the user has not updated his profile
+		return render('profile_class.html', \
+			user_school_program=session['school_program'], \
+			chosen_school_program=school_program if school_program != str(0) else 'D', \
+			program_users=program_users)
 	else:
 		return render('login.html', login=False)
 
@@ -505,10 +502,11 @@ def admin_student_poll_save(command):
 @app.route('/admin_student_poll_result')
 def admin_student_poll_result():
 	if db_commands.check_role(session['email']) is 0:
+		#, \
+		# dialects=db_commands.get_student_poll_dialects(), \
+		# user_w_points=db_commands.admin_get_top_three_groups()
 		return render('admin_student_poll_result.html', \
-			users_info=db_commands.admin_get_all_users_w_poll_done(), \
-			dialects=db_commands.get_student_poll_dialects(), \
-			user_w_points=db_commands.admin_get_top_three_groups())
+			users_info=db_commands.admin_get_all_users_w_poll_done())
 	else:
 		return render('admin_fail.html')
 
@@ -544,7 +542,6 @@ def page_not_found(e):
 @app.errorhandler(500)
 def page_not_found(e):
     return render('error.html', st=static_texts), 500
-
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
