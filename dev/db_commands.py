@@ -231,11 +231,15 @@ def get_student_poll_question():
 
 def get_user_school_program(db_user_email):
 	db_user = models.User.query.filter_by(email=db_user_email).first()
-	user_info = models.UserInformation.query.filter_by(fk_user_id=db_user.id).first()
-	school_program = models.SchoolProgram.query.filter_by(id=user_info.school_program).first()
-	return school_program.abbreviation
+	school_program = models.SchoolProgram.query.filter_by(id=db_user.r_user_information.school_program).first()
+	if school_program != None:
+		return school_program.abbreviation
+	else:
+		return 0
 
 def get_school_program_users(school_program):
+	if school_program == str(0):
+		return models.User.query.join(models.UserInformation).filter(models.UserInformation.school_program==1).filter(models.User.role!=0).all()
 	return models.User.query.join(models.UserInformation).filter(models.UserInformation.school_program==get_school_programs(school_program).id).filter(models.User.role!=0).all()
 
 def register_user(db_user_dict):
@@ -419,15 +423,17 @@ def admin_insert_user_to_group():
 	dialect_md = config.MultiDict()
 	rest_md = config.MultiDict()
 	student_poll_dialects = get_student_poll_dialects()
-	for user_id, content in admin_get_top_three_groups().iteritems():
+	for user_id, content in admin_get_top_three_groups(only_users=True).iteritems():
 		for i, dialect_id in enumerate(content['top_score']):
+			print '#######', i, dialect_id
 			# Add 1 to i because i starts with 0
 			position = i+1
 
-			# Check so there is not more than 5 students in a group.
+			# Check so there is no more than max_students in a group.
 			# If there are more than student_poll_dialects[dialect_id].max_students
 			# students they will be added to rest_list to be dealt with later.
 			if len(dialect_md.getlist(dialect_id)) < student_poll_dialects[dialect_id].max_students:
+				print dialect_id
 				dialect_md.add(dialect_id, {user_id: position})
 			else:
 				# If dialect_id is full in dialect_md,
@@ -466,7 +472,10 @@ def admin_insert_user_to_group():
 	print ''
 	print rest_md
 
-def admin_get_top_three_groups():
+def admin_get_top_three_groups(only_users=False):
+	###
+	# Not sure that colors are needed!
+	###
 	top_three_groups = {}
 	for i in admin_get_all_users_w_poll_done():
 		# content will contain the information gathered
@@ -475,8 +484,9 @@ def admin_get_top_three_groups():
 		# This is a really ugly way to do it, it should be a better way!
 		# dialect_w_total_points = OrderedMultiDict([(DialectID, TotalPoints)])
 		# dialect_w_total_points_colors = OrderedMultiDict([(DialectID, ColorCode)])
+		# OrderedMultiDict([(DialectID, {'tot_points': points, 'color': ColorCode})])
 		dialect_w_total_points = config.OrderedMultiDict()
-		dialect_w_total_points_colors = config.OrderedMultiDict()
+		# dialect_w_total_points_colors = config.OrderedMultiDict()
 
 		# Loop the specific user's top three groups and add to the MultiDict
 		for dialect_id, total_point in admin_calc_user_points(i.fk_user_id, True).iteritems():
@@ -484,20 +494,19 @@ def admin_get_top_three_groups():
 				dialect_w_total_points.add(dialect_id, total_point)
 
 				# This is soooo ugly
-				# Gotta find out another way to do this!
-				if len(dialect_w_total_points) is 1:
-					dialect_w_total_points_colors.add(dialect_id, '#00ff00')
-				elif len(dialect_w_total_points) is 2:
-					dialect_w_total_points_colors.add(dialect_id, '#ffff00')
-				elif len(dialect_w_total_points) is 3:
-					dialect_w_total_points_colors.add(dialect_id, '#ff0000')
+				# # Gotta find out another way to do this!
+				# if not only_users:
+				# 	if len(dialect_w_total_points) is 1:
+				# 		dialect_w_total_points_colors.add(dialect_id, '#00ff00')
+				# 	elif len(dialect_w_total_points) is 2:
+				# 		dialect_w_total_points_colors.add(dialect_id, '#ffff00')
+				# 	elif len(dialect_w_total_points) is 3:
+				# 		dialect_w_total_points_colors.add(dialect_id, '#ff0000')
 			else:
 				break
 
-		# user = get_db_user(user_id=i.fk_user_id)['info']
-
 		content['top_score'] = dialect_w_total_points
-		content['top_score_colors'] = dialect_w_total_points_colors
+		# content['top_score_colors'] = dialect_w_total_points_colors
 		content['user_points'] = admin_calc_user_points(i.fk_user_id)
 		content['user'] = get_db_user(user_id=i.fk_user_id)['info']
 		top_three_groups[i.fk_user_id] = content
