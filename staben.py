@@ -530,6 +530,18 @@ def admin_insert_user_to_group():
 		flash(u'ALLA ANVÄNDARE HAR EN EGEN GRUPP. WOOOOOOHOOOOOOOOOO!!')
 		return redirect(url_for('admin_student_poll'))
 
+@app.route('/test')
+def test():
+	# DialectID: [{UserID: Position}]
+	md = config.MultiDict()
+	md.add(2, {1: 3})
+	md.add(2, {2: 1})
+	md.add(2, {10: 2})
+	md.add(2, {11: 1})
+	md.add(2, {17: 3})
+	print db_commands.check_if_in_md(md, 17, 1)
+	return 'hej'
+
 @app.errorhandler(403)
 def page_not_found(e):
     return render('error.html', st=static_texts), 403
