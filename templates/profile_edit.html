@@ -12,6 +12,7 @@
 	</p>
 {% endif %}
 <form method='post' action='{{ url_for('profile_save', user_email=session['email']) }}' id='profile_edit'>
+	<input type='hidden' id='default_class' value='{{ db_selection }}' />
 	<h4>{{ st['nollan']|safe }}uppgifter</h4>
 	Förnamn <br />
 	<input type='text' id='firstname' name='firstname' value='{{ user_info.firstname }}' /> <br />
@@ -48,9 +49,9 @@
 	Klass <br />
 	<select name='school_class' id='school_class'>
 		<option value='0|0'></option>
-		{%- for classes in school_classes %}
-		<option value='{{ classes.id }}|{{ classes.fk_school_program_id }}' {% if user_info.school_class == classes.id %}selected{% endif %}>
-			{{ classes.name }}
+		{%- for class in school_classes %}
+		<option value='{{ class.id }}|{{ class.fk_school_program_id }}' {% if user_info.school_class == class.id %}selected{% endif %}>
+			{{ class.name }}
 		</option>
 		{%- endfor %}
 	</select>
