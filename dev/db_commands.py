@@ -423,19 +423,24 @@ def admin_insert_user_to_group():
 	dialect_md = config.MultiDict()
 	rest_md = config.MultiDict()
 	student_poll_dialects = get_student_poll_dialects()
-	for user_id, content in admin_get_top_three_groups(only_users=True).iteritems():
-		for i, dialect_id in enumerate(content['top_score']):
-			print '#######', i, dialect_id
+	for user_id, content in admin_get_top_groups_users_only().iteritems():
+		for i, dialect_id in enumerate(content):
 			# Add 1 to i because i starts with 0
 			position = i+1
 
 			# Check so there is no more than max_students in a group.
 			# If there are more than student_poll_dialects[dialect_id].max_students
 			# students they will be added to rest_list to be dealt with later.
-			if len(dialect_md.getlist(dialect_id)) < student_poll_dialects[dialect_id].max_students:
-				print dialect_id
+			if len(dialect_md.getlist(dialect_id)) < student_poll_dialects[dialect_id-1].max_students:
 				dialect_md.add(dialect_id, {user_id: position})
-			else:
+			# If user_id does not exist in dialect_md
+			elif not check_if_in_md(dialect_md, user_id):
+				# If True it will replace the values
+				# If False it will add the value to rest_md
+				# if check_if_in_md(dialect_md, user_id, position):
+				print '))))))', check_if_in_md(dialect_md, user_id, position)
+					# print replace_position_in_md(dialect_md, dialect_id, , {user_id: position})
+
 				# If dialect_id is full in dialect_md,
 				# check if the current user_id has a higher position then
 				# any of the users already in dialect_md
@@ -462,17 +467,21 @@ def admin_insert_user_to_group():
 							user_id = list_user_id
 							found = True
 					if found: break #Ugly solution but it works...
-
 				rest_md.add(dialect_id, {user_id: list_user_position})
+			# If the user exist in dialect_md
+			else:
+				print '######', user_id
 
-	print ''
-	print 'DialectID: [{UserID: Position}]'
-	for a, d in dialect_md.iterlists():
-		print 'Dialect ID: ', a, ' has: ', d
-	print ''
-	print rest_md
+	# print ''
+	# print 'DialectID: [{UserID: Position}]'
+	# for a, d in dialect_md.iterlists():
+	# 	print 'Dialect ID: ', a, ' has: ', d
+	# print ''
+	# print 'DialectID, {UserID: Position}'
+	# for k, l in rest_md.iterlists():
+	# 	print 'DialectID:', k, ' has: ', l
 
-def admin_get_top_three_groups(only_users=False):
+def admin_get_top_three_groups():
 	###
 	# Not sure that colors are needed!
 	###
@@ -512,6 +521,24 @@ def admin_get_top_three_groups(only_users=False):
 		top_three_groups[i.fk_user_id] = content
 	return top_three_groups
 
+def admin_get_top_groups_users_only(number_of_groups=3):
+	top_three_groups = {}
+	for i in admin_get_all_users_w_poll_done():
+		# content will contain the information gathered
+		content = {}
+
+		dialect_w_total_points = config.OrderedMultiDict()
+
+		# Loop the specific user's top three groups and add to the MultiDict
+		for dialect_id, total_point in admin_calc_user_points(i.fk_user_id, True).iteritems():
+			if len(dialect_w_total_points) < number_of_groups:
+				dialect_w_total_points.add(dialect_id, total_point)
+			else:
+				break
+
+		top_three_groups[i.fk_user_id] = dialect_w_total_points
+	return top_three_groups
+
 def sort_dict(m_dict):
 	"""
 	Add keys and values to a tuple that is within a list so it is possible to sort
@@ -531,6 +558,27 @@ def sort_dict(m_dict):
 		new_omd.add(a, b)
 
 	return new_omd
+
+def check_if_in_md(md, user_id, position=None):
+	# DialectID: [{UserID: Position}, {UserID: Position}]
+	# Loop through the MD
+	# Loop through all dicts
+	# If user_id is in c (which is a dict) it returns True
+	# If position is set it will check if the user's position in the md is higher than the position set
+	# E.g. {5: 3} is higher than {5: 2}
+	for dialect_id, content in md.iterlists():
+		for c in content:
+			if user_id in c:
+				if position != None:
+					print 2222222
+					print position, c
+					if position < c.get(user_id):
+						return c
+					else:
+						return False
+				else:
+					return True
+	return False
 
 def replace_position_in_md(md, dialect_id, list_position, new_value):
 	poped_list = md.getlist(dialect_id)
