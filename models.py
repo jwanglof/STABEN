@@ -401,6 +401,8 @@ class UserInformation(Base):
 	"""User information-table
 
 	Contains a user's information. Connected with User with fk_user_id
+
+	!!!! school_program and school_class should be fk !!!!
 	"""
 	
 	__tablename__ = 'user_information'
