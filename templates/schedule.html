@@ -4,26 +4,33 @@
     <h3>Ange vecka</h3>
     <div class="pagination">
         <ul>
-            {% if week == '1' %}
+            {% if week == 1 %}
                 <li class="active">
                     {% else %}
                 <li>
             {% endif %}
             <a href="{{ url_for('schedule') }}/1">1</a>
             </li>
-            {% if week == '2' %}
+            {% if week == 2 %}
                 <li class="active">
                     {% else %}
                 <li>
             {% endif %}
             <a href="{{ url_for('schedule') }}/2">2</a>
             </li>
-            {% if week == '3' %}
+            {% if week == 3 %}
                 <li class="active">
                     {% else %}
                 <li>
             {% endif %}
             <a href="{{ url_for('schedule') }}/3">3</a>
+            </li>
+            {% if week == 4 %}
+                <li class="active">
+                    {% else %}
+                <li>
+            {% endif %}
+            <a href="{{ url_for('schedule') }}/4">4</a>
             </li>
         </ul>
     </div>
@@ -33,7 +40,8 @@
             {% for schedule_tab in schedule %}
                 {% if schedule_tab.href_div_id == '1a' or
                 schedule_tab.href_div_id == '2a' or
-                schedule_tab.href_div_id == '3a' %}
+                schedule_tab.href_div_id == '3a' or
+                schedule_tab.href_div_id == '4b'%}
                     <li class="active">
                         {% else %}
                     <li>
@@ -46,7 +54,10 @@
 
         <div class="tab-content">
             {% for schedule_info in schedule %}
-                <div class="tab-pane {% if schedule_info.href_div_id == '1a' or schedule_info.href_div_id == '2a' or schedule_info.href_div_id == '3a' %}active{% endif %}" id="{{ schedule_info.href_div_id }}">
+                <div class="tab-pane {% if schedule_info.href_div_id == '1a' or
+                 schedule_info.href_div_id == '2a' or
+                  schedule_info.href_div_id == '3a' or
+                   schedule_info.href_div_id == '4b' %}active{% endif %}" id="{{ schedule_info.href_div_id }}">
                     <p>
                         <b>Tid:</b> {{ schedule_info.time }}. <b>Plats: </b>{{ schedule_info.place|safe }}.</p>
                     <p>
@@ -59,7 +70,13 @@
                     <p>
                         {{ schedule_info.activity_info_evening|safe }}
                     </p>
+                    {% if schedule_info.href_div_id == '4b' %}
+                        <img src="{{ url_for('static', filename='img/schedule/sv_ing_logo.png') }}" alt="Sveriges Ingenjörers logga">
+                        <br /><br />
+                    {% endif %}
+                {% if  schedule_info.img_url %}
                     <img src="{{ url_for('static', filename='img/schedule/%s.PNG' % schedule_info.img_url) }}">
+                {% endif %}
                 </div>
             {% endfor %}
         </div>
