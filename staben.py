@@ -44,15 +44,16 @@ def send_email(recipients, subject, email_body=None, html_body=None):
 			msg.body = email_body
 		elif html_body:
 			msg.html = html_body
-		send_async_email(msg)
-		# config.mail.send(msg)
+		# send_async_email(msg)
+		config.mail.send(msg)
 		return True
 	except:
 		return False
 
-@async
-def send_async_email(msg):
-	config.mail.send(msg)
+# Can not use this on CYD!
+# @async
+# def send_async_email(msg):
+# 	config.mail.send(msg)
 
 def add_session(db_user):
 	config.session['email'] = db_user['user'].email
@@ -121,7 +122,7 @@ def prices():
 
 @app.route('/schedule')
 @app.route('/schedule/<show_week>')
-def schedule(show_week='1'):
+def schedule(show_week=1):
 	schedule = db_commands.get_schedule(show_week)
 	return render('schedule.html', week=show_week, schedule=schedule)
 
@@ -506,7 +507,9 @@ def admin_student_poll_result():
 		# dialects=db_commands.get_student_poll_dialects(), \
 		# user_w_points=db_commands.admin_get_top_three_groups()
 		return render('admin_student_poll_result.html', \
-			users_info=db_commands.admin_get_all_users_w_poll_done())
+			users_info=db_commands.admin_get_all_users_w_poll_done(), \
+			dialects=db_commands.get_student_poll_dialects(), \
+			user_w_points=db_commands.admin_get_top_three_groups())
 	else:
 		return render('admin_fail.html')
 
@@ -539,6 +542,7 @@ def test():
 	md.add(2, {10: 2})
 	md.add(2, {11: 1})
 	md.add(2, {17: 3})
+	md.add(3, {1: 2})
 	print db_commands.check_if_in_md(md, 17, 1)
 	return 'hej'
 
