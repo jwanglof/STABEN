@@ -483,7 +483,7 @@ def check_and_replace_user_in_md(md, r_md, d_id, u_id, u_point):
 		# 	print md.getlist(dialect_id)
 		# 	print replace_value
 
-# WORK
+# WORK (19-08)
 def add_to_groups(md):
 	# md = MultiDict(DialectID, MultiDict(UserID, Point))
 	# {UserID: UserIDPoint, UserID: UserIDPoint}
@@ -508,7 +508,7 @@ def add_to_groups(md):
 	# Will return: MultiDict(DialectID, MultiDict([(UserID, UserIDPoint), (UserID, UserIDPoint)]))
 	return groups
 
-# WORK
+# WORK (19-08)
 def sort_groups(md):
 	# md = MultiDict(DialectID, MultiDict([(UserID, UserIDPoint), (UserID, UserIDPoint)]))
 
@@ -534,9 +534,6 @@ def sort_groups(md):
 		# print ''
 	# print dsa
 	return dsa
-
-def check_for_duplication_user(md, u_id, u_id_point):
-	return
 
 def check_for_duplication(md, r_md):
 	# print md
@@ -661,6 +658,7 @@ def limit_groups(md):
 
 	return return_values(return_md, rest_md)
 
+# WORK (19-08)
 def prioritize_groups(md):
 	group_dict = {}
 	for dialect_id, content in md.iteritems():
@@ -670,18 +668,30 @@ def prioritize_groups(md):
 		group_dict[dialect_id] = len(content_list)
 
 	# Will return: OrderedMultiDict(DialectID, NumberOfStudents)
-	return sort_dict(group_dict)
+	return sort_dict(group_dict, True)
 
 def populate_group_according_to_prio(md, priority_md):
+	# Loop through md with the least prioritized group first
+	# Save all userID's in a list
+	# When looping through all the other groups in prioritized order,
+	#   if the userID is in the list it will be removed from that group
+	used_users = []
 	for prio_dialect_id, prio in priority_md.iteritems():
-		
+		for user_id, user_id_point in md[prio_dialect_id].iteritems():
+			if not user_id in used_users:
+				used_users.append(user_id)
+				# Loop through md except prio_dialect_id and remove all instances of user_id
+				for dialect_id, content in md.iteritems():
+					for u_id, u_id_point in content.iteritems():
+						if u_id is user_id:
+							content.pop()
 
 def admin_insert_user_to_group():
 	# Going to try to send a finished md to a function and sort it from there
 	# rest_md = config.MultiDict()
 
 	# admin_get_top_groups_users_only returns: MultiDict(DialectID, MultiDict(UserID, Point))
-	md = add_to_groups(admin_get_top_groups_users_only(8))
+	md = add_to_groups(admin_get_top_groups_users_only(3))
 
 	# for i, x in md.iteritems():
 	# 	print i, ' --- ', x
@@ -886,7 +896,7 @@ def admin_get_top_groups_users_only(number_of_groups=3):
 	# Will return: MultiDict(DialectID, MultiDict(UserID, Point))
 	return dsa
 
-def sort_dict(m_dict):
+def sort_dict(m_dict, desc=False):
 	"""
 	Add keys and values to a tuple that is within a list so it is possible to sort
 	on the value (which is x[1] in sorted())
@@ -899,7 +909,8 @@ def sort_dict(m_dict):
 	Loop the sorted values into an OrderedMultiDict().
 	This is so the function return a MultiDict() and not a list with tuples
 	"""
-	tmp_list.reverse()	
+	if not desc:
+		tmp_list.reverse()	
 	new_omd = config.OrderedMultiDict()
 	for a, b in tmp_list:
 		new_omd.add(a, b)
