@@ -518,62 +518,91 @@ def sort_groups(md):
 def check_for_duplication_user(md, u_id, u_id_point):
 	return
 
-def check_for_duplication(md):
-	print md
-	print ''
-	for dialect_id, content in md.iterlists():
-		print 'DialectID:', dialect_id
-		print 'Content:', content
-		for index, u_md in enumerate(content):
-			# keys() = userid
-			# values() = userpoint
-			check_for_duplication_user(md, u_md.keys()[0], u_md.values()[0])
+def check_for_duplication(md, r_md):
+	# print md
+	# print ''
+	# for dialect_id, content in md.iterlists():
+	# 	print 'DialectID:', dialect_id
+	# 	print 'Content:', content
+	# 	for index, u_md in enumerate(content):
+	# 		# keys() = userid
+	# 		# values() = userpoint
+	# 		check_for_duplication_user(md, u_md.keys()[0], u_md.values()[0])
 
+	# 	print ''
+
+	# ----> print md[2]
+
+	# for content in md.values():
+	# 	for user_id, user_id_point in content.iteritems():
+			
+	# Find the user_id that is currently active
+	# Find that user in rest_md (if it occurs)
+	# If the user's point in md is higher than every other occurencies
+	#  in rest_md nothing happens
+	# Else if the user's point is lower in md than the point in rest_md
+	#  the user will be removed from md 
+
+	# BUT I SHOULD ONLY CHECK IN MD IF A USER HAS MORE THAN ONE
+	# OCCURENCIE
+	# IF A USER HAS IT THE LOWEST POINT WILL BE REMOVE
+	# ELSE NOTHING HAPPENS
+	# AFTER THIS IS DONE IT SHOULD BE A CHECK SO THAT EACH GROUP HAS
+	# IT'S MAXIMUM NUMBER OF STUDENTS, IF NOT JUST TAKE FROM REST_MD
+	for dialect_id, content in md.iteritems():
+		print ''
+		print 'DID:', dialect_id
+		print 'MD:', content
+		print 'REST:', r_md
+		for user_id, user_id_point in content.iteritems():
+			for rest_u_id, rest_u_id_point in r_md.values()[0].iteritems():
+				if user_id == rest_u_id:
+					print user_id, user_id_point
+					print rest_u_id, rest_u_id_point
+					print '####'
+			print ''
 		print ''
 
-def limit_groups(md, rest_md=None):
+def limit_groups(md):
 	# md = OrderedMultiDict(DialectID, OrderedMultiDict(UserID, UserIDPoint)
 	student_poll_dialects = get_student_poll_dialects()
-	dsa = config.OrderedMultiDict()
-
-	rest_md = config.MultiDict()
+	return_md = config.OrderedMultiDict()
+	return_values = collections.namedtuple('returns', ['md', 'rest_md'])
+	rest_md = config.OrderedMultiDict()
 	for dialect_id, content in md.iteritems():
 		i = 1
 		# print dialect_id
-		etst = config.OrderedMultiDict()
-		etst_rest = config.MultiDict()
+		user_w_point = config.OrderedMultiDict()
+		user_w_point_rest = config.MultiDict()
 		for user_id, user_id_point in content.iteritems():
 			if i <= student_poll_dialects[dialect_id-1].max_students:
 				# print user_id, user_id_point
-				etst.add(user_id, user_id_point)
+				user_w_point.add(user_id, user_id_point)
 			else:
-				etst_rest.add(user_id, user_id_point)
+				user_w_point_rest.add(user_id, user_id_point)
 			i += 1
-		dsa.add(dialect_id, etst)
-		rest_md.add(dialect_id, etst_rest)
+		return_md.add(dialect_id, user_w_point)
+		rest_md.add(dialect_id, user_w_point_rest)
 		# print ''
-	return dsa
+
+	return return_values(return_md, rest_md)
 
 def admin_insert_user_to_group():
 	# Going to try to send a finished md to a function and sort it from there
 	rest_md = config.MultiDict()
-	md = add_to_groups(admin_get_top_groups_users_only(5))
-	# check_for_duplication(md)
-	print md
-	print '########'
+	md = add_to_groups(admin_get_top_groups_users_only(3))
 	md = sort_groups(md)
-	print md
-	print '#######'
-	# Need to get all the users that got discarded
-	# When all the discarded users are in rest_md
+	# Need to get all the users that got discarded = CHECK
+	# When all the discarded users are in rest_md = CHECK
 	# I need to to check for duplicated users
 	# and if there is I just need to keep the highest point
 	# in md
-	md = limit_groups(md, rest_md)
+	
+	limited = limit_groups(md)
+	md = limited.md
+	rest_md = limited.rest_md
 
-	for i, x in md.iteritems():
-		print i, x
-	# print rest_md
+	check_for_duplication(md, rest_md)
 
 	# dialect_md = config.MultiDict()
 	# rest_md = config.MultiDict()
