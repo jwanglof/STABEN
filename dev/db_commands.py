@@ -483,6 +483,7 @@ def check_and_replace_user_in_md(md, r_md, d_id, u_id, u_point):
 		# 	print md.getlist(dialect_id)
 		# 	print replace_value
 
+# WORK
 def add_to_groups(md):
 	# md = MultiDict(DialectID, MultiDict(UserID, Point))
 	# {UserID: UserIDPoint, UserID: UserIDPoint}
@@ -496,7 +497,8 @@ def add_to_groups(md):
 			# print user_md.keys()[0]
 			# print user_md.values()[0]
 			# print '###'
-			asd.add(user_md.keys()[0], user_md.values()[0])
+			if user_md.values()[0] > 10:
+				asd.add(user_md.keys()[0], user_md.values()[0])
 		# print '$$$$$$'
 		groups.add(dialect_id, asd)
 	# 	user_w_point = config.MultiDict()
@@ -504,9 +506,9 @@ def add_to_groups(md):
 	# 		user_w_point.add(user_id, user_id_point)
 	# 	groups.add(dialect_id, user_w_point)
 	# Will return: MultiDict(DialectID, MultiDict([(UserID, UserIDPoint), (UserID, UserIDPoint)]))
-	print groups
 	return groups
 
+# WORK
 def sort_groups(md):
 	# md = MultiDict(DialectID, MultiDict([(UserID, UserIDPoint), (UserID, UserIDPoint)]))
 
@@ -659,13 +661,24 @@ def limit_groups(md):
 
 	return return_values(return_md, rest_md)
 
-def populate_groups(md, r_md):
-	student_poll_dialects = get_student_poll_dialects()
+def prioritize_groups(md):
+	group_dict = {}
+	for dialect_id, content in md.iteritems():
+		content_list = []
+		for i in content:
+			content_list.append(i)
+		group_dict[dialect_id] = len(content_list)
 
+	# Will return: OrderedMultiDict(DialectID, NumberOfStudents)
+	return sort_dict(group_dict)
+
+def populate_group_according_to_prio(md, priority_md):
+	for prio_dialect_id, prio in priority_md.iteritems():
+		
 
 def admin_insert_user_to_group():
 	# Going to try to send a finished md to a function and sort it from there
-	rest_md = config.MultiDict()
+	# rest_md = config.MultiDict()
 
 	# admin_get_top_groups_users_only returns: MultiDict(DialectID, MultiDict(UserID, Point))
 	md = add_to_groups(admin_get_top_groups_users_only(8))
@@ -679,6 +692,9 @@ def admin_insert_user_to_group():
 
 	# for i, x in md.iteritems():
 	# 	print i, ' --- ', x
+
+	prioritize_groups(md)
+	populate_group_according_to_prio(md, prioritize_groups(md))
 
 	# # Need to get all the users that got discarded = CHECK
 	# # When all the discarded users are in rest_md = CHECK
