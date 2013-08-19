@@ -511,7 +511,6 @@ def add_to_groups(md):
 # WORK (19-08)
 def sort_groups(md):
 	# md = MultiDict(DialectID, MultiDict([(UserID, UserIDPoint), (UserID, UserIDPoint)]))
-
 	dsa = config.OrderedMultiDict()
 	# content is a list with MultiDicts in it
 	for dialect_id, content in md.iteritems():
@@ -670,28 +669,100 @@ def prioritize_groups(md):
 	# Will return: OrderedMultiDict(DialectID, NumberOfStudents)
 	return sort_dict(group_dict, True)
 
+# WORK (19-08)
 def populate_group_according_to_prio(md, priority_md):
 	# Loop through md with the least prioritized group first
 	# Save all userID's in a list
 	# When looping through all the other groups in prioritized order,
 	#   if the userID is in the list it will be removed from that group
 	used_users = []
+
+	# Need to check if a dialect is full when going in a prioritized order
+	# If it is full then ignore all other users in that dialect and assign them
+	# to other groups
+	# ^^^^^^^^^^^^^^^
+	
+	# for i, x in md.iteritems():
+	# 	print 'DialectID', i
+	# 	print 'Content', x
+
 	for prio_dialect_id, prio in priority_md.iteritems():
 		for user_id, user_id_point in md[prio_dialect_id].iteritems():
 			if not user_id in used_users:
 				used_users.append(user_id)
-				# Loop through md except prio_dialect_id and remove all instances of user_id
+				# Loop through md except prio_dialect_id and remove all instances of user_id in md
 				for dialect_id, content in md.iteritems():
-					for u_id, u_id_point in content.iteritems():
-						if u_id is user_id:
-							content.pop()
+					if dialect_id != prio_dialect_id:
+						for u_id, u_id_point in content.iteritems():
+							if u_id is user_id:
+								# print 'Found a duplicated user.'
+								# print 'The original user is in:', prio_dialect_id
+								# print 'The new user is in:', dialect_id
+								content.pop(u_id)
+						# print ''
+	# print '########'
+	# print priority_md
+	# print '$$$$$$$$'
+	# for i, x in md.iteritems():
+	# 	print 'DialectID', i
+	# 	print 'Content', x
+	return md
+
+def limit_group2(md):
+	return_values = collections.namedtuple('returns', ['md', 'rest'])
+	users_wo_group = []
+	student_poll_dialects = get_student_poll_dialects()
+	tree = config.OrderedMultiDict()
+	for dialect_id, content in md.iteritems():
+		adwq = config.OrderedMultiDict()
+		i = 0
+		for user_id, user_id_point in content.iteritems():
+			if i < student_poll_dialects[dialect_id-1].max_students:
+				adwq.add(user_id, user_id_point)
+			else:
+				users_wo_group.append(user_id)
+			i += 1
+		tree.add(dialect_id, adwq)
+
+	# print len(users_wo_group)
+	# print users_wo_group
+	# for u_id in users_wo_group:
+	# 	print u_id
+	# 	print admin_calc_user_points(u_id)
+	# return tree
+	return return_values(tree, users_wo_group)
+
+def assign_rest_users(md, rest_u, avail_groups):
+	student_poll_dialects = get_student_poll_dialects()
+	print avail_groups
+	used_users = []
+	for u_id in rest_u:
+		iiii = {}
+		for dialect_id, point in admin_calc_user_points(u_id).iteritems():
+			if dialect_id in avail_groups and not u_id in used_users:
+				md[dialect_id].add(u_id, point)
+			else:
+				used_users.append(u_id)
+		# 		iiii[dialect_id] = point
+		# iiii = sort_dict(iiii)
+		# md[dialect_id].add(u_id, point)
+
+	return md
+
+def available_groups(md):
+	student_poll_dialects = get_student_poll_dialects()
+	avail_groups = []
+	for dialect_id in md:
+		if len(md[dialect_id].values()) < student_poll_dialects[dialect_id-1].max_students:
+			avail_groups.append(dialect_id)
+	return avail_groups
 
 def admin_insert_user_to_group():
 	# Going to try to send a finished md to a function and sort it from there
 	# rest_md = config.MultiDict()
 
 	# admin_get_top_groups_users_only returns: MultiDict(DialectID, MultiDict(UserID, Point))
-	md = add_to_groups(admin_get_top_groups_users_only(3))
+	md = add_to_groups(admin_get_top_groups_users_only(10))
 
 	# for i, x in md.iteritems():
 	# 	print i, ' --- ', x
@@ -700,11 +771,20 @@ def admin_insert_user_to_group():
 
 	md = sort_groups(md)
 
-	# for i, x in md.iteritems():
-	# 	print i, ' --- ', x
+	md = populate_group_according_to_prio(md, prioritize_groups(md))
 
-	prioritize_groups(md)
-	populate_group_according_to_prio(md, prioritize_groups(md))
+
+	limited = limit_group2(md)
+	md = limited.md
+	rest_users = limited.rest
+
+	for i, x in md.iteritems():
+		print i, ' --- ', x
+
+	md = assign_rest_users(md, rest_users, available_groups(md))
+
+	for i, x in md.iteritems():
+		print i, ' --- ', x
 
 	# # Need to get all the users that got discarded = CHECK
 	# # When all the discarded users are in rest_md = CHECK
@@ -716,11 +796,6 @@ def admin_insert_user_to_group():
 	# #    OR IS IT?
 	# #    CASE 1: A USER GOT INTO GROUPS THAT HAS A LOT OF OTHER STUDENTS WITH HIGHER POINTS THAN THE STUDENT
 	# #	 >> AFTER SOME 'RESEARCH' I HAVE FOUND THAT THIS IS NECESSARY
-
-	# # for i, x in md.iteritems():
-	# # 	print i, ' --- ', x
-	# print md
-	# print '####'
 
 	# limited = limit_groups(md)
 	# md = limited.md
