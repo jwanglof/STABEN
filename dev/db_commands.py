@@ -11,6 +11,8 @@ import read_csv
 import read_quotes
 import debug
 
+import collections
+
 db = config.db
 app = config.app
 db_session = config.db_session
@@ -482,37 +484,53 @@ def check_and_replace_user_in_md(md, r_md, d_id, u_id, u_point):
 		# 	print replace_value
 
 def add_to_groups(md):
-	groups = config.OrderedMultiDict()
-	student_poll_dialects = get_student_poll_dialects()
-	for user_id, content in md.iteritems():
-		for dialect_id, user_id_point in content.iteritems():
-			user_w_point = config.MultiDict([(user_id, user_id_point)])
-			groups.add(dialect_id, user_w_point)
+	# md = MultiDict(DialectID, MultiDict(UserID, Point))
+	# {UserID: UserIDPoint, UserID: UserIDPoint}
+	# print md
+	groups = config.MultiDict()
+	for dialect_id, content in md.iterlists():
+		# print dialect_id
+		# print content
+		asd = config.MultiDict()
+		for index, user_md in enumerate(content):
+			# print user_md.keys()[0]
+			# print user_md.values()[0]
+			# print '###'
+			asd.add(user_md.keys()[0], user_md.values()[0])
+		# print '$$$$$$'
+		groups.add(dialect_id, asd)
+	# 	user_w_point = config.MultiDict()
+	# 	for dialect_id, user_id_point in content.iteritems():
+	# 		user_w_point.add(user_id, user_id_point)
+	# 	groups.add(dialect_id, user_w_point)
+	# Will return: MultiDict(DialectID, MultiDict([(UserID, UserIDPoint), (UserID, UserIDPoint)]))
+	print groups
 	return groups
 
 def sort_groups(md):
-	# md = MultiDict(DialectID, MultiDict(UserID, UserIDPoint))
+	# md = MultiDict(DialectID, MultiDict([(UserID, UserIDPoint), (UserID, UserIDPoint)]))
 
 	dsa = config.OrderedMultiDict()
 	# content is a list with MultiDicts in it
-	for dialect_id, content in md.iterlists():
+	for dialect_id, content in md.iteritems():
 		etst = {}
 		# print 'DialectID:', dialect_id
 		# print 'Content:', content
-		lowest_score = 100
-		for index, user_md in enumerate(content):
+		# lowest_score = 100
+		for user_id, user_id_point in content.iteritems():
+			etst[user_id] = user_id_point
 			# user_id_point = content[index].values()[0]
 			# if user_id_point < lowest_score:
 			# 	# print user_id_point, 'lower than', lowest_score
 			# 	# print ''
 			# 	lowest_score = user_id_point
-			etst[content[index].keys()[0]] = content[index].values()[0]
+			# etst[content[index].keys()[0]] = content[index].values()[0]
 		etst = sort_dict(etst)
-		# print etst
 		dsa.add(dialect_id, etst)
 		# for user_id, user_id_point in etst.iteritems():
 		# 	md.add(dialect_id, config.MultiDict(user_id, user_id_point))
 		# print ''
+	# print dsa
 	return dsa
 
 def check_for_duplication_user(md, u_id, u_id_point):
@@ -549,25 +567,79 @@ def check_for_duplication(md, r_md):
 	# ELSE NOTHING HAPPENS
 	# AFTER THIS IS DONE IT SHOULD BE A CHECK SO THAT EACH GROUP HAS
 	# IT'S MAXIMUM NUMBER OF STUDENTS, IF NOT JUST TAKE FROM REST_MD
+	# ^^^^^^^^^^^^
+	# 1. Loop through md to get dialect_id and content (which is a OrderedMultiDict(UserID, UserIDPoint))
+	# 2. Loop through content to get UserID and UserIDPoint
+	# 3. Loop through md again IF the dialectID is NOT the same as the one user_id is in
+	# 4. Loop through c to get all UserIDs and UserIDPoints from md AGAIN
+	#      to check if UserID is in md more than once
+	# 5. Check if the user exists more than once in md
+	# 6. Check if the point in the second md is higher than in the
+	#      first md
+	# 7. Save this entry
+	# 8. Remove the 'original' one with the lower score
+	# 9. 
+	return_values = collections.namedtuple('returns', ['md', 'rest_md'])
+
+	asd = md
+	for dialect_id, content in asd.iteritems(): #1
+		# print 'DID:', dialect_id
+		# print 'CONTENT:', content
+		for user_id, user_id_point in content.iteritems(): #2
+			# print 'Checking', user_id, 'with', user_id_point, 'points in DialectID', dialect_id
+			for d_id, c in asd.iteritems(): #3
+				if d_id != dialect_id: #3
+					for u_id, u_id_point in c.iteritems(): #4
+						if u_id is user_id: #5
+							if u_id_point > user_id_point: #6
+								# print 'Found a duplicated user higher points. UserID:', u_id, 'with', u_id_point, 'points in DialectID', d_id
+								new_entry = (u_id, u_id_point) #7
+								content.poplist(u_id) #8
+	# Check in rest_md for u_id and remove all occurances!
+	return return_values(md, remove_from_md(r_md, user_id))
+				# for u_id, u_id_point in c.iteritems():
+
+	# for dialect_id, content in md.iteritems():
+	# 	print ''
+	# 	print 'DID:', dialect_id
+	# 	print 'MD:', content
+	# 	print 'REST:', r_md
+	# 	for user_id, user_id_point in content.iteritems():
+	# 		for rest_u_id, rest_u_id_point in r_md.values()[0].iteritems():
+	# 			if user_id == rest_u_id:
+	# 				print user_id, user_id_point
+	# 				print rest_u_id, rest_u_id_point
+	# 				print '####'
+	# 		print ''
+	# 	print ''
+
+def remove_from_md(md, u_id):
+	# SHOULD I CHECK POINTS AS WELL IF U_ID HAVE A HIGHER POINT IN REST_MD THAN
+	#   IN THE GROUP THE USER IS ASSIGNED?
+	# print 'Check for:', u_id
+	# print 'In:', md
+
+	# Loop through md
+	# Loop through the md's content
+	# If argument u_id is user_id it will be poped
 	for dialect_id, content in md.iteritems():
-		print ''
-		print 'DID:', dialect_id
-		print 'MD:', content
-		print 'REST:', r_md
+		# print 'DID:', dialect_id
+		# print 'CONTENT:', content
 		for user_id, user_id_point in content.iteritems():
-			for rest_u_id, rest_u_id_point in r_md.values()[0].iteritems():
-				if user_id == rest_u_id:
-					print user_id, user_id_point
-					print rest_u_id, rest_u_id_point
-					print '####'
-			print ''
-		print ''
+			# print user_id, u_id
+			if u_id is user_id:
+				# print '!!!!!!!!!!!!!!!!!!!!!!!!!!11111111111111111111111111111111111111 Found!'
+				# print user_id
+				content.poplist(user_id)
+		# print 'NEW CONTENT:', content
+	return md
 
 def limit_groups(md):
 	# md = OrderedMultiDict(DialectID, OrderedMultiDict(UserID, UserIDPoint)
 	student_poll_dialects = get_student_poll_dialects()
-	return_md = config.OrderedMultiDict()
 	return_values = collections.namedtuple('returns', ['md', 'rest_md'])
+
+	return_md = config.OrderedMultiDict()
 	rest_md = config.OrderedMultiDict()
 	for dialect_id, content in md.iteritems():
 		i = 1
@@ -587,22 +659,80 @@ def limit_groups(md):
 
 	return return_values(return_md, rest_md)
 
+def populate_groups(md, r_md):
+	student_poll_dialects = get_student_poll_dialects()
+
+
 def admin_insert_user_to_group():
 	# Going to try to send a finished md to a function and sort it from there
 	rest_md = config.MultiDict()
-	md = add_to_groups(admin_get_top_groups_users_only(3))
-	md = sort_groups(md)
-	# Need to get all the users that got discarded = CHECK
-	# When all the discarded users are in rest_md = CHECK
-	# I need to to check for duplicated users
-	# and if there is I just need to keep the highest point
-	# in md
-	
-	limited = limit_groups(md)
-	md = limited.md
-	rest_md = limited.rest_md
 
-	check_for_duplication(md, rest_md)
+	# admin_get_top_groups_users_only returns: MultiDict(DialectID, MultiDict(UserID, Point))
+	md = add_to_groups(admin_get_top_groups_users_only(8))
+
+	# for i, x in md.iteritems():
+	# 	print i, ' --- ', x
+	# print md
+	# print '####'
+
+	md = sort_groups(md)
+
+	# for i, x in md.iteritems():
+	# 	print i, ' --- ', x
+
+	# # Need to get all the users that got discarded = CHECK
+	# # When all the discarded users are in rest_md = CHECK
+	# # I need to to check for duplicated users = CHECK
+	# # and if there is I just need to keep the highest point = CHECK
+	# # in md = CHECK
+	# # After that I need to populate all groups again so they are at it's maximum = NOPE!
+	# #    THIS IS NOT NECESSARY SINCE ALL USER HAS A UNIQUE GROUP AND IN REST_MD THERE ARE ONLY DUPLICATED USERS
+	# #    OR IS IT?
+	# #    CASE 1: A USER GOT INTO GROUPS THAT HAS A LOT OF OTHER STUDENTS WITH HIGHER POINTS THAN THE STUDENT
+	# #	 >> AFTER SOME 'RESEARCH' I HAVE FOUND THAT THIS IS NECESSARY
+
+	# # for i, x in md.iteritems():
+	# # 	print i, ' --- ', x
+	# print md
+	# print '####'
+
+	# limited = limit_groups(md)
+	# md = limited.md
+	# rest_md = limited.rest_md # Should fix so that rest_md is sorted to!
+
+	# print 'AFTER LIMIT_GROUPS'
+	# print 'MD'
+	# # print md
+	# for i, x in md.iteritems():
+	# 	print i, ' --- ', x
+	# print '####'
+	# print 'REST_MD'
+	# print rest_md
+	# print '@@@@'
+
+	# duplications = check_for_duplication(md, rest_md)
+	# md = duplications.md
+	# rest_md = duplications.rest_md
+
+	# print 'AFTER CHECK_FOR_DUPLICATION'
+	# print 'MD'
+	# # print md
+	# for i, x in md.iteritems():
+	# 	print i, ' --- ', x
+	# print '$$$$'
+	# print 'REST_MD'
+	# print rest_md
+
+
+
+	# for i, x in md.iteritems():
+	# 	print i, x
+	# print '#####'
+	# for o, c in rest_md.iteritems():
+	# 	print o, c
+
+	# Do this after I checked rest_md for duplications
+	# populate_groups(md, rest_md) 
 
 	# dialect_md = config.MultiDict()
 	# rest_md = config.MultiDict()
@@ -727,25 +857,17 @@ def admin_get_top_groups_users_only(number_of_groups=3):
 	# top_three_groups = {}
 	dsa = config.MultiDict()
 	for i in admin_get_all_users_w_poll_done():
-		# content will contain the information gathered
-		# content = {}
-
-		# dialect_w_total_points = config.MultiDict()
-		asd = config.MultiDict()
-		# Loop the specific user's top three groups and add to the MultiDict
+		# asd = config.MultiDict()
+		# Loop the specific user's top groups and add to the MultiDict
 		for dialect_id, total_point in admin_calc_user_points(i.fk_user_id, True).iteritems():
-			if len(asd) < number_of_groups:
-				asd.add(dialect_id, total_point)
-		dsa.add(i.fk_user_id, asd)
-			# if len(dialect_w_total_points) < number_of_groups:
-				# dialect_w_total_points.add(dialect_id, config.MultiDict([(i.fk_user_id, total_point)]))
-			# 	dialect_w_total_points.add(i.fk_user_id, total_point)
-			# else:
-			# 	break
+			# print dialect_id, total_point
+			# if len(asd) < number_of_groups:
+			# asd.add(i.fk_user_id, total_point)
+			# dsa.add(dialect_id, asd)
+			dsa.add(dialect_id, config.MultiDict([(i.fk_user_id, total_point)]))
 
 		# top_three_groups[dialect_id] = dialect_w_total_points
-
-	# Will return: MultiDict(UserID, MultiDict(DialectID, Point))
+	# Will return: MultiDict(DialectID, MultiDict(UserID, Point))
 	return dsa
 
 def sort_dict(m_dict):
