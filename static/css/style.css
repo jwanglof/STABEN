@@ -102,7 +102,7 @@ dd {
 
 .student_poll .percent_width {width: 250%;}
 .student_poll .dialect_margin {margin-left: 230px;}
-.student_poll .dialect_dialect {width: 100px; height: 40px; float: left; border-left: 1px solid #000; text-align: center;}
+.student_poll .dialect_dialect {width: 100px; height: 40px; float: left; border-left: 1px solid #fff; text-align: center;}
 
 .border {border: 1px solid #fff;}
 .border_red {border: 1px solid #ff0000;}

@@ -1,12 +1,15 @@
 {% extends "template.html" %}
 {% block content %}
+	<div class='span1' id='id'>
+		<h3>ID</h3>
+	</div>
 	<div class='span2' id='name'>
 		<h3>Namn</h3>
 	</div>
 	<div class='span2' id='allergies'>
 		<h3>Allergier</h3>
 	</div>
-	<div class='span3' id='food_preference'>
+	<div class='span2' id='food_preference'>
 		<h3>Vegan/Vegetarian</h3>
 	</div>
 	<div class='span2' id='current_city'>
@@ -17,30 +20,35 @@
 	</div>
 <div id='all_users'>
 {% for user in users %}
-	<div class='span2'>
+	<div class='span1' id='id' style='border-bottom: 1px solid #fff'>
+		<h3>{{ user.id }}</h3>
+	</div>
+	<div class='span2' style='border-bottom: 1px solid #fff'>
 		{% if user.r_user_information.firstname %}
 			{{ user.r_user_information.firstname }} {{ user.r_user_information.lastname }}
 		{% else %}
 			<i>Inget namn, databasid: {{ user.id }}</i>
 		{% endif %}
 	</div>
-	<div class='span2'>
+	<div class='span2' style='border-bottom: 1px solid #fff'>
 		{% if user.r_user_information.allergies %}
 			{{ user.r_user_information.allergies }}
 		{% endif %}
 	</div>
-	<div class='span3'>
+	<div class='span2' style='border-bottom: 1px solid #fff'>
 		{% if user.r_user_information.food_preference %}
 			{{ user.r_user_information.food_preference }}
 		{% endif %}
 	</div>
-	<div class='span2'>
+	<div class='span2' style='border-bottom: 1px solid #fff'>
 		{% if user.r_user_information.current_city %}
 			{{ user.r_user_information.current_city }}
 		{% endif %}
 	</div>
-	<div class='span2'>
+	<div class='span2' style='border-bottom: 1px solid #fff'>
 		Gör till admin
+		<br />
+		<a href='{{ url_for('admin_edit_user', user_id=user.id) }}'>Redigera</a>
 	</div>
 {% endfor %}
 </div>

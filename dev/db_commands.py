@@ -352,15 +352,18 @@ def admin_calc_user_points(user_id, order=False, nr_of_points=None):
 		for point in question.r_question_point:
 			point_MD.add(point.fk_student_poll_dialect_id, point.point)
 		questions_w_dialects_a_points.add(question.id, point_MD)
-	
+
 	# MultiDict([(Dialect_id, Point), (Dialect_id, Point)])
 	# The answers from user_id
 	# Add all the dialects with the points
+	# 100 IS ADDED AS A DIALECT
+	# NOOOOOO IDEA WHYYYYYY =(
 	answers = models.StudentPollAnswer.query.filter_by(fk_user_id=user_id).all()
 	dialects_w_points = config.MultiDict()
 	for answer in answers:
 		for dialect_id, point in questions_w_dialects_a_points[answer.fk_student_poll_question_id].iteritems():
-			dialects_w_points.add(dialect_id, point)
+			if dialect_id != 100:
+				dialects_w_points.add(dialect_id, point)
 
 	# MultiDict([(Missing_dialect_id, 0), (Missing_dialect_id, 0)])
 	# Add the missing dialect id(s) with zero points to dialects_w_points
@@ -416,7 +419,7 @@ def admin_get_all_users():
 	return models.User.query.all()
 
 def admin_get_all_users_w_poll_done():
-	return models.UserInformation.query.filter_by(poll_done=1).values(models.UserInformation.fk_user_id)
+	return models.UserInformation.query.filter_by(poll_done=1)
 
 def dialect_full(md, dialect_id, max_students):
 	return max_students <= len(md.getlist(dialect_id))
@@ -459,29 +462,29 @@ def check_points(md, r_md, d_id, u_id, u_point):
 	for item in poped_list:
 		md.add(d_id, item)
 
-def check_and_replace_user_in_md(md, r_md, d_id, u_id, u_point):
-	# md = MultiDict([DialectID, {UserID: TotalPoints}])
-	# print {u_id: u_point} in md.getlist(d_id)
-	# print 'user id', u_id
-	# print md.getlist(d_id)
-	# print ''
-	print md
-	for dialect_id, content in md.iteritems():
-		print 'UID:', u_id
-		print 'DID:', dialect_id, '- Content:', md.getlist(dialect_id)
-		for l in md.getlist(dialect_id):
-			if l.get(u_id):
-				print l
-	# 	for x in content.iteritems():
-	# 		print x
-	# print ''
-	# 	for a, b in content.iteritems():
-	# 		print a, b
-	# print ''
-		# replace_value = {u_id: u_point}
-		# if replace_value in md.getlist(dialect_id):
-		# 	print md.getlist(dialect_id)
-		# 	print replace_value
+# def check_and_replace_user_in_md(md, r_md, d_id, u_id, u_point):
+# 	# md = MultiDict([DialectID, {UserID: TotalPoints}])
+# 	# print {u_id: u_point} in md.getlist(d_id)
+# 	# print 'user id', u_id
+# 	# print md.getlist(d_id)
+# 	# print ''
+# 	print md
+# 	for dialect_id, content in md.iteritems():
+# 		print 'UID:', u_id
+# 		print 'DID:', dialect_id, '- Content:', md.getlist(dialect_id)
+# 		for l in md.getlist(dialect_id):
+# 			if l.get(u_id):
+# 				print l
+# 	# 	for x in content.iteritems():
+# 	# 		print x
+# 	# print ''
+# 	# 	for a, b in content.iteritems():
+# 	# 		print a, b
+# 	# print ''
+# 		# replace_value = {u_id: u_point}
+# 		# if replace_value in md.getlist(dialect_id):
+# 		# 	print md.getlist(dialect_id)
+# 		# 	print replace_value
 
 # WORK (19-08)
 def add_to_groups(md):
@@ -734,16 +737,37 @@ def limit_group2(md):
 
 def assign_rest_users(md, rest_u, avail_groups):
 	student_poll_dialects = get_student_poll_dialects()
-	print avail_groups
+	# print avail_groups
+	# print rest_u
 	used_users = []
 	for u_id in rest_u:
 		iiii = {}
+		# print avail_groups
+		# print admin_calc_user_points(u_id) = MultiDict(DialectID, Point)
 		for dialect_id, point in admin_calc_user_points(u_id).iteritems():
-			if dialect_id in avail_groups and not u_id in used_users:
-				md[dialect_id].add(u_id, point)
-			else:
+			#point > 10 and 
+			if dialect_id in avail_groups:
+				iiii[point] = dialect_id
+		iii = sort_dict(iiii)
+
+		for point, dialect_id in iiii.iteritems():
+			if not u_id in used_users and len(md[dialect_id]) < student_poll_dialects[dialect_id-1].max_students:
 				used_users.append(u_id)
+				md[dialect_id].add(u_id, point)
+			# if not u_id in used_users and len(md[dialect_id]) < student_poll_dialects[dialect_id-1].max_students:
+			# 	used_users.append(u_id)
+			# 	md.add(dialect_id, config.MultiDict(u_id, point))
+
+		# for i, x in priority_md.iteritems():
+		# 	print i, x
+				# print 'DID:', dialect_id
+				# print 'POINT:', point
+				# md.add(dialect_id, )
+					# if not u_id in used_users:
+					# 	used_users.append(u_id)
 		# 		iiii[dialect_id] = point
+
+		# print ''
 		# iiii = sort_dict(iiii)
 		# md[dialect_id].add(u_id, point)
 
@@ -752,7 +776,12 @@ def assign_rest_users(md, rest_u, avail_groups):
 def available_groups(md):
 	student_poll_dialects = get_student_poll_dialects()
 	avail_groups = []
+	# print md
 	for dialect_id in md:
+	# 	print 'DID:', dialect_id
+	# 	print 'MAX STUDENTS:', student_poll_dialects[dialect_id-1].max_students
+	# 	print 'LENGTH:', len(md[dialect_id].values())
+	# 	print ''
 		if len(md[dialect_id].values()) < student_poll_dialects[dialect_id-1].max_students:
 			avail_groups.append(dialect_id)
 	return avail_groups
@@ -763,28 +792,36 @@ def admin_insert_user_to_group():
 
 	# admin_get_top_groups_users_only returns: MultiDict(DialectID, MultiDict(UserID, Point))
 	md = add_to_groups(admin_get_top_groups_users_only(10))
-
+	# admin_get_top_groups_users_only(7)
 	# for i, x in md.iteritems():
 	# 	print i, ' --- ', x
 	# print md
 	# print '####'
-
+	# print md
 	md = sort_groups(md)
-
+	# print md
+	# print ''
 	md = populate_group_according_to_prio(md, prioritize_groups(md))
+	# print ''
+	# limited = limit_group2(md)
+	# md = limited.md
+	# rest_users = limited.rest
 
+	# # asd = available_groups(md)
+	# # for i, x in md.iteritems():
+	# # 	if i in asd:
+	# # 		print i, ' --- ', x
+	# # print ''
+	# md = assign_rest_users(md, rest_users, available_groups(md))
 
-	limited = limit_group2(md)
-	md = limited.md
-	rest_users = limited.rest
+	# users = []
+	# for i, x in md.iteritems():
+	# 	for user_id, point in x.iteritems():
+	# 		users.append(user_id)
+	# print len(users)
+	# print sorted(users)
 
-	for i, x in md.iteritems():
-		print i, ' --- ', x
-
-	md = assign_rest_users(md, rest_users, available_groups(md))
-
-	for i, x in md.iteritems():
-		print i, ' --- ', x
+	print md
 
 	# # Need to get all the users that got discarded = CHECK
 	# # When all the discarded users are in rest_md = CHECK
@@ -928,7 +965,7 @@ def admin_get_top_three_groups():
 		# dialect_w_total_points_colors = OrderedMultiDict([(DialectID, ColorCode)])
 		# OrderedMultiDict([(DialectID, {'tot_points': points, 'color': ColorCode})])
 		dialect_w_total_points = config.OrderedMultiDict()
-		# dialect_w_total_points_colors = config.OrderedMultiDict()
+		dialect_w_total_points_colors = config.OrderedMultiDict()
 
 		# Loop the specific user's top three groups and add to the MultiDict
 		for dialect_id, total_point in admin_calc_user_points(i.fk_user_id, True).iteritems():
@@ -936,19 +973,19 @@ def admin_get_top_three_groups():
 				dialect_w_total_points.add(dialect_id, total_point)
 
 				# This is soooo ugly
-				# # Gotta find out another way to do this!
-				# if not only_users:
-				# 	if len(dialect_w_total_points) is 1:
-				# 		dialect_w_total_points_colors.add(dialect_id, '#00ff00')
-				# 	elif len(dialect_w_total_points) is 2:
-				# 		dialect_w_total_points_colors.add(dialect_id, '#ffff00')
-				# 	elif len(dialect_w_total_points) is 3:
-				# 		dialect_w_total_points_colors.add(dialect_id, '#ff0000')
+				# Gotta find out another way to do this!
+			
+				if len(dialect_w_total_points) is 1:
+					dialect_w_total_points_colors.add(dialect_id, '#00ff00')
+				elif len(dialect_w_total_points) is 2:
+					dialect_w_total_points_colors.add(dialect_id, '#ffff00')
+				elif len(dialect_w_total_points) is 3:
+					dialect_w_total_points_colors.add(dialect_id, '#ff0000')
 			else:
 				break
 
 		content['top_score'] = dialect_w_total_points
-		# content['top_score_colors'] = dialect_w_total_points_colors
+		content['top_score_colors'] = dialect_w_total_points_colors
 		content['user_points'] = admin_calc_user_points(i.fk_user_id)
 		content['user'] = get_db_user(user_id=i.fk_user_id)['info']
 		top_three_groups[i.fk_user_id] = content
@@ -961,6 +998,7 @@ def admin_get_top_groups_users_only(number_of_groups=3):
 		# asd = config.MultiDict()
 		# Loop the specific user's top groups and add to the MultiDict
 		for dialect_id, total_point in admin_calc_user_points(i.fk_user_id, True).iteritems():
+			# print dialect_id
 			# print dialect_id, total_point
 			# if len(asd) < number_of_groups:
 			# asd.add(i.fk_user_id, total_point)

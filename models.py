@@ -424,6 +424,7 @@ class UserInformation(Base):
 	poll_done = db.Column(db.SmallInteger(), default=0)
 	finished_profile = db.Column(db.SmallInteger(), default=0)
 	recover_code = db.Column(db.String(50))
+	bicycle = db.Column(db.SmallInteger(), default=0)
 	fk_student_dialect = db.Column(db.Integer, db.ForeignKey('student_poll_dialect.id'))
 
 	def __init__(self, user_id=None, presentation=None):

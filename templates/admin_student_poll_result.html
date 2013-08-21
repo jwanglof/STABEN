@@ -2,7 +2,6 @@
 {% block content %}
 
 <a href='#'>Visa alla nollor</a> | <a href='#'>Visa dialekter</a>
-
 <div class='students'>
 	{% for user in users_info %}
 		<a href='{{ url_for('admin_show_student_poll_result', user_id=user.fk_user_id) }}' target='_blank'><span style='display: block'>
@@ -15,12 +14,12 @@
 	{% endfor %}
 </div>
 <hr />
-Choose your search criteria:
+{#Choose your search criteria:
 <form method='get' action='#'>
 	<input type='radio' name='' value='' /> Groups with < 5 students
 	<input type='radio' name='' value='' /> Groups with > 5 students
 	<input type='radio' name='' value='' /> All
-</form>
+</form>#}
 <div class='student_poll'>
 	<div class='percent_width dialect_margin'>
 		{% for dialect in dialects %}
@@ -43,7 +42,7 @@ Choose your search criteria:
 			</span>
 			{% for dialect_id, user_point in user_w_points[user]['user_points'].iteritems() %}
 				{% if user_w_points[user]['top_score'][dialect_id] %}
-					<span class='dialect_dialect' style='text-decoration: underline; background-color: #c0c0c0'>{{ user_point }}</span>
+					<span class='dialect_dialect' style='background-color: {{ user_w_points[user]['top_score_colors'][dialect_id] }}'>{{ user_point }}</span>
 				{% else %}
 					<span class='dialect_dialect'>{{ user_point }}</span>
 				{% endif %}

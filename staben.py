@@ -19,9 +19,9 @@ flash = config.flash
 redirect = config.redirect
 
 debug = debug.debug
-async = decorators.async
+# async = decorators.async
 
-static_texts = {'nollan': '<span class="nollanfont">minus</span>', 'nollans': '<span class="nollanfont">nollans</span>', 'staben': '<span class="stabenfont">STABEN</span>'}
+static_texts = {'nollan': '<span class="nollanfont">nollan</span>', 'nollans': '<span class="nollanfont">nollans</span>', 'staben': '<span class="stabenfont">STABEN</span>'}
 
 # Make get_quote() callable from a template. Used in template.html
 def get_quote():
@@ -529,9 +529,49 @@ def admin_show_student_poll_result(user_id):
 @app.route('/admin_insert_user_to_group', methods=['POST'])
 def admin_insert_user_to_group():
 	if request.method == 'POST':
-		db_commands.admin_insert_user_to_group()
-		flash(u'ALLA ANVÄNDARE HAR EN EGEN GRUPP. WOOOOOOHOOOOOOOOOO!!')
-		return redirect(url_for('admin_student_poll'))
+		print db_commands.admin_insert_user_to_group()
+		
+		# REPLACE THE FINISHED MD WITH THIS::::::
+		# users = db_commands.admin_get_all_users()
+		# return render('admin_student_poll_show_assigned_groups.html', \
+		# 	md=db_commands.admin_insert_user_to_group(), \
+		# 	users=users, \
+		# 	dialects=db_commands.get_student_poll_dialects(), \
+		# 	school_programs=db_commands.get_school_programs())
+
+@app.route('/admin_edit_user/<user_id>')
+def admin_edit_user(user_id):
+	return render('admin_edit_user.html', user=db_commands.get_db_user(user_id=user_id))
+
+@app.route('/admin_edit_user/save/<user_id>', methods=['POST'])
+def admin_edit_user_save(user_id):
+	try:
+		copy_request_form = request.form.copy()
+		if 'bicycle' in request.form:
+			copy_request_form.pop('bicycle')
+			copy_request_form.add('bicycle', 1)
+
+		if '110' in request.form:
+			db_commands.save_student_poll(request.form['email'], config.ImmutableMultiDict([('110', 110)]))
+		if '111' in request.form:
+			db_commands.save_student_poll(request.form['email'], config.ImmutableMultiDict([('111', 111)]))
+		if '112' in request.form:
+			db_commands.save_student_poll(request.form['email'], config.ImmutableMultiDict([('112', 112)]))
+		if '113' in request.form:
+			db_commands.save_student_poll(request.form['email'], config.ImmutableMultiDict([('113', 113)]))
+		copy_request_form.pop('email')
+		db_commands.update_db_user(request.form['email'], copy_request_form)
+
+		return redirect(url_for('admin_get_all_users'))
+	except:
+		return False
+
+@app.route('/admin_show_user/<user_id>')
+def admin_show_user(user_id):
+	return render('admin_show_user.html', \
+		user=db_commands.get_db_user(user_id=user_id), \
+		user_points=db_commands.admin_calc_user_points(user_id=user_id, order=True), \
+		dialects=db_commands.get_student_poll_dialects())
 
 @app.route('/test')
 def test():
@@ -543,7 +583,7 @@ def test():
 	md.add(2, {11: 1})
 	md.add(2, {17: 3})
 	md.add(3, {1: 2})
-	print db_commands.check_if_in_md(md, 17, 1)
+	db_commands.check_if_in_md(md, 17, 1)
 	return 'hej'
 
 @app.errorhandler(403)
