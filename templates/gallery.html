@@ -1,8 +1,36 @@
 {% extends "template.html" %}
 {% block active_gallery %}active{% endblock %}
 {% block content %}
-<h1>Galleri</h1>
+    <h1>Galleri</h1>
+    <!-- Om album nyss lades till så visas meddelande -->
+    {% if notice == '1' %}
+        <span class="label label-inverse">Bra jobbat <span class="nollanfont">nollan</span>.
+            Ditt galleri inväntar bekräftelse från <span class="stabenfont">STABEN.</span>
+        </span>
+        <br>
+        <br>
+    {% endif %}
 
-<a href="/upload/{{ album_id }}">Album 1</a>
+    <!-- Om inloggad och godkänd användare så visas länk för att ladda upp -->
+    {% if session.role == 0 or session.role == 5%}
+        <a href="{{ url_for('upload') }}" class="btn btn-inverse">Ladda upp nytt album</a>
+        <br>
+        <br>
+    {% endif %}
 
+
+    <!-- Nedan så visas alla album hämtade från databasen -->
+
+    <ul class="thumbnails">
+        {% for a in albums %}
+            <li class="span3">
+                <div class="thumbnail" style="border-color: #cccccc">
+                    <a href="/gallery/album/{{ a.id }}">
+                        <img src="/static/upload/gallery/album_{{ a.id }}/thumbnail/{{ thumbnails[loop.index - 1].path }}" alt="Thumbnail för album med titel {{ a.title }}">
+                        <h3>{{ a.title }}</h3>
+                    </a>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
 {% endblock %}

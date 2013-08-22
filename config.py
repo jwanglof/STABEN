@@ -5,6 +5,7 @@ from flask import Flask, request, session, g, redirect, url_for, render_template
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.bcrypt import Bcrypt
 from flask.ext.mail import Mail, Message
+from flask.ext.uploads import IMAGES
 from sqlalchemy import Table, Column, Integer, String, Date, Time, Text, create_engine, asc
 from sqlalchemy.orm import relationship, backref, scoped_session, sessionmaker, aliased
 from sqlalchemy.ext.declarative import declarative_base
@@ -24,13 +25,14 @@ USERNAME = 'admin'
 PASSWORD = 'default'
 HOST = '127.0.0.1'
 
-UPLOAD_FOLDER = host_option.root_path + '/upload'
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
+UPLOADED_FILES_URL = host_option.root_path + '\upload\gallery'
+#UPLOADED_FILES_URL = 'upload/gallery'
+UPLOADED_FILES_ALLOW = IMAGES
 
 app = Flask(__name__)
 app.secret_key = SECRET_KEY
 app.debug = DEBUG
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['UPLOAD_FOLDER'] = UPLOADED_FILES_URL
 bcrypt = Bcrypt(app)
 db = SQLAlchemy(app)
 app.config.setdefault('MAIL_SERVER', 'smtp.gmail.com')

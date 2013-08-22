@@ -1,0 +1,28 @@
+{% extends "template.html" %}
+{% block active_gallery %}active{% endblock %}
+{% block content %}
+<h1>{{ album.title }}</h1>
+    <p>Datum då fotona togs: {{ album.date }}</p>
+    <h4>{{ album.description|safe }}</h4>
+    <div id="links">
+        {% for p in photos %}
+        <a href="/static/upload/gallery/album_{{ album_id }}/{{ p.path }}" title="{{ p.description }}">
+            <img src="/static/upload/gallery/album_{{ album_id }}/thumbnail/{{ p.path }}" alt="{{ p.description|safe }}">
+        </a>
+        {% endfor %}
+    </div>
+    <br>
+    <a href="/gallery">Tillbaks till galleriet</a>
+
+    <!-- The Gallery as lightbox dialog, should be a child element of the document body -->
+    <div id="blueimp-gallery" class="blueimp-gallery">
+        <div class="slides"></div>
+        <h3 class="title"></h3>
+        <a class="prev">‹</a>
+        <a class="next">›</a>
+        <a class="close">×</a>
+        <a class="play-pause"></a>
+        <ol class="indicator"></ol>
+    </div>
+
+{% endblock %}

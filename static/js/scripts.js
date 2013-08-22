@@ -68,6 +68,21 @@ $(document).ready(function() {
 			$('.admin_student_poll_show_hide').text('Press to collapse!')
 		}
 	});
+
+    $(function() {
+        var elem = $("#chars_upload");
+        $("#description_upload").limiter(100, elem);
+    });
+
+    $(function() {
+        var elem = $("#chars_album_info");
+        $("#description_album_info").limiter(50, elem);
+    });
+
+    $('#datepicker').datetimepicker({
+        weekStart: 1,
+        pickTime: false
+    });
 });
 
 function show_school_class() {

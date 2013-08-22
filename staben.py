@@ -1,5 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+import os
+import Image
+from werkzeug.utils import secure_filename
 
 import config
 #import model
@@ -101,9 +104,69 @@ def schedule(show_week='1'):
 	schedule = db_commands.get_schedule(show_week)
 	return render('schedule.html', week=show_week, schedule=schedule)
 
+@app.route('/gallery/album/<album_id>')
+@app.route('/gallery/<notice>')
 @app.route('/gallery')
-def gallery():
-	return render('gallery.html')
+def gallery(album_id=0, notice='0'):
+	if album_id != 0:
+		album = db_commands.get_a_album(album_id)
+		photos = db_commands.get_all_pic_from_album(album_id)
+		return render('album.html', album=album, photos=photos, album_id=album_id)
+	albums = db_commands.get_all_albums(1)
+	thumbnails = []
+	uploaders = []
+	if albums is not None:
+		for a in albums:
+			thumbnails.append(db_commands.get_thumbnail(a.id))
+			uploaders.append(db_commands.get_user_name(a.fk_user_id))
+	return render('gallery.html', albums=albums, thumbnails=thumbnails, uploaders=uploaders, notice=notice)
+
+@app.route('/album_info', methods=['POST'])
+def album_info():
+	if request.method == 'POST':
+		pic = request.form.getlist("picture_id")
+		desc = request.form.getlist("description")
+		for i,p in enumerate(pic):
+			db_commands.update_picture(int(p), desc[i])
+	notice = 1
+	return redirect(url_for('gallery', notice=notice))
+
+@app.route('/upload', methods=['GET','POST'])
+def upload():
+	user = db_commands.get_db_user(db_user_email=session['email'])
+	if request.method == 'POST':
+		title = request.form['title']
+		description = request.form['description']
+		uploader = request.form['uploader']
+		date = request.form['date']
+
+		#Haha visa ej för nollan, ju
+		time = '13:37:00'
+
+		album_id_int = db_commands.save_album(uploader, date, time, title, description, 0)
+		album_id = 'album_' + str(album_id_int)
+
+		photos = request.files.getlist('file[]')
+		photo_paths = []
+		photo_ids = []
+		for p in photos:
+			album_path = 'static/upload/gallery/' + album_id
+			if not os.path.exists(album_path):
+				os.makedirs(album_path)
+			path = album_path + '/' + secure_filename(p.filename)
+			photo_paths.append(secure_filename(p.filename))
+			p.save(path)
+			p_thumb = Image.open(path)
+			p_thumb.thumbnail((200,200), Image.ANTIALIAS)
+			p_thumb_path = album_path + '/thumbnail'
+			if not os.path.exists(p_thumb_path):
+				os.makedirs(p_thumb_path)
+			p_thumb_filename = p_thumb_path + '/' + p.filename
+			p_thumb.save(p_thumb_filename)
+			p_id = db_commands.save_picture(uploader, album_id_int, date, time, secure_filename(p.filename), 'Beskrivning')
+			photo_ids.append(p_id)
+		return render('album_info.html', photo_ids=photo_ids, photo_paths=photo_paths,album_id=album_id)
+	return render('upload.html',user=user)
 
 @app.route('/blog')
 def blog():
@@ -540,4 +603,4 @@ def shutdown_session(exception=None):
 	config.db_session.remove()
 
 if __name__ == '__main__':
-	app.run(host=config.HOST, debug=config.DEBUG)
+	app.run(host=config.HOST, debug=config.host_option.DEBUG)

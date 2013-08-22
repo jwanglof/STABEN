@@ -149,6 +149,53 @@ def check_if_email_exist(email):
 	else:
 		return False
 
+def get_all_albums(approved):
+	albums = models.GalleryAlbum.query.filter_by(approved=approved).all()
+	return albums
+
+def get_a_album(album_id):
+	album = models.GalleryAlbum.query.filter_by(id=album_id).first()
+	return album
+
+def get_all_pic_from_album(album_id):
+	pictures = models.GalleryPicture.query.filter_by(fk_gallery_album_id=album_id).all()
+	return pictures
+
+def get_thumbnail(album_id):
+	thumbnail = models.GalleryPicture.query.filter_by(fk_gallery_album_id=album_id).first()
+	return thumbnail
+
+def save_album(uploader, date, time, title, description, approved):
+	user_id = models.User.query.filter_by(email=uploader).first().id
+	try:
+		album = models.GalleryAlbum(user_id, date, time, title, description, approved)
+		db_session.add(album)
+		db_session.commit()
+		album_id = models.GalleryAlbum.query.filter_by(fk_user_id=user_id, date=date, time=time, title=title).first().id
+		return album_id
+	except:
+		return False
+
+def save_picture(uploader, album_id, date, time, path, description):
+	user_id = models.User.query.filter_by(email=uploader).first().id
+	picture = models.GalleryPicture(user_id, album_id, date, time, path, description)
+	db_session.add(picture)
+	db_session.commit()
+	picture_id = models.GalleryPicture.query.filter_by(fk_user_id=user_id, fk_gallery_album_id=album_id, date=date, time=time, path=path).first().id
+	return picture_id
+
+def update_picture(pic_id, description):
+	print pic_id
+	print description
+	models.GalleryPicture.query.filter_by(id=pic_id).update({"description": description})
+	db_session.commit()
+
+def get_user_name(user_id):
+	first_name = models.UserInformation.query.filter_by(fk_user_id=user_id).first().firstname
+	last_name = models.UserInformation.query.filter_by(fk_user_id=user_id).first().lastname
+	name = first_name + ' ' + last_name
+	return name
+
 def get_class_mates(db_user_email):
 	db_user = models.User.query.filter_by(email=db_user_email).first()
 	if db_user.r_user_information.school_program > 0:

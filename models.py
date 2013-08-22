@@ -112,13 +112,14 @@ class GalleryAlbum(Base):
 	r_gallery_comment = db.relationship('GalleryComment', backref='GalleryAlbum')
 	r_blog = db.relationship('Blog', backref='GalleryAlbum')
 
-	def __init__(self, fk_user_id, date, time, title, description=None):
+	def __init__(self, fk_user_id, date, time, title, description=None, approved = 0):
 		"""The constructor"""
 		self.fk_user_id = fk_user_id
 		self.date = date
 		self.time = time
 		self.title = title
 		self.description = description
+		self.approved = approved
 
 class GalleryPicture(Base):
 	__tablename__ = 'gallery_picture'

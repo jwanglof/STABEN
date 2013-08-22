@@ -1,0 +1,23 @@
+{% extends "template.html" %}
+{% block active_gallery %}active{% endblock %}
+{% block content %}
+    <form method="POST" action="{{ url_for('album_info') }}">
+    {% for p in photo_paths %}
+        <br>
+        <input type="hidden" name="picture_id" id="index" value="{{ photo_ids[loop.index - 1] }}">
+        <label for="description_album_info">Beskrivning (max 50 tecken)</label>
+        <textarea name="description" id="description_album_info" placeholder="Beskrivning" maxlength="50"
+                  rows="2" cols="70" style="resize: none"></textarea>
+        <br>
+        <p style="display: inline">Antal tecken kvar: </p>
+        <div id="chars_album_info" style="display: inline">50</div>
+        <br>
+        <a href="/static/upload/gallery/{{ album_id }}/{{ p }}" target="_blank">
+            <img src="/static/upload/gallery/{{ album_id }}/thumbnail/{{ p }}"></a>
+        <br>
+        <p>------------------------------------------</p>
+    {% endfor %}
+    <br>
+    <input type="submit" value="Spara information om ovanstående bilder">
+    </form>
+{% endblock %}

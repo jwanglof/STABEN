@@ -1,0 +1,36 @@
+{% extends "template.html" %}
+{% block active_gallery %}active{% endblock %}
+{% block content %}
+    <p>Fyll i formuläret nedan för att skapa ett nytt album.
+        På nästa sida så får du möjlighet att fylla i beskrivning av respektive bild.</p>
+    <p>Ditt namn sparas och kommer visas som skapare av detta album.</p>
+    <p>OBS! Sträva efter att skapa ett album per aktivitet.</p>
+    <p>Se till att fylla i alla rutor.</p>
+    <br>
+    <form method=POST enctype=multipart/form-data action="{{ url_for('upload') }}">
+        <label for="title">Titel för album</label>
+        <input type="text" name="title" id="title" placeholder="Titel" />
+        <p>Ange datum då fotona togs</p>
+        <div id="datepicker" class="input-append">
+            <input data-format="yyyy-MM-dd" type="text" name="date" id="date" />
+            <span class="add-on">
+              <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+              </i>
+            </span>
+        </div>
+        <label for="description_upload">Beskrivning (max 100 tecken)</label>
+        <textarea name="description" maxlength="100" id="description_upload" placeholder="Beskrivning"
+                  style="resize: none" cols="10" rows="5"></textarea>
+        <br>
+        <p style="display: inline">Antal tecken kvar: </p>
+        <div id="chars_upload" style="display: inline">100</div>
+        <br>
+        <br>
+        <input type=file multiple name="file[]" style="border: none">
+        <br>
+        <input type="hidden" value="{{ session.email }}" name="uploader" id="uploader">
+        <button type="submit" class="btn btn-inverse">
+            Ladda upp de valda bilderna
+        </button>
+    </form>
+{% endblock %}

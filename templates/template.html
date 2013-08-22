@@ -6,6 +6,8 @@
     <title>STABEN</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap-datetimepicker.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='gallery/css/blueimp-gallery.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style_form.css') }}" />
 
@@ -115,7 +117,37 @@
     <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/jquery.validate.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/galleria/galleria-1.2.9.js') }}"></script>
+    <script src="{{ url_for('static', filename='gallery/js/blueimp-gallery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.tinylimiter.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap-datetimepicker.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+
+    <!-- Le gallery -->
+    <script>
+        document.getElementById('links').onclick = function (event) {
+            event = event || window.event;
+            var target = event.target || event.srcElement,
+                    link = target.src ? target.parentNode : target,
+                    options = {index: link, event: event},
+                    links = this.getElementsByTagName('a');
+            blueimp.Gallery(links, options);
+        };
+    </script>
+    <!-- Le textLimiter
+    <script>
+        $(document).ready( function() {
+            var elem = $("#chars");
+            $("#description").limiter(50, elem);
+        });
+    </script>
+    <script type="text/javascript">
+
+        $(function() {
+            $('#datepicker').datetimepicker({
+                weekStart: 1,
+                pickTime: false
+            });
+        });
+    </script>-->
 </body>
 </html>
