@@ -1,0 +1,14 @@
+{% extends "template.html" %}
+{% block content %}
+<h3>{{ user['info'].firstname }} {{ user['info'].lastname }}</h3>
+Program: {{ user['info'].school_program }}
+<br /><br />
+<b>Grupper i fallande ordning:</b>
+{% for dialect_id, point in user_points.iteritems() %}
+	<p>
+		Nollegrupp: {{ dialects[dialect_id-1].dialect }}
+		<br />
+		Poäng: {{ point }}
+	</p>
+{% endfor %}
+{% endblock %}

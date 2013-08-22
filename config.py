@@ -23,7 +23,7 @@ DEBUG = True
 SECRET_KEY = ':\xbe\xef\xc9\xbf\xf6\x86\x8d\xeb\x90\xa5!+\x97i\xa38\xe0\x98\x7f\xec\xca*\x8c'
 USERNAME = 'admin'
 PASSWORD = 'default'
-HOST = '127.0.0.1'
+HOST = '0.0.0.0'
 
 UPLOADED_FILES_URL = host_option.root_path + '\upload\gallery'
 #UPLOADED_FILES_URL = 'upload/gallery'
@@ -31,6 +31,8 @@ UPLOADED_FILES_ALLOW = IMAGES
 
 app = Flask(__name__)
 app.secret_key = SECRET_KEY
+# app.debug = DEBUG
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.debug = DEBUG
 app.config['UPLOAD_FOLDER'] = UPLOADED_FILES_URL
 bcrypt = Bcrypt(app)

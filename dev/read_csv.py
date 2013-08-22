@@ -19,7 +19,7 @@ class ReadStudentPollCsvFile():
 
 	# Check so that row doesn't contain any 'illegal' characters
 	def check(self, row):
-		if row[:1] == ',' or row == 'SUmma' or row == 'Summa' or row == '':
+		if row[:1] == ',' or row == 'SUmma' or row == 'Summa' or row == '' or row == 'Summa':
 			return False
 		else:
 			return True
@@ -49,6 +49,7 @@ class ReadStudentPollCsvFile():
 			for row in reader:
 				if self.check(row[0]) and row[0][:1].isupper():
 					if i > 0:
+						print question_list
 						questions[i] = question_list
 						question_list = []
 					i += 1

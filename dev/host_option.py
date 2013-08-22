@@ -4,7 +4,7 @@ local = True
 dev = True
 
 if local:
-	dbhost = '127.0.0.1'
+	dbhost = '0.0.0.0'
 	dbuser = 'STABEN'
 	dbpass = 'generalhenrik'
 	dbname = 'STABEN'

@@ -22,9 +22,9 @@ flash = config.flash
 redirect = config.redirect
 
 debug = debug.debug
-async = decorators.async
+# async = decorators.async
 
-static_texts = {'nollan': '<span class="nollanfont">minus</span>', 'nollans': '<span class="nollanfont">nollans</span>', 'staben': '<span class="stabenfont">STABEN</span>'}
+static_texts = {'nollan': '<span class="nollanfont">nollan</span>', 'nollans': '<span class="nollanfont">nollans</span>', 'staben': '<span class="stabenfont">STABEN</span>'}
 
 # Make get_quote() callable from a template. Used in template.html
 def get_quote():
@@ -34,6 +34,49 @@ def get_quote():
 	else:
 		return False
 config.app.jinja_env.globals.update(get_quote=get_quote)
+
+def random_string(length=12):
+	lst = [random.choice(string.ascii_letters + string.digits) for n in xrange(length)]
+	return ''.join(lst)
+
+def send_email(recipients, subject, email_body=None, html_body=None):
+	try:
+		msg = config.Message(subject)
+		msg.recipients = recipients
+		if email_body:
+			msg.body = email_body
+		elif html_body:
+			msg.html = html_body
+		# send_async_email(msg)
+		config.mail.send(msg)
+		return True
+	except:
+		return False
+
+# Can not use this on CYD!
+# @async
+# def send_async_email(msg):
+# 	config.mail.send(msg)
+
+def add_session(db_user):
+	config.session['email'] = db_user['user'].email
+	config.session['role'] = db_user['user'].role
+	config.session['school_program'] = db_commands.get_user_school_program(db_user['user'].email)
+
+	if db_user['info'].finished_profile:
+		config.session['finished_profile'] = True
+	else:
+		config.session['finished_profile'] = False
+
+	if db_user['info'].poll_done:
+		config.session['poll_done'] = True
+	else:
+		config.session['poll_done'] = False
+
+	return True
+
+def edit_session(session_value, value):
+	config.session[session_value] = value
 
 if config.host_option.dev:
 	@app.route('/db_all')
@@ -72,26 +115,6 @@ if config.host_option.dev:
 	def db_student_poll():
 		return db_commands.create_student_poll()
 
-def add_session(db_user):
-	config.session['email'] = db_user['user'].email
-	config.session['role'] = db_user['user'].role
-	config.session['school_program'] = db_commands.get_user_school_program(db_user['user'].email)
-
-	if db_user['info'].finished_profile:
-		config.session['finished_profile'] = True
-	else:
-		config.session['finished_profile'] = False
-
-	if db_user['info'].poll_done:
-		config.session['poll_done'] = True
-	else:
-		config.session['poll_done'] = False
-
-	return True
-
-def edit_session(session_value, value):
-	config.session[session_value] = value
-
 @app.route('/')
 def index():
 	return render('index.html', session=session, bla=config.user_roles, st=static_texts)
@@ -102,7 +125,7 @@ def prices():
 
 @app.route('/schedule')
 @app.route('/schedule/<show_week>')
-def schedule(show_week='1'):
+def schedule(show_week=1):
 	schedule = db_commands.get_schedule(show_week)
 	return render('schedule.html', week=show_week, schedule=schedule)
 
@@ -217,6 +240,8 @@ def login():
 						redirect_to = 'profile_edit'
 
 					return redirect(url_for(redirect_to, user_email=request.form['email']))
+				else:
+					return 'Ojoj, detta var ju inte korrekt!'
 			else:
 				return render('login.html', login=False)
 		else:
@@ -347,28 +372,6 @@ def forgot_password(code=None):
 	else:
 		return render('forgot_password.html')
 
-def random_string(length=12):
-	lst = [random.choice(string.ascii_letters + string.digits) for n in xrange(length)]
-	return ''.join(lst)
-
-def send_email(recipients, subject, email_body=None, html_body=None):
-	try:
-		msg = config.Message(subject)
-		msg.recipients = recipients
-		if email_body:
-			msg.body = email_body
-		elif html_body:
-			msg.html = html_body
-		send_async_email(msg)
-		# config.mail.send(msg)
-		return True
-	except:
-		return False
-
-@async
-def send_async_email(msg):
-	config.mail.send(msg)
-
 @app.route('/student_badge')
 def student_badge():
 	return render('student_badge.html')
@@ -448,17 +451,12 @@ def profile_save_password(user_email):
 @app.route('/profile/<user_email>/class/<school_program>')
 def profile_class(user_email, school_program):
 	if session and user_email == session['email']:
-		class_mates = db_commands.get_class_mates(user_email)
 		program_users = db_commands.get_school_program_users(school_program)
-		if class_mates:
-			# user_school_program = db_commands.get_user_school_program(user_email)
-			return render('profile_class.html', \
-				class_mates=class_mates, \
-				user_school_program=session['school_program'], \
-				chosen_school_program=school_program, \
-				program_users=program_users)
-		else:
-			return render('profile_class.html', class_mates=False)
+		# Set school_program to D if the user has not updated his profile
+		return render('profile_class.html', \
+			user_school_program=session['school_program'], \
+			chosen_school_program=school_program if school_program != str(0) else 'D', \
+			program_users=program_users)
 	else:
 		return render('login.html', login=False)
 
@@ -580,6 +578,9 @@ def admin_student_poll_save(command):
 @app.route('/admin_student_poll_result')
 def admin_student_poll_result():
 	if db_commands.check_role(session['email']) is 0:
+		#, \
+		# dialects=db_commands.get_student_poll_dialects(), \
+		# user_w_points=db_commands.admin_get_top_three_groups()
 		return render('admin_student_poll_result.html', \
 			users_info=db_commands.admin_get_all_users_w_poll_done(), \
 			dialects=db_commands.get_student_poll_dialects(), \
@@ -603,9 +604,62 @@ def admin_show_student_poll_result(user_id):
 @app.route('/admin_insert_user_to_group', methods=['POST'])
 def admin_insert_user_to_group():
 	if request.method == 'POST':
-		db_commands.admin_insert_user_to_group()
-		flash(u'ALLA ANVÄNDARE HAR EN EGEN GRUPP. WOOOOOOHOOOOOOOOOO!!')
-		return redirect(url_for('admin_student_poll'))
+		print db_commands.admin_insert_user_to_group()
+		
+		# REPLACE THE FINISHED MD WITH THIS::::::
+		# users = db_commands.admin_get_all_users()
+		# return render('admin_student_poll_show_assigned_groups.html', \
+		# 	md=db_commands.admin_insert_user_to_group(), \
+		# 	users=users, \
+		# 	dialects=db_commands.get_student_poll_dialects(), \
+		# 	school_programs=db_commands.get_school_programs())
+
+@app.route('/admin_edit_user/<user_id>')
+def admin_edit_user(user_id):
+	return render('admin_edit_user.html', user=db_commands.get_db_user(user_id=user_id))
+
+@app.route('/admin_edit_user/save/<user_id>', methods=['POST'])
+def admin_edit_user_save(user_id):
+	try:
+		copy_request_form = request.form.copy()
+		if 'bicycle' in request.form:
+			copy_request_form.pop('bicycle')
+			copy_request_form.add('bicycle', 1)
+
+		if '110' in request.form:
+			db_commands.save_student_poll(request.form['email'], config.ImmutableMultiDict([('110', 110)]))
+		if '111' in request.form:
+			db_commands.save_student_poll(request.form['email'], config.ImmutableMultiDict([('111', 111)]))
+		if '112' in request.form:
+			db_commands.save_student_poll(request.form['email'], config.ImmutableMultiDict([('112', 112)]))
+		if '113' in request.form:
+			db_commands.save_student_poll(request.form['email'], config.ImmutableMultiDict([('113', 113)]))
+		copy_request_form.pop('email')
+		db_commands.update_db_user(request.form['email'], copy_request_form)
+
+		return redirect(url_for('admin_get_all_users'))
+	except:
+		return False
+
+@app.route('/admin_show_user/<user_id>')
+def admin_show_user(user_id):
+	return render('admin_show_user.html', \
+		user=db_commands.get_db_user(user_id=user_id), \
+		user_points=db_commands.admin_calc_user_points(user_id=user_id, order=True), \
+		dialects=db_commands.get_student_poll_dialects())
+
+@app.route('/test')
+def test():
+	# DialectID: [{UserID: Position}]
+	md = config.MultiDict()
+	md.add(2, {1: 3})
+	md.add(2, {2: 1})
+	md.add(2, {10: 2})
+	md.add(2, {11: 1})
+	md.add(2, {17: 3})
+	md.add(3, {1: 2})
+	db_commands.check_if_in_md(md, 17, 1)
+	return 'hej'
 
 @app.route('/admin_approve_album/<album_id>', methods=['GET','POST'])
 @app.route('/admin_approve_album', methods=['GET','POST'])
@@ -641,7 +695,6 @@ def page_not_found(e):
 @app.errorhandler(500)
 def page_not_found(e):
     return render('error.html', st=static_texts), 500
-
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):

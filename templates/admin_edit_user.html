@@ -1,0 +1,42 @@
+{% extends "template.html" %}
+{% block content %}
+<h3>{{ user['info'].firstname }} {{ user['info'].lastname }}</h3>
+<form method='post' action='{{ url_for('admin_edit_user_save', user_id=user['user'].id) }}'>
+	<input type='hidden' name='email' value='{{ user['user'].email }}' />
+	Dubbelkolla allergier <br />
+	<input type='text' id='allergies' name='allergies' value='{{ user['info'].allergies }}' /> <br />
+<br />
+	Vegan/Vegetarian <br />
+	<select name='food_preference'>
+		<option value='0' {% if user['info'].food_preference == 0 %}selected{% endif %}></option>
+		<option value='1' {% if user['info'].food_preference == 1 %}selected{% endif %}>Vegetarian</option>
+		<option value='2' {% if user['info'].food_preference == 2 %}selected{% endif %}>Vegan</option>
+	</select>
+<br />
+	Är detta din rätta adress? <br />
+	<input type='text' name='current_city' value='{{ user['info'].current_city }}' /> <br />
+<br />
+
+	Har du cykel?
+	<input type='checkbox' name='bicycle' {% if user['info'].bicycle == 1 %}value='0' checked='checked'{% elif user['info'].bicycle == 0 %}value='1'{% endif %} />
+<br />
+<br />
+Nolleenkät:
+<br />
+Hur mycket bänkar du? Gillar du att träna? (Lek och atlet)
+<input type='checkbox' name='110' value='7' />
+<br />
+Gillar du att uppträda inför folk? (G3, Gyckel, Spex)
+<input type='checkbox' name='111' value='7' />
+<br />
+Gillar du att spela något instrument? Sjunga? (G3, Gyckel, Spex)
+<input type='checkbox' name='111' value='7' />
+<br />
+Gillar du att instruera på midsommarlekarna? (BRAK, D-cup)
+<input type='checkbox' name='112' value='7' />
+<br />
+Tycker du om att bli utmanad? (Challenge accepted)
+<input type='checkbox' name='113' value='7' />
+<input type='submit' value='Skicka' />
+</form>
+{% endblock %}

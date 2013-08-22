@@ -1,0 +1,21 @@
+{% extends "template.html" %}
+{% block content %}
+{% for dialect_id, content in md.iteritems() %}
+	<h1>{{ dialects[dialect_id-1].dialect }}</h1>
+	<div class='span12' style='margin-bottom: 10px;'>
+	{% for user_id, point in content.iteritems() %}
+			<p>
+			<a href='{{ url_for('admin_show_user', user_id=user_id) }}'>
+				{{ users[user_id-1].r_user_information.firstname }} {{ users[user_id-1].r_user_information.lastname }}
+			</a>
+			<br />
+			Program: {{ users[user_id-1].r_user_information.school_program }}
+			<br />
+			AnvändarID: {{ user_id }}
+			<br />
+			Poäng: {{ point }}
+			</p>
+	{% endfor %}
+	</div>
+{% endfor %}
+{% endblock %}

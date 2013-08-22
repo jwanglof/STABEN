@@ -18,11 +18,11 @@
 			<h4>{{ i }}</h4>
 			<div class='percent_width'>
 			{% for question_id, inner_content in content.iteritems() %}
-				<div style='float: left; width: 230px; border-bottom: 1px solid #000; {% if user[question_id] %} font-weight: bold; {% endif %}'>
+				<div style='float: left; width: 230px; border-bottom: 1px solid #fff; {% if user[question_id] %} font-weight: bold; {% endif %}'>
 					{{ inner_content['question'][:25] }}
 				</div>
 				{% for dialect_index in range(1, number_of_dialects+1) %}
-					<div style='width: 100px; float: left; border-left: 1px solid #000; border-bottom: 1px solid #000; text-align: center'>
+					<div style='width: 100px; float: left; border-left: 1px solid #fff; border-bottom: 1px solid #fff; text-align: center'>
 					{% if inner_content['points'][dialect_index] %}
 						{{ inner_content['points'][dialect_index] }}
 					{% else %}
@@ -43,7 +43,7 @@
 			<h3>Totalt</h3>
 		</div>
 		{% for dialect_id, total_point in user_points.iteritems() %}
-			<div style='width: 100px; float: left; border-left: 1px solid #000; border-bottom: 1px solid #000; text-align: center'>
+			<div style='width: 100px; float: left; border-left: 1px solid #fff; border-bottom: 1px solid #fff; text-align: center'>
 				<h3>{{ total_point }}</h3>
 			</div>
 		{% endfor %}

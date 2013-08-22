@@ -402,6 +402,8 @@ class UserInformation(Base):
 	"""User information-table
 
 	Contains a user's information. Connected with User with fk_user_id
+
+	!!!! school_program and school_class should be fk !!!!
 	"""
 	
 	__tablename__ = 'user_information'
@@ -423,6 +425,7 @@ class UserInformation(Base):
 	poll_done = db.Column(db.SmallInteger(), default=0)
 	finished_profile = db.Column(db.SmallInteger(), default=0)
 	recover_code = db.Column(db.String(50))
+	bicycle = db.Column(db.SmallInteger(), default=0)
 	fk_student_dialect = db.Column(db.Integer, db.ForeignKey('student_poll_dialect.id'))
 
 	def __init__(self, user_id=None, presentation=None):
