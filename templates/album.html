@@ -1,39 +1,67 @@
 {% extends "template.html" %}
 {% block active_gallery %}active{% endblock %}
 {% block content %}
-<h1>{{ album.title }}</h1>
-    {% if session.role == 5 or session.role == 0%}
-        <a href="/album_info/{{ album_id }}" class="btn btn-inverse"> Redigera detta album</a>
-    {% endif %}
-    <p>Datum då fotona togs: {{ album.date }}</p>
-    <p>Album skapat av: {{ uploader }}</p>
-    <h4>{{ album.description|safe }}</h4>
-    <div id="links">
-        {% for p in photos %}
-        <a href="/static/upload/gallery/album_{{ album_id }}/{{ p.path }}" title="{{ p.description }}">
-            <img src="/static/upload/gallery/album_{{ album_id }}/thumbnail/{{ p.path }}" alt="{{ p.description|safe }}">
-        </a>
-        {% endfor %}
-    </div>
-    <br>
-    {% if admin_approve %}
-        <form method="POST" action="{{ url_for('admin_approve_album') }}">
-            <input type="hidden" name="album_id" id="album_id" value="{{ album_id }}">
-            <button type="submit" class="btn btn-inverse"><span class="stabenfont">STABEN</span> approves!</button>
-        </form>
-        <a href="/admin_approve_album">Tillbaks till att godkänna album</a>
+    {% if album %}
+        <h1>{{ album.title }}</h1>
+        {% if session.role == 5 or session.role == 0%}
+            <span class="label label-important">Om du vill radera detta album så använd knappen längst ned på sidan.</span>
+            <br>
+            <br>
+            <a href="/album_info/{{ album_id }}" class="btn btn-inverse"> Redigera detta album</a>
+        {% endif %}
+        <p>Datum då fotona togs: {{ album.date }}</p>
+        <p>Album skapat av: {{ uploader }}</p>
+        <h4>{{ album.description|safe }}</h4>
+        <div id="links">
+            {% for p in photos %}
+            <a href="/static/upload/gallery/album_{{ album_id }}/{{ p.path }}" title="{{ p.description }}">
+                <img src="/static/upload/gallery/album_{{ album_id }}/thumbnail/{{ p.path }}" alt="{{ p.description|safe }}">
+            </a>
+            {% endfor %}
+        </div>
         <br>
+        {% if admin_approve %}
+            <form method="POST" action="{{ url_for('admin_approve_album') }}">
+                <input type="hidden" name="album_id" id="album_id" value="{{ album_id }}">
+                <button type="submit" class="btn btn-inverse"><span class="stabenfont">STABEN</span> approves!</button>
+            </form>
+            <a href="/admin_approve_album">Tillbaks till att godkänna album</a>
+            <br>
+        {% endif %}
+        <a href="/gallery">Tillbaks till galleriet</a>
+        <br>
+        <br>
+        <div id="blueimp-gallery" class="blueimp-gallery">
+            <div class="slides"></div>
+            <h3 class="title"></h3>
+            <a class="prev">‹</a>
+            <a class="next">›</a>
+            <a class="close">×</a>
+            <a class="play-pause"></a>
+            <ol class="indicator"></ol>
+        </div>
+
+        {% if session.role == 0 or session.role == 5 %}
+            <br>
+            <br>
+            <div id="delete_album" class="modal hide fade in" style="color: #000000">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal">×</a>
+                    <h3>Är du säker på att du vill ta bort detta album?</h3>
+                </div>
+                <div class="modal-body">
+                    <p>Denna borttagning går inte att ångra!</p>
+                </div>
+                <div class="modal-footer">
+                    <a href="/delete_album/{{ album_id }}" class="btn btn-danger">Ta bort album</a>
+                    <a href="#" class="btn" data-dismiss="modal">Avbryt</a>
+                </div>
+            </div>
+            <p>
+                <a data-toggle="modal" href="#delete_album" class="btn btn-danger btn-large">Ta bort album</a>
+            </p>
+            <br>
+            <br>
+        {% endif %}
     {% endif %}
-    <a href="/gallery">Tillbaks till galleriet</a>
-    <br>
-    <br>
-    <div id="blueimp-gallery" class="blueimp-gallery">
-        <div class="slides"></div>
-        <h3 class="title"></h3>
-        <a class="prev">‹</a>
-        <a class="next">›</a>
-        <a class="close">×</a>
-        <a class="play-pause"></a>
-        <ol class="indicator"></ol>
-    </div>
 {% endblock %}

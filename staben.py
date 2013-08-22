@@ -125,7 +125,6 @@ def gallery(album_id=0, notice='0'):
 @app.route('/album_info/<album_id>', methods=['GET','POST'])
 @app.route('/album_info', methods=['POST'])
 def album_info(album_id=0):
-	notice = 0
 	if album_id != 0:
 		album = db_commands.get_a_album(album_id)
 		pictures = db_commands.get_all_pic_from_album(album_id)
@@ -136,8 +135,13 @@ def album_info(album_id=0):
 		desc = request.form.getlist("description")
 		for i,p in enumerate(pic):
 			db_commands.update_picture(int(p), desc[i])
-		notice = 1
+	notice = 1
 	return redirect(url_for('gallery', notice=notice))
+
+@app.route('/delete_album/<album_id>')
+def delete_alum(album_id):
+	db_commands.delete_album(album_id)
+	return redirect(url_for('gallery'))
 
 @app.route('/upload', methods=['GET','POST'])
 def upload():

@@ -71,17 +71,12 @@ $(document).ready(function() {
 
     $(function() {
         var elem = $("#chars_upload");
-        $("#description_upload").limiter(100, elem);
+        $("#description_upload").limiter(200, elem);
     });
 
     $(function() {
         var elem = $("#chars_album_info");
         $("#description_album_info").limiter(50, elem);
-    });
-
-    $(function() {
-        var elem = $("#chars_album_info_edit");
-        $("#description_album_info_edit").limiter(50, elem);
     });
 
     $('#datepicker').datetimepicker({

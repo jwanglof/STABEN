@@ -18,15 +18,16 @@
               </i>
             </span>
         </div>
-        <label for="description_upload">Beskrivning (max 100 tecken)</label>
-        <textarea name="description" maxlength="100" id="description_upload" placeholder="Beskrivning"
+        <label for="description_upload">Beskrivning (max 200 tecken)</label>
+        <textarea name="description" maxlength="200" id="description_upload" placeholder="Beskrivning"
                   style="resize: none" cols="10" rows="5"></textarea>
         <br>
         <p style="display: inline">Antal tecken kvar: </p>
-        <div id="chars_upload" style="display: inline">100</div>
+        <div id="chars_upload" style="display: inline">200</div>
         <br>
         <br>
         <input type=file multiple name="file[]" style="border: none">
+        <br>
         <br>
         <input type="hidden" value="{{ session.email }}" name="uploader" id="uploader">
         <button type="submit" class="btn btn-inverse">

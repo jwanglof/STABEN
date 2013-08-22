@@ -185,6 +185,12 @@ def album_approve(album_id):
 	models.GalleryAlbum.query.filter_by(id=album_id).update({"approved": 1})
 	db_session.commit()
 
+def delete_album(album_id):
+	album = models.GalleryAlbum.query.filter_by(id=album_id).first()
+	db_session.delete(album)
+	db_session.commit()
+	return True
+
 def get_user_name(user_id):
 	first_name = models.UserInformation.query.filter_by(fk_user_id=user_id).first().firstname
 	last_name = models.UserInformation.query.filter_by(fk_user_id=user_id).first().lastname
