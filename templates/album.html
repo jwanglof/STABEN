@@ -2,7 +2,11 @@
 {% block active_gallery %}active{% endblock %}
 {% block content %}
 <h1>{{ album.title }}</h1>
+    {% if session.role == 5 or session.role == 0%}
+        <a href="/album_info/{{ album_id }}" class="btn btn-inverse"> Redigera detta album</a>
+    {% endif %}
     <p>Datum då fotona togs: {{ album.date }}</p>
+    <p>Album skapat av: {{ uploader }}</p>
     <h4>{{ album.description|safe }}</h4>
     <div id="links">
         {% for p in photos %}
@@ -12,9 +16,17 @@
         {% endfor %}
     </div>
     <br>
+    {% if admin_approve %}
+        <form method="POST" action="{{ url_for('admin_approve_album') }}">
+            <input type="hidden" name="album_id" id="album_id" value="{{ album_id }}">
+            <button type="submit" class="btn btn-inverse"><span class="stabenfont">STABEN</span> approves!</button>
+        </form>
+        <a href="/admin_approve_album">Tillbaks till att godkänna album</a>
+        <br>
+    {% endif %}
     <a href="/gallery">Tillbaks till galleriet</a>
-
-    <!-- The Gallery as lightbox dialog, should be a child element of the document body -->
+    <br>
+    <br>
     <div id="blueimp-gallery" class="blueimp-gallery">
         <div class="slides"></div>
         <h3 class="title"></h3>
@@ -24,5 +36,4 @@
         <a class="play-pause"></a>
         <ol class="indicator"></ol>
     </div>
-
 {% endblock %}

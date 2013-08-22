@@ -150,31 +150,24 @@ def check_if_email_exist(email):
 		return False
 
 def get_all_albums(approved):
-	albums = models.GalleryAlbum.query.filter_by(approved=approved).all()
-	return albums
+	return models.GalleryAlbum.query.filter_by(approved=approved).all()
 
 def get_a_album(album_id):
-	album = models.GalleryAlbum.query.filter_by(id=album_id).first()
-	return album
+	return models.GalleryAlbum.query.filter_by(id=album_id).first()
 
 def get_all_pic_from_album(album_id):
-	pictures = models.GalleryPicture.query.filter_by(fk_gallery_album_id=album_id).all()
-	return pictures
+	return models.GalleryPicture.query.filter_by(fk_gallery_album_id=album_id).all()
 
 def get_thumbnail(album_id):
-	thumbnail = models.GalleryPicture.query.filter_by(fk_gallery_album_id=album_id).first()
-	return thumbnail
+	return models.GalleryPicture.query.filter_by(fk_gallery_album_id=album_id).first()
 
 def save_album(uploader, date, time, title, description, approved):
 	user_id = models.User.query.filter_by(email=uploader).first().id
-	try:
-		album = models.GalleryAlbum(user_id, date, time, title, description, approved)
-		db_session.add(album)
-		db_session.commit()
-		album_id = models.GalleryAlbum.query.filter_by(fk_user_id=user_id, date=date, time=time, title=title).first().id
-		return album_id
-	except:
-		return False
+	album = models.GalleryAlbum(user_id, date, time, title, description, approved)
+	db_session.add(album)
+	db_session.commit()
+	album_id = models.GalleryAlbum.query.filter_by(fk_user_id=user_id, date=date, time=time, title=title).first().id
+	return album_id
 
 def save_picture(uploader, album_id, date, time, path, description):
 	user_id = models.User.query.filter_by(email=uploader).first().id
@@ -185,9 +178,11 @@ def save_picture(uploader, album_id, date, time, path, description):
 	return picture_id
 
 def update_picture(pic_id, description):
-	print pic_id
-	print description
 	models.GalleryPicture.query.filter_by(id=pic_id).update({"description": description})
+	db_session.commit()
+
+def album_approve(album_id):
+	models.GalleryAlbum.query.filter_by(id=album_id).update({"approved": 1})
 	db_session.commit()
 
 def get_user_name(user_id):

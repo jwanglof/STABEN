@@ -79,6 +79,11 @@ $(document).ready(function() {
         $("#description_album_info").limiter(50, elem);
     });
 
+    $(function() {
+        var elem = $("#chars_album_info_edit");
+        $("#description_album_info_edit").limiter(50, elem);
+    });
+
     $('#datepicker').datetimepicker({
         weekStart: 1,
         pickTime: false

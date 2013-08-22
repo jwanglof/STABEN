@@ -10,7 +10,7 @@
     <form method=POST enctype=multipart/form-data action="{{ url_for('upload') }}">
         <label for="title">Titel för album</label>
         <input type="text" name="title" id="title" placeholder="Titel" />
-        <p>Ange datum då fotona togs</p>
+        <p>Ange datum då fotona togs (klicka på datum-ikonen till höger) nedan</p>
         <div id="datepicker" class="input-append">
             <input data-format="yyyy-MM-dd" type="text" name="date" id="date" />
             <span class="add-on">
