@@ -251,7 +251,9 @@ def get_register_code():
 def get_schedule(week):
 	return models.Schedule.query.filter_by(week=week).order_by(config.asc(models.Schedule.id)).all()
 
-def get_school_programs():
+def get_school_programs(program_abbreviation=None):
+	if program_abbreviation:
+		return models.SchoolProgram.query.filter_by(abbreviation=program_abbreviation).first()
 	return models.SchoolProgram.query.all()
 
 def get_school_classes():
@@ -280,6 +282,9 @@ def get_user_school_program(db_user_email):
 	user_info = models.UserInformation.query.filter_by(fk_user_id=db_user.id).first()
 	school_program = models.SchoolProgram.query.filter_by(id=user_info.school_program).first()
 	return school_program.abbreviation
+
+def get_school_program_users(school_program):
+	return models.User.query.join(models.UserInformation).filter(models.UserInformation.school_program==get_school_programs(school_program).id).filter(models.User.role!=0).all()
 
 def register_user(db_user_dict):
 	try:

@@ -75,6 +75,7 @@ if config.host_option.dev:
 def add_session(db_user):
 	config.session['email'] = db_user['user'].email
 	config.session['role'] = db_user['user'].role
+	config.session['school_program'] = db_commands.get_user_school_program(db_user['user'].email)
 
 	if db_user['info'].finished_profile:
 		config.session['finished_profile'] = True
@@ -85,6 +86,7 @@ def add_session(db_user):
 		config.session['poll_done'] = True
 	else:
 		config.session['poll_done'] = False
+
 	return True
 
 def edit_session(session_value, value):
@@ -396,12 +398,15 @@ def profile_edit(user_email):
 	if session and user_email == session['email']:
 		user = db_commands.get_db_user(db_user_email=session['email'])
 		school_programs = db_commands.get_school_programs()
+		db_selection = str(user['info'].school_class) + '|' + str(user['info'].school_program)
+
 		return render('profile_edit.html', \
 			user=user['user'], \
 			user_info=user['info'], \
 			school_programs=school_programs,
 			school_classes=db_commands.get_school_classes(), \
-			st=static_texts)
+			st=static_texts, \
+			db_selection=db_selection)
 	else:
 		return render('login.html', login=False)
 
@@ -413,6 +418,7 @@ def profile_save(user_email):
 			copy_request_form = request.form.copy()
 			copy_request_form.add('phonenumber_vis', 1 if 'phonenumber_vis' in request.form else 0)
 			copy_request_form.add('finished_profile', 1)
+			db_commands.update_db_user(user_email, copy_request_form)
 
 			if session['finished_profile'] and not session['poll_done']:
 				redirect_to = 'profile_student_poll'
@@ -422,7 +428,7 @@ def profile_save(user_email):
 				redirect_to = 'profile_student_poll'
 
 			edit_session('finished_profile', True)
-			db_commands.update_db_user(user_email, copy_request_form)
+			edit_session('school_program', db_commands.get_user_school_program(user_email))
 			return redirect(url_for(redirect_to, user_email=user_email))
 		else:
 			return redirect(url_for('profile_edit', user_email=user_email))
@@ -433,19 +439,24 @@ def profile_save(user_email):
 def profile_save_password(user_email):
 	if session and user_email == session['email']:
 		if db_commands.update_db_pw(user_email, request.form):
-			return redirect(url_for('profile_class', user_email=user_email))
+			return redirect(url_for('index', user_email=user_email))
 		else:
 			return "Not updated"
 	else:
 		return render('login.html', login=False)
 
-@app.route('/profile/<user_email>/class/')
-def profile_class(user_email):
+@app.route('/profile/<user_email>/class/<school_program>')
+def profile_class(user_email, school_program):
 	if session and user_email == session['email']:
 		class_mates = db_commands.get_class_mates(user_email)
+		program_users = db_commands.get_school_program_users(school_program)
 		if class_mates:
-			school_programs = db_commands.get_user_school_program(user_email)
-			return render('profile_class.html', class_mates=class_mates, school_programs=school_programs)
+			# user_school_program = db_commands.get_user_school_program(user_email)
+			return render('profile_class.html', \
+				class_mates=class_mates, \
+				user_school_program=session['school_program'], \
+				chosen_school_program=school_program, \
+				program_users=program_users)
 		else:
 			return render('profile_class.html', class_mates=False)
 	else:

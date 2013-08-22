@@ -3,11 +3,11 @@ html, body {
     background: #000 url(../img/background.png) no-repeat fixed center bottom;
     height: 100%;
 }
-/*
+
 body {
-    background: transparent;
+    overflow-y: scroll;
 }
-*/
+
 
 .container {
     color: #ffffff;
