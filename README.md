@@ -14,7 +14,7 @@ TODO (x == finished)
 		<dd>[x] Layout page</dd>
 		<dd>[x] Home</dd>
 		<dd>[ ] Blog</dd>
-		<dd>[/] Gallery</dd>
+		<dd>[x] Gallery</dd>
 		<dd>[x] Schedule</dd>
 		<dd>[x] Contact information</dd>
 		<dd>[-] 'Nolleportalen'</dd>
