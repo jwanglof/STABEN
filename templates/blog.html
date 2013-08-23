@@ -1,4 +1,19 @@
 {% extends "template.html" %}
 {% block active_blog %}active{% endblock %}
 {% block content %}
+	{% for blog in blogs %}
+	<div style='border: 0px solid #fff; margin-bottom: 30px;'>
+		<div style='float: left; font-size: 250%; height: 30px;'>
+		{% if blog_id == None %}
+			<a href='{{ url_for('blog', blog_id=blog.id) }}'>{{ blog.title }}</a>
+		{% else %}
+			{{ blog.title }}
+		{% endif %}
+		</div>
+		<div style='float: right'>{{ blog.date }} {{ blog.time }}</div>
+		<div style='clear: both; border-top: 1px solid #fff; padding-left: 15px; padding-top: 5px;'>
+			{{ blog.text|safe }}
+		</div>
+	</div>
+	{% endfor %}
 {% endblock %}

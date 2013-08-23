@@ -149,3 +149,7 @@ dd {
 .clear_both {
     clear: both;
 }
+
+#profile_blog_add:hover, #profile_blog_edit:hover {
+    cursor: pointer;
+}

@@ -44,6 +44,8 @@ class Blog(Base):
 
 	def __init__(self, fk_user_id, fk_gallery_album_id, title, text, date, time):
 		"""The constructor"""
+		self.fk_user_id = fk_user_id
+		self.fk_gallery_album_id = fk_gallery_album_id
 		self.title = title
 		self.text = text
 		self.date = date
