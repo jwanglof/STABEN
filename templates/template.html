@@ -1,125 +1,139 @@
 <!DOCTYPE HTML>
 <html lang="sv">
 <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta charset="utf-8">
-    <title>STABEN</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style_form.css') }}" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta charset="utf-8">
+	<title>STABEN</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}" />
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}" />
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style_form.css') }}" />
 
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+	<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
 </head>
 
 <body>
-    <div id="wrap">
-        <div class="navbar navbar-static-top navbar-inverse">
-            <div class="navbar-inner">
-                <div class="container">
-                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </a>
-                    <a class="brand" href="{{ url_for('index') }}"><span class="stabenfont">STABEN</span></a>
-                    <div class="nav-collapse collapse">
-                        <ul class="nav" id="nav_menu">
-                            <li class='{% block active_index %}{% endblock %}'><a href="{{ url_for('index') }}">Start</a></li>
-                            <li class='{% block active_prices %}{% endblock %}'><a href="{{ url_for('prices') }}">Priser</a></li>
-                            <li class='{% block active_schedule %}{% endblock %}'><a href="{{ url_for('schedule') }}">Schema</a></li>
-                            {#<li class='{% block active_gallery %}{% endblock %}'><a href="{{ url_for('gallery') }}">Galleri</a></li>#}
-                            <li class='{% block active_blog %}{% endblock %}'><a href="{{ url_for('blog') }}">Blogg</a></li>
-                            <li class='{% block active_contact %}{% endblock %}'><a href="{{ url_for('contact') }}">Kontakt</a></li>
-                            {% if session['email'] %}
-                                <li class='dropdown'>
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                        Profil
-                                        <b class="caret"></b>
-                                    </a>
-                                    <ul class='dropdown-menu'>
-                                        <li><a href="{{ url_for('profile_edit', user_email=session['email']) }}">Redigera</a></li>
-                                        <li>
-                                            <a href="{% if session['finished_profile'] %}{{ url_for('profile_class', user_email=session['email'], school_program=session['school_program']) }}{% else %}#{% endif %}">
-                                            Skolprogram
-                                            </a>
-                                        </li>
-                                        {#<li><a href="{% if session['finished_profile'] %}{{ url_for('profile_student_poll', user_email=session['email']) }}{% else %}#{% endif %}">Nolleenkät</a></li>#}
-                                        <li><a href="{% if session['finished_profile'] %}{{ url_for('student_badge') }}{% else %}#{% endif %}">Nollebricka</a></li>
-                                        <li><a href="{% if session['finished_profile'] %}{{ url_for('student_book') }}{% else %}#{% endif %}">Nollehandboken</a></li>
-                                        {% if session.role == 0 %}
-                                            <br />
-                                            <span class="help-block">Admin verktyg</span>
-                                            <li><a href="{{ url_for('admin_pages') }}">Random shiet</a></li>
-                                            <li><a href="{{ url_for('admin_get_all_users') }}">Användare</a></li>
-                                            <li><a href="{{ url_for('admin_addcontact') }}">Lägg till kontakt</a></li>
-                                            <li><a href="{{ url_for('admin_student_poll') }}">Nolleenkätsinställningar</a></li>
-                                            <li><a href="{{ url_for('admin_student_poll_result') }}">Nollans enkäter</a></li>
-                                        {% endif %}
-                                    </ul>
-                                </li>
-                                <li><a href="{{ url_for('signout') }}">Logga ut</a></li>
-                                {% if not session['finished_profile'] %}
-                                    <li><a href='{{ url_for('profile_edit', user_email=session['email']) }}' style='font-style: italic; color: #ff0000'>Fyll i din profil!</a></li>
-                                {% elif not session['poll_done'] and session['finished_profile'] %}
-                                    <li><a href='{{ url_for('profile_student_poll', user_email=session['email']) }}' style='font-style: italic; color: #ff0000'>Fyll i din nollenekät!</a></li>
-                                {% endif %}
-                            {% else %}
-                                <li class='dropdown'>
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                        Logga in
-                                        <b class="caret"></b>
-                                    </a>
-                                    <ul class='dropdown-menu' style='padding: 5px;'>
-                                        <form method='post' action='{{ url_for('login') }}'>
-                                            <fieldset>
-                                                <input type="email" name="email" placeholder="E-post">
-                                                <input type="password" name="password" placeholder="Lösenord">
-                                                <button type="submit" class="btn">Logga in</button>
-                                            </fieldset>
-                                        </form>
-                                        <li><a href='{{ url_for('forgot_password', code=None) }}'>Glömt lösenord</a></li>
-                                    </ul>
-                                </li>
-                                {#<li class='{% block active_register %}{% endblock %}'><a href="{{ url_for('register') }}">Registrera</a></li>#}
-                            {% endif %}
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
+	<div id="wrap">
+		<div class="navbar navbar-static-top navbar-inverse">
+			<div class="navbar-inner">
+				<div class="container">
+					<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</a>
+					<a class="brand" href="{{ url_for('index') }}"><span class="stabenfont">STABEN</span></a>
+					<div class="nav-collapse collapse">
+						<ul class="nav" id="nav_menu">
+							<li class='{% block active_index %}{% endblock %}'><a href="{{ url_for('index') }}">Start</a></li>
+							<li class='{% block active_prices %}{% endblock %}'><a href="{{ url_for('prices') }}">Priser</a></li>
+							<li class='{% block active_schedule %}{% endblock %}'><a href="{{ url_for('schedule') }}">Schema</a></li>
+							{#<li class='{% block active_gallery %}{% endblock %}'><a href="{{ url_for('gallery') }}">Galleri</a></li>#}
+							<li class='{% block active_blog %}{% endblock %}'><a href="{{ url_for('blog') }}">Blogg</a></li>
+							<li class='{% block active_contact %}{% endblock %}'><a href="{{ url_for('contact') }}">Kontakt</a></li>
+							{% if session['email'] %}
+								<li class='dropdown'>
+									<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+										Profil
+										<b class="caret"></b>
+									</a>
+									<ul class='dropdown-menu'>
+										<li><a href="{{ url_for('profile_edit', user_email=session['email']) }}">Redigera</a></li>
+										<li>
+											<a href="{% if session['finished_profile'] %}{{ url_for('profile_class', user_email=session['email'], school_program=session['school_program']) }}{% else %}#{% endif %}">
+											Skolprogram
+											</a>
+										</li>
+										{#<li><a href="{% if session['finished_profile'] %}{{ url_for('profile_student_poll', user_email=session['email']) }}{% else %}#{% endif %}">Nolleenkät</a></li>#}
+										<li><a href="{% if session['finished_profile'] %}{{ url_for('student_badge') }}{% else %}#{% endif %}">Nollebricka</a></li>
+										<li><a href="{% if session['finished_profile'] %}{{ url_for('student_book') }}{% else %}#{% endif %}">Nollehandboken</a></li>
+										{% if session.role == 6 or session.role == 0 %}
+											<li>
+												<a href="{{ url_for('profile_blog', user_email=session['email']) }}">Blogga</a>
+											</li>
+										{% endif %}
+										{% if session.role == 0 %}
+											<br />
+											<span class="help-block">Admin verktyg</span>
+											<li><a href="{{ url_for('admin_pages') }}">Random shiet</a></li>
+											<li><a href="{{ url_for('admin_get_all_users') }}">Användare</a></li>
+											<li><a href="{{ url_for('admin_addcontact') }}">Lägg till kontakt</a></li>
+											<li><a href="{{ url_for('admin_student_poll') }}">Nolleenkätsinställningar</a></li>
+											<li><a href="{{ url_for('admin_student_poll_result') }}">Nollans enkäter</a></li>
+										{% endif %}
+									</ul>
+								</li>
+								<li><a href="{{ url_for('signout') }}">Logga ut</a></li>
+								{% if not session['finished_profile'] %}
+									<li><a href='{{ url_for('profile_edit', user_email=session['email']) }}' style='font-style: italic; color: #ff0000'>Fyll i din profil!</a></li>
+								{% elif not session['poll_done'] and session['finished_profile'] %}
+									<li><a href='{{ url_for('profile_student_poll', user_email=session['email']) }}' style='font-style: italic; color: #ff0000'>Fyll i din nollenekät!</a></li>
+								{% endif %}
+							{% else %}
+								<li class='dropdown'>
+									<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+										Logga in
+										<b class="caret"></b>
+									</a>
+									<ul class='dropdown-menu' style='padding: 5px;'>
+										<form method='post' action='{{ url_for('login') }}'>
+											<fieldset>
+												<input type="email" name="email" placeholder="E-post">
+												<input type="password" name="password" placeholder="Lösenord">
+												<button type="submit" class="btn">Logga in</button>
+											</fieldset>
+										</form>
+										<li><a href='{{ url_for('forgot_password', code=None) }}'>Glömt lösenord</a></li>
+									</ul>
+								</li>
+								{#<li class='{% block active_register %}{% endblock %}'><a href="{{ url_for('register') }}">Registrera</a></li>#}
+							{% endif %}
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
 
-        <div class="container" style='padding-top: 25px;'>
-            {% block content %}{% endblock %}
-        </div>
-        
-        <div id="push"></div>
-    </div>
+		<div class="container" style='padding-top: 25px;'>
+			{% block content %}{% endblock %}
+		</div>
+		
+		<div id="push"></div>
+	</div>
 
-    <div id='footer'>
-        <div class='container'>
-            {{ get_quote()|safe }}
-        </div>
-    </div>
+	<div id='footer'>
+		<div class='container'>
+			{{ get_quote()|safe }}
+		</div>
+	</div>
 
-    <!-- Google Analytics -->
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	<!-- Google Analytics -->
+	<script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-      ga('create', 'UA-43110159-1', 'staben.info');
-      ga('send', 'pageview');
-    </script>
+	  ga('create', 'UA-43110159-1', 'staben.info');
+	  ga('send', 'pageview');
+	</script>
 
-    <!-- Le javascript
-    ==============================-->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/jquery.validate.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/galleria/galleria-1.2.9.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+	<!-- Le javascript
+	==============================-->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/jquery.validate.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/galleria/galleria-1.2.9.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+	<script src="{{ url_for('static', filename='ckeditor/ckeditor.js') }}"></script>
+	<script>
+		CKEDITOR.replace(
+			'text',
+			{
+				height: 500
+			}
+		);
+	</script>
 </body>
 </html>
