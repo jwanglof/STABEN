@@ -5,7 +5,7 @@ from flask import Flask, request, session, g, redirect, url_for, render_template
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.bcrypt import Bcrypt
 from flask.ext.mail import Mail, Message
-from sqlalchemy import Table, Column, Integer, String, Date, Time, Text, create_engine, asc
+from sqlalchemy import Table, Column, Integer, String, Date, Time, Text, create_engine, asc, desc
 from sqlalchemy.orm import relationship, backref, scoped_session, sessionmaker, aliased
 from sqlalchemy.ext.declarative import declarative_base
 from dev import host_option
@@ -21,7 +21,6 @@ Base.query = db_session.query_property()
 SECRET_KEY = ':\xbe\xef\xc9\xbf\xf6\x86\x8d\xeb\x90\xa5!+\x97i\xa38\xe0\x98\x7f\xec\xca*\x8c'
 USERNAME = 'admin'
 PASSWORD = 'default'
-HOST = '0.0.0.0'
 
 UPLOAD_FOLDER = host_option.root_path + '/upload'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
