@@ -1,56 +1,32 @@
 {% extends "template.html" %}
 {% block active_gallery %}active{% endblock %}
 {% block content %}
-    <h1>Galleri</h1>
-
-    {% if notice == '1' %}
-        <span class="label label-inverse">Bra jobbat <span class="nollanfont">nollan</span>.
-            Om det var ett nytt album du lade till så måste det godkännas av <span class="stabenfont">STABEN</span>
-            innan det syns. Gjorde du en ändring av en eller flera beskrivningar så syns de direkt.
-        </span>
-        <br>
-        <br>
-    {% endif %}
-
-    {% if session.role == 0 or session.role == 5%}
-        <a href="{{ url_for('upload') }}" class="btn btn-inverse">Ladda upp nytt album</a>
-        <br>
-        <br>
-    {% endif %}
-
-{#    {% if admin_approve %}#}
-{#    <ul class="thumbnails">#}
-{#        {% for a in albums %}#}
-{#            <li class="span3">#}
-{#                <div class="thumbnail" style="border-color: #cccccc">#}
-{#                    <a href="/admin_approve_album/{{ a.id }}">#}
-{#                        <img src="/static/upload/gallery/album_{{ a.id }}/thumbnail/{{ thumbnails[loop.index - 1].path }}"#}
-{#                             alt="Thumbnail för album med titel {{ a.title }}">#}
-{#                        <h3>{{ a.title }}</h3>#}
-{#                    </a>#}
-{#                    <p>{{ uploaders[loop.index - 1] }}</p>#}
-{#                </div>#}
-{#            </li>#}
-{#        {% endfor %}#}
-{#    </ul>#}
-{#    {% else %}#}
-        <ul class="thumbnails">
-            {% for a in albums %}
-                <li class="span3">
-                    <div class="thumbnail" style="border-color: #cccccc">
-                        {% if admin_approve %}
-                            <a href="/admin_approve_album/{{ a.id }}">
-                        {% else %}
-                            <a href="/gallery/album/{{ a.id }}">
-                        {% endif %}
-                            <img src="/static/upload/gallery/album_{{ a.id }}/thumbnail/{{ thumbnails[loop.index - 1].path }}"
-                                 alt="Thumbnail för album med titel {{ a.title }}">
-                            <h3>{{ a.title }}</h3>
-                        </a>
-                        <p>Skapat av {{ uploaders[loop.index - 1] }}</p>
-                    </div>
-                </li>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <span class="label label-inverse" style="margin-bottom: 30px; padding: 10px 20px;">
+                    {{ message|safe }}
+                </span>
             {% endfor %}
-        </ul>
-{#    {% endif %}#}
+        {% endif %}
+    {% endwith %}
+
+    <ul class="thumbnails">
+        {% for a in albums %}
+            <li class="span3">
+                <div style='text-align: center;'>
+                    {% if admin_approve %}
+                        <a href="/admin_approve_album/{{ a.id }}">
+                    {% else %}
+                        <a href="/gallery/album/{{ a.id }}">
+                    {% endif %}
+                        <img src="/static/upload/gallery/album_{{ a.id }}/thumbnail/{{ thumbnails[loop.index - 1].path }}"
+                             alt="Thumbnail för album med titel {{ a.title }}">
+                        <h3>{{ a.title }}</h3>
+                    </a>
+                    {#<p>Skapat av {{ uploaders[loop.index - 1] }}</p>#}
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
 {% endblock %}

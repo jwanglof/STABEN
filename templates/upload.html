@@ -1,5 +1,4 @@
 {% extends "template.html" %}
-{% block active_gallery %}active{% endblock %}
 {% block content %}
     <p>Fyll i formuläret nedan för att skapa ett nytt album.
         På nästa sida så får du möjlighet att fylla i beskrivning av respektive bild.</p>
@@ -26,7 +25,7 @@
         <div id="chars_upload" style="display: inline">200</div>
         <br>
         <br>
-        <input type=file multiple name="file[]" style="border: none">
+        <input type='file' multiple name="file[]" style="border: none">
         <br>
         <br>
         <input type="hidden" value="{{ session.email }}" name="uploader" id="uploader">

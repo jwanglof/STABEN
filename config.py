@@ -5,7 +5,7 @@ from flask import Flask, request, session, g, redirect, url_for, render_template
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.bcrypt import Bcrypt
 from flask.ext.mail import Mail, Message
-from flask.ext.uploads import IMAGES
+# from flask.ext.uploads import IMAGES
 from sqlalchemy import Table, Column, Integer, String, Date, Time, Text, create_engine, asc, desc
 from sqlalchemy.orm import relationship, backref, scoped_session, sessionmaker, aliased
 from sqlalchemy.ext.declarative import declarative_base
@@ -26,7 +26,7 @@ PASSWORD = 'default'
 
 UPLOADED_FILES_URL = host_option.root_path + '\upload\gallery'
 #UPLOADED_FILES_URL = 'upload/gallery'
-UPLOADED_FILES_ALLOW = IMAGES
+# UPLOADED_FILES_ALLOW = IMAGES
 
 app = Flask(__name__)
 app.secret_key = SECRET_KEY

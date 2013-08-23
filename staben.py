@@ -133,12 +133,12 @@ def schedule(show_week=1):
 @app.route('/gallery/album/<album_id>')
 @app.route('/gallery/<notice>')
 @app.route('/gallery')
-def gallery(album_id=0, notice='0'):
+def gallery(album_id=0):
 	if album_id != 0:
 		album = db_commands.get_a_album(album_id)
 		uploader = db_commands.get_user_name(album.fk_user_id)
 		photos = db_commands.get_all_pic_from_album(album_id)
-		return render('album.html', album=album, photos=photos, album_id=album_id, uploader=uploader)
+		return render('gallery_album.html', album=album, photos=photos, album_id=album_id, uploader=uploader)
 	albums = db_commands.get_all_albums(1)
 	thumbnails = []
 	uploaders = []
@@ -146,7 +146,7 @@ def gallery(album_id=0, notice='0'):
 		for a in albums:
 			thumbnails.append(db_commands.get_thumbnail(a.id))
 			uploaders.append(db_commands.get_user_name(a.fk_user_id))
-	return render('gallery.html', albums=albums, thumbnails=thumbnails, uploaders=uploaders, notice=notice)
+	return render('gallery.html', albums=albums, thumbnails=thumbnails, uploaders=uploaders)
 
 @app.route('/album_info/<album_id>', methods=['GET','POST'])
 @app.route('/album_info', methods=['POST'])
@@ -154,7 +154,7 @@ def album_info(album_id=0):
 	if album_id != 0:
 		album = db_commands.get_a_album(album_id)
 		pictures = db_commands.get_all_pic_from_album(album_id)
-		return render('album_info.html',album_id=album_id, album=album, pictures=pictures, edit=True)
+		return render('gallery_album_info.html',album_id=album_id, album=album, pictures=pictures, edit=True)
 	#if album_id != 0 and request.method == 'POST':
 	if request.method == 'POST':
 		pic = request.form.getlist("picture_id")
@@ -162,7 +162,8 @@ def album_info(album_id=0):
 		for i,p in enumerate(pic):
 			db_commands.update_picture(int(p), desc[i])
 	notice = 1
-	return redirect(url_for('gallery', notice=notice))
+	flash(u'Bra jobbat <span class="nollanfont">nollan</span>. Om det var ett nytt album du lade till så måste det godkännas av <span class="stabenfont">STABEN</span> innan det syns. Gjorde du en ändring av en eller flera beskrivningar så syns de direkt.')
+	return redirect(url_for('gallery'))
 
 @app.route('/delete_album/<album_id>')
 def delete_alum(album_id):
@@ -203,7 +204,7 @@ def upload():
 			p_thumb.save(p_thumb_filename)
 			p_id = db_commands.save_picture(uploader, album_id_int, date, time, secure_filename(p.filename), 'Beskrivning')
 			photo_ids.append(p_id)
-		return render('album_info.html', photo_ids=photo_ids, photo_paths=photo_paths,album_id=album_id)
+		return render('gallery_album_info.html', photo_ids=photo_ids, photo_paths=photo_paths,album_id=album_id)
 	return render('upload.html',user=user)
 
 @app.route('/blog')
@@ -716,7 +717,7 @@ def admin_approve_album(album_id=0):
 		album = db_commands.get_a_album(album_id)
 		uploader = db_commands.get_user_name(album.fk_user_id)
 		photos = db_commands.get_all_pic_from_album(album_id)
-		return render('album.html', album=album, photos=photos, album_id=album_id, uploader=uploader, admin_approve=True)
+		return render('gallery_album.html', album=album, photos=photos, album_id=album_id, uploader=uploader, admin_approve=True)
 	if request.method == 'POST':
 		album_id = request.form['album_id']
 		db_commands.album_approve(album_id)
