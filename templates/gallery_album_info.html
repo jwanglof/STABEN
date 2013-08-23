@@ -1,0 +1,51 @@
+{% extends "template.html" %}
+{% block active_gallery %}active{% endblock %}
+{% block content %}
+    {% if edit %}
+        <form method="POST" action="{{ url_for('album_info') }}">
+            {% for p in pictures %}
+                <div style='float: left; width: 250px; text-align: center;'>
+                    <input type="hidden" name="picture_id" id="index" value="{{ p.id }}">
+
+                    <a href="/static/upload/gallery/album_{{ album_id }}/{{ p.path }}" target="_blank">
+                        <img src="/static/upload/gallery/album_{{ album_id }}/thumbnail/{{ p.path }}">
+                    </a>
+
+                    <br />
+
+                    <label for="description_album_info_edit">
+                        Beskrivning (max 50 tecken)
+                        <textarea name="description" id="description_album_info_edit" maxlength="50" rows="2" cols="70" style="resize: none">{{ p.description }}</textarea>
+                    </label>
+
+                    <br />
+                </div>
+            {% endfor %}
+            <div style='clear: both; height: 20px;'></div>
+            <input type="submit" value="Spara information om ovanstående bilder">
+        </form>
+    {% else %}
+        <form method="POST" action="{{ url_for('album_info') }}">
+        {% for p in photo_paths %}
+            <div style='float: left; width: 250px; text-align: center;'>
+                <input type="hidden" name="picture_id" id="index" value="{{ photo_ids[loop.index - 1] }}">
+
+                <a href="/static/upload/gallery/{{ album_id }}/{{ p }}" target="_blank">
+                    <img src="/static/upload/gallery/{{ album_id }}/thumbnail/{{ p }}">
+                </a>
+                
+                <br />
+                
+                <label for="description_album_info">
+                    Beskrivning (max 50 tecken)>
+                    <textarea name="description" id="description_album_info" placeholder="Beskrivning" maxlength="50" rows="2" cols="70" style="resize: none"></textarea>
+                </label>
+
+                <br />
+            </div>
+        {% endfor %}
+        <div style='clear: both; height: 20px;'></div>
+        <input type="submit" value="Spara information om ovanstående bilder">
+        </form>
+    {% endif %}
+{% endblock %}
