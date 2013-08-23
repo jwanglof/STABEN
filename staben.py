@@ -9,6 +9,7 @@ from dev import db_commands, debug, decorators
 # Used for new_password()
 import string
 import random
+import time
 
 app = config.app
 render = config.render_template
@@ -131,8 +132,9 @@ def gallery():
 	return render('gallery.html')
 
 @app.route('/blog')
-def blog():
-	return render('blog.html')
+@app.route('/blog/<blog_id>')
+def blog(blog_id=None):
+	return render('blog.html', blogs=db_commands.get_blog(b_id=blog_id), blog_id=blog_id)
 
 @app.route('/contact')
 @app.route('/contact/<show_page>')
@@ -424,6 +426,42 @@ def profile_save_student_poll(user_email):
 	else:
 		return render('login.html', login=False)
 
+@app.route('/profile/<user_email>/blog')
+def profile_blog(user_email):
+	if session and user_email == session['email'] and (session['role'] is 6 or session['role'] is 0):
+		blog = db_commands.check_if_blog_done(time.strftime('%Y-%m-%d', time.localtime()))
+		if blog is None:
+			return render('profile_blog.html', gallery=db_commands.get_gallery(), blog=None)
+		else:
+			return render('profile_blog.html', gallery=db_commands.get_gallery(), blog=blog)
+	else:
+		return render('admin_fail.html')
+
+@app.route('/profile/<user_email>/blog/<command>', methods=['POST'])
+def profile_blog_entry(user_email, command):
+	if session and user_email == session['email'] and (session['role'] is 6 or session['role'] is 0):
+		copy_request_form = request.form.copy()
+		localtime = time.localtime()
+		current_date = time.strftime('%Y-%m-%d', localtime)
+		current_time = time.strftime('%H:%M', localtime)
+		print current_time
+		copy_request_form.add('date', current_date)
+		copy_request_form.add('time', current_time)
+		copy_request_form.add('fk_user_id', db_commands.get_db_user(db_user_email=user_email)['user'].id)
+
+		if command == 'add':
+			if db_commands.save_blog(copy_request_form):
+				return redirect(url_for('blog'))
+			else:
+				return 'Kunde inte adda blogginlägget!'
+		elif command == 'edit':
+			if db_commands.save_blog(copy_request_form, db_commands.get_blog(b_date=current_date).id):
+				return redirect(url_for('blog'))
+			else:
+				return 'Kunde inte uppdatera blogginlägget!'
+	else:
+		return render('admin_fail.html')
+
 '''
 	*
 	* Admin tools
@@ -577,14 +615,24 @@ def admin_show_user(user_id):
 def test():
 	# DialectID: [{UserID: Position}]
 	md = config.MultiDict()
-	md.add(2, {1: 3})
-	md.add(2, {2: 1})
-	md.add(2, {10: 2})
-	md.add(2, {11: 1})
-	md.add(2, {17: 3})
-	md.add(3, {1: 2})
-	db_commands.check_if_in_md(md, 17, 1)
-	return 'hej'
+	# md.add(2, {1: 3})
+	# md.add(2, {2: 1})
+	# md.add(2, {10: 2})
+	# md.add(2, {11: 1})
+	# md.add(2, {17: 3})
+	# md.add(3, {1: 2})
+	# db_commands.check_if_in_md(md, 17, 1)
+	# return 'hej'
+	md.add('picture_id', 69)
+	md.add('picture_id', 22)
+	md.add('picture_id', 43)
+	md.add('description', 'Hej')
+	md.add('description', 'Hej22')
+	md.add('description', 'Tji')
+	asd = {}
+	print md
+	for i in md:
+		print md.getlist(i)
 
 @app.errorhandler(403)
 def page_not_found(e):
@@ -604,4 +652,4 @@ def shutdown_session(exception=None):
 	config.db_session.remove()
 
 if __name__ == '__main__':
-	app.run(host=config.HOST, debug=config.host_option.DEBUG)
+	app.run(host=config.host_option.HOST, debug=config.host_option.DEBUG)
