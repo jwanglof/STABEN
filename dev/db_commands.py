@@ -264,6 +264,40 @@ def save_student_poll(db_user_email, db_student_poll_dict):
 	except:
 		return False
 
+def save_blog(blog_dict, blog_id=False):
+	try:
+		if not blog_id:
+			db_session.add(models.Blog(blog_dict['fk_user_id'], blog_dict['fk_gallery_album_id'], blog_dict['title'], blog_dict['text'], blog_dict['date'], blog_dict['time']))
+		elif blog_id:
+			models.Blog.query.filter_by(id=blog_id).update(blog_dict)
+		db_session.commit()
+		return True
+	except:
+		return False
+
+def get_blog(b_id=None, b_date=None):
+	try:
+		if b_id:
+			return models.Blog.query.filter_by(id=b_id).all()
+		elif b_date:
+			return models.Blog.query.filter_by(date=b_date).first()
+		else:
+			return models.Blog.query.order_by(config.desc(models.Blog.id)).all()
+	except:
+		return False
+
+def check_if_blog_done(date):
+	return models.Blog.query.filter_by(date=date).first()
+
+def get_gallery(g_id=None):
+	try:
+		if not g_id:
+			return models.GalleryAlbum.query.all()
+		else:
+			return models.GalleryAlbum.query.filter_by(id=g_id)
+	except:
+		return False
+
 def update_db_user(db_user_email, db_user_dict):
 	try:
 		db_user = models.User.query.filter_by(email=db_user_email).first()
