@@ -444,10 +444,9 @@ def profile_blog_entry(user_email, command):
 		localtime = time.localtime()
 		current_date = time.strftime('%Y-%m-%d', localtime)
 		current_time = time.strftime('%H:%M', localtime)
-		print current_time
 		copy_request_form.add('date', current_date)
 		copy_request_form.add('time', current_time)
-		copy_request_form.add('fk_user_id', db_commands.get_db_user(db_user_email=user_email)['user'].id)
+		copy_request_form.add('fk_user_id', int(db_commands.get_db_user(db_user_email=user_email)['user'].id))
 
 		if command == 'add':
 			if db_commands.save_blog(copy_request_form):
