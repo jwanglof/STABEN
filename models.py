@@ -42,7 +42,7 @@ class Blog(Base):
 	time = db.Column(db.Time(), index=True)
 	r_blog_comment = db.relationship('BlogComment', backref='Blog')
 
-	def __init__(self, fk_user_id, fk_gallery_album_id, title, text, date, time):
+	def __init__(self, fk_user_id=None, fk_gallery_album_id=None, title=None, text=None, date=None, time=None):
 		"""The constructor"""
 		self.fk_user_id = fk_user_id
 		self.fk_gallery_album_id = fk_gallery_album_id
@@ -65,7 +65,7 @@ class BlogComment(Base):
 	date = db.Column(db.Date(), index=True)
 	time = db.Column(db.Time(), index=True)
 
-	def __init__(self, fk_user_id, fk_blog_id, comment, date, time):
+	def __init__(self, fk_user_id=None, fk_blog_id=None, comment=None, date=None, time=None):
 		"""The constructor"""
 		self.fk_user_id = fk_user_id
 		self.fk_blog_id = fk_blog_id
@@ -114,7 +114,7 @@ class GalleryAlbum(Base):
 	r_gallery_comment = db.relationship('GalleryComment', backref='GalleryAlbum')
 	r_blog = db.relationship('Blog', backref='GalleryAlbum')
 
-	def __init__(self, fk_user_id, date, time, title, description=None, approved = 0):
+	def __init__(self, fk_user_id=None, date=None, time=None, title=None, description=None, approved=0):
 		"""The constructor"""
 		self.fk_user_id = fk_user_id
 		self.date = date
@@ -133,7 +133,7 @@ class GalleryPicture(Base):
 	time = db.Column(db.Time(), index=True)
 	path = db.Column(db.String(254), index=True)
 
-	def __init__(self, fk_user_id, fk_gallery_album_id, date, time, path, description=None):
+	def __init__(self, fk_user_id=None, fk_gallery_album_id=None, date=None, time=None, path=None, description=None):
 		"""The constructor"""
 		self.fk_user_id = fk_user_id
 		self.fk_gallery_album_id = fk_gallery_album_id
@@ -151,7 +151,7 @@ class GalleryComment(Base):
 	date = db.Column(db.Date(), index=True)
 	time = db.Column(db.Time(), index=True)
 
-	def __init__(self, fk_user_id, fk_gallery_album_id, comment, date, time):
+	def __init__(self, fk_user_id=None, fk_gallery_album_id=None, comment=None, date=None, time=None):
 		"""The constructor"""
 		self.fk_user_id = fk_user_id
 		self.fk_gallery_album_id = fk_gallery_album_id
