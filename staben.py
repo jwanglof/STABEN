@@ -210,7 +210,14 @@ def upload():
 @app.route('/blog')
 @app.route('/blog/<blog_id>')
 def blog(blog_id=None):
-	return render('blog.html', blogs=db_commands.get_blog(b_id=blog_id), blog_id=blog_id)
+	db_blog = db_commands.get_blog(b_id=blog_id)
+	if not blog_id is None:
+		gallery = db_commands.get_a_album(db_blog[0].fk_gallery_album_id)
+		photos = db_commands.get_all_pic_from_album(db_blog[0].fk_gallery_album_id)
+	else:
+		gallery = None
+		photos = None
+	return render('blog.html', blogs=db_blog, blog_id=blog_id, gallery=gallery, photos=photos)
 
 @app.route('/contact')
 @app.route('/contact/<show_page>')

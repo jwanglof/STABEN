@@ -150,6 +150,6 @@ dd {
     clear: both;
 }
 
-#profile_blog_add:hover, #profile_blog_edit:hover {
+#blog_show_pictures:hover, #blog_show_comments:hover {
     cursor: pointer;
 }

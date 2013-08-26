@@ -11,9 +11,49 @@
 			{% endif %}
 			</div>
 			<div style='float: right'>{{ blog.date }} {{ blog.time }}</div>
+
+			<div style='clear: both; padding-top: 20px;'>
+				{% if gallery != None %}
+				<div style='border: 1px solid #fff; border-bottom: 0px; border-radius: 5px 5px 0px 0px; width: 100px; text-align: center; float: left; margin-right: 5px'>
+					<div id='blog_show_pictures'>Visa bilderna</div>
+				</div>
+				{% endif %}
+				<div style='border: 1px solid #fff; border-bottom: 0px; border-radius: 5px 5px 0px 0px; width: 150px; text-align: center; float: left;'>
+					<div id='blog_show_comments'>Visa kommentarer</div>
+				</div>
+			</div>
+
 			<div style='clear: both; border-top: 1px solid #fff; padding-left: 15px; padding-top: 5px;'>
 				{{ blog.text|safe }}
 			</div>
+		</div>
+
+		{% if gallery != None %}
+		<div id='blog_pictures' style='clear: both; padding-top: 20px'>
+        <div id="links">
+			{% for p in photos %}
+	        <a href="/static/upload/gallery/album_{{ gallery.id }}/{{ p.path }}" title="{{ p.description }}">
+	            <img src="/static/upload/gallery/album_{{ gallery.id }}/thumbnail/{{ p.path }}" alt="{{ p.description|safe }}">
+	        </a>
+	        {% endfor %}
+        </div>
+
+        <div id="blueimp-gallery" class="blueimp-gallery">
+            <div class="slides"></div>
+            <h3 class="title"></h3>
+            <a class="prev">‹</a>
+            <a class="next">›</a>
+            <a class="close">×</a>
+            <a class="play-pause"></a>
+            <ol class="indicator"></ol>
+        </div>
+        <br />
+		Titta i <a href='{{ url_for('gallery', album_id=gallery.id) }}'>galleriet.</a>			
+		</div>
+		{% endif %}
+
+		<div id='blog_comments' style='clear: both; padding-top: 20px'>
+			Skrivet av:
 		</div>
 	{% endfor %}
 {% endblock %}

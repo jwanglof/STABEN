@@ -1,6 +1,34 @@
 $(document).ready(function() {
 	$('#errorMessages').hide();
 	$('.no_javascript').hide();
+	$('#blog_comments').hide();
+	$('#blog_pictures').hide();
+
+	$('#blog_show_pictures').click(function() {
+		$('#blog_comments').hide();
+		if ($('#blog_pictures').is(':visible')) {
+			$('#blog_pictures').hide();
+			$('#blog_show_pictures').text('Visa bilderna');
+		}
+		else {
+			$('#blog_comments').hide();
+			$('#blog_pictures').show(100);
+			$('#blog_show_pictures').text('Göm bilderna');
+		}
+	});
+
+	$('#blog_show_comments').click(function() {
+		$('#blog_pictures').hide();
+		if ($('#blog_comments').is(':visible')) {
+			$('#blog_comments').hide();
+			$('#blog_show_comments').text('Visa kommentarer');
+		}
+		else {
+			$('#blog_pictures').hide();
+			$('#blog_comments').show(100);
+			$('#blog_show_comments').text('Göm kommentarer');
+		}
+	});
 
 	$('#profile_edit').validate({
 		errorLabelContainer: $("#errorMessages"),

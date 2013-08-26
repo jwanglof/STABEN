@@ -5,13 +5,13 @@
 			<input type='text' placeholder='Titel' id='title' name='title' value='{{ blog.title }}' />
 			<textarea class='text' name='text'>{{ blog.text }}</textarea>
 			<br />
-			{#<select name='fk_gallery_album_id'>
+			<select name='fk_gallery_album_id'>
 				<option value='0'>Inget galleri</option>
 				{% for g_content in gallery %}
 					<option value='{{ g_content.id }}'>{{ g_content.title }}</option>
 				{% endfor %}
 			</select>
-			<br />#}
+			<br />
 			<button type="submit" class="btn">{% if blog.id %}Redigera inlägg{% else %}Lägg till nytt inlägg{% endif %}</button>
 		</fieldset>
 	</form>
