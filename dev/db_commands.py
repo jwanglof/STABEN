@@ -164,20 +164,29 @@ def get_thumbnail(album_id):
 	return models.GalleryPicture.query.filter_by(fk_gallery_album_id=album_id).first()
 
 def save_album(uploader, date, time, title, description, approved):
-	user_id = models.User.query.filter_by(email=uploader).first().id
-	album = models.GalleryAlbum(user_id, date, time, title, description, approved)
-	db_session.add(album)
-	db_session.commit()
-	album_id = models.GalleryAlbum.query.filter_by(fk_user_id=user_id, date=date, time=time, title=title).first().id
-	return album_id
+	try:
+		# return 'S'
+		user_id = models.User.query.filter_by(email=uploader).first().id
+		# return 'U'
+		album = models.GalleryAlbum(user_id, date, time, title, description, approved)
+		# return 'P'
+		db_session.add(album)
+		# return 'A'
+		db_session.commit()
+		# return '!'
+		return models.GalleryAlbum.query.filter_by(fk_user_id=user_id, date=date, time=time, title=title).first().id
+	except:
+		return 'KUNDE EJ SPARA ALBUMET!'
 
 def save_picture(uploader, album_id, date, time, path, description):
-	user_id = models.User.query.filter_by(email=uploader).first().id
-	picture = models.GalleryPicture(user_id, album_id, date, time, path, description)
-	db_session.add(picture)
-	db_session.commit()
-	picture_id = models.GalleryPicture.query.filter_by(fk_user_id=user_id, fk_gallery_album_id=album_id, date=date, time=time, path=path).first().id
-	return picture_id
+	try:
+		user_id = models.User.query.filter_by(email=uploader).first().id
+		picture = models.GalleryPicture(user_id, album_id, date, time, path, description)
+		db_session.add(picture)
+		db_session.commit()
+		return models.GalleryPicture.query.filter_by(fk_user_id=user_id, fk_gallery_album_id=album_id, date=date, time=time, path=path).first().id
+	except:
+		return 'KUNDE EJ SPARA BILDEN!'
 
 def update_picture(pic_id, description):
 	models.GalleryPicture.query.filter_by(id=pic_id).update({"description": description})
@@ -206,6 +215,9 @@ def get_class_mates(db_user_email):
 			models.UserInformation.school_program == db_user.r_user_information.school_program).all()
 	else:
 		return False
+
+def get_comments(blog_id):
+	return
 
 def get_contacts(role):
 	if role is 0:
@@ -307,6 +319,16 @@ def save_student_poll(db_user_email, db_student_poll_dict):
 		db_user = models.User.query.filter_by(email=db_user_email).first()
 		for x in db_student_poll_dict:
 			db_session.add(models.StudentPollAnswer(db_user.id, x))
+		db_session.commit()
+		return True
+	except:
+		return False
+
+def add_blog_comment(request_form):
+	try:
+		new_comment = models.BlogComment(request_form['fk_user_id'], request_form['fk_blog_id'], request_form['comment'], request_form['date'], request_form['time'])
+		# new_comment = models.BlogComment(1, 1, 'SAdds', '2013-08-27', '13:37:00')
+		db_session.add(new_comment)
 		db_session.commit()
 		return True
 	except:

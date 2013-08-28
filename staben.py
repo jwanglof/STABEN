@@ -2,11 +2,12 @@
 # -*- coding: utf-8 -*-
 import os
 import Image
+# from PIL import Image
 from werkzeug.utils import secure_filename
 
 import config
 #import model
-from dev import db_commands, debug, decorators
+from dev import db_commands, debug
 # from dev import debug
 
 # Used for new_password()
@@ -170,10 +171,16 @@ def delete_alum(album_id):
 	db_commands.delete_album(album_id)
 	return redirect(url_for('gallery'))
 
+@app.route('/upload_pictures/<gallery_id>', methods=['GET', 'POST'])
+def upload_pictures(gallery_id):
+	return 'hej'
+
 @app.route('/upload', methods=['GET','POST'])
 def upload():
 	user = db_commands.get_db_user(db_user_email=session['email'])
 	if request.method == 'POST':
+		photos = request.files.getlist('file[]')
+		# if not len(photos) > 5:
 		title = request.form['title']
 		description = request.form['description']
 		uploader = request.form['uploader']
@@ -184,27 +191,36 @@ def upload():
 
 		album_id_int = db_commands.save_album(uploader, date, time, title, description, 0)
 		album_id = 'album_' + str(album_id_int)
-
-		photos = request.files.getlist('file[]')
+	
 		photo_paths = []
 		photo_ids = []
+
+		album_path = config.host_option.upload_dir + 'gallery/' + album_id + '/'
+		p_thumb_path = album_path + 'thumbnail/'
+
+		if not os.path.exists(album_path):
+			os.makedirs(album_path)
+
+		if not os.path.exists(p_thumb_path):
+			os.makedirs(p_thumb_path)
+
+		thumbnail_size = 200, 200
 		for p in photos:
-			album_path = 'static/upload/gallery/' + album_id
-			if not os.path.exists(album_path):
-				os.makedirs(album_path)
-			path = album_path + '/' + secure_filename(p.filename)
+			path_to_file = album_path + secure_filename(p.filename)
 			photo_paths.append(secure_filename(p.filename))
-			p.save(path)
-			p_thumb = Image.open(path)
-			p_thumb.thumbnail((200,200), Image.ANTIALIAS)
-			p_thumb_path = album_path + '/thumbnail'
-			if not os.path.exists(p_thumb_path):
-				os.makedirs(p_thumb_path)
-			p_thumb_filename = p_thumb_path + '/' + p.filename
-			p_thumb.save(p_thumb_filename)
+
+			p.save(path_to_file)
+			
+			p_thumb = Image.open(path_to_file)
+			p_thumb.save(path_to_file)
+			p_thumb.thumbnail(thumbnail_size, Image.ANTIALIAS)
+			p_thumb.save(p_thumb_path + p.filename)
+		
 			p_id = db_commands.save_picture(uploader, album_id_int, date, time, secure_filename(p.filename), 'Beskrivning')
 			photo_ids.append(p_id)
 		return render('gallery_album_info.html', photo_ids=photo_ids, photo_paths=photo_paths,album_id=album_id)
+		# else:
+		# 	flash(u'Du kan bara ladda upp 5 bilder åt gången!')
 	return render('upload.html',user=user)
 
 @app.route('/blog')
@@ -214,9 +230,11 @@ def blog(blog_id=None):
 	if not blog_id is None:
 		gallery = db_commands.get_a_album(db_blog[0].fk_gallery_album_id)
 		photos = db_commands.get_all_pic_from_album(db_blog[0].fk_gallery_album_id)
+		comments = db_commands.get_comments(blog_id)
 	else:
 		gallery = None
 		photos = None
+		comments = None
 	return render('blog.html', blogs=db_blog, blog_id=blog_id, gallery=gallery, photos=photos)
 
 @app.route('/contact')
@@ -737,19 +755,33 @@ def admin_approve_album(album_id=0):
 			uploaders.append(db_commands.get_user_name(a.fk_user_id))
 	return render('gallery.html', albums=albums, thumbnails=thumbnails, uploaders=uploaders, admin_approve=True)
 
+@app.route('/add_comment/<blog_id>', methods=['GET','POST'])
+def add_comment(blog_id):
+	copy_request_form = request.form.copy()
 
-@app.errorhandler(403)
-def page_not_found(e):
-    return render('error.html', st=static_texts), 403
-@app.errorhandler(404)
-def page_not_found(e):
-    return render('error.html', st=static_texts), 404
-@app.errorhandler(410)
-def page_not_found(e):
-    return render('error.html', st=static_texts), 410
-@app.errorhandler(500)
-def page_not_found(e):
-    return render('error.html', st=static_texts), 500
+	localtime = time.localtime()
+	current_date = time.strftime('%Y-%m-%d', localtime)
+	current_time = time.strftime('%H:%M', localtime)
+	copy_request_form.add('date', current_date)
+	copy_request_form.add('time', current_time)
+	copy_request_form.add('fk_user_id', int(db_commands.get_db_user(db_user_email=session['email'])['user'].id))
+	copy_request_form.add('fk_blog_id', int(blog_id))
+
+	print db_commands.add_blog_comment(copy_request_form)
+	return blog_id
+
+# @app.errorhandler(403)
+# def page_not_found(e):
+#     return render('error.html', st=static_texts), 403
+# @app.errorhandler(404)
+# def page_not_found(e):
+#     return render('error.html', st=static_texts), 404
+# @app.errorhandler(410)
+# def page_not_found(e):
+#     return render('error.html', st=static_texts), 410
+# @app.errorhandler(500)
+# def page_not_found(e):
+#     return render('error.html', st=static_texts), 500
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
