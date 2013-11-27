@@ -750,7 +750,6 @@ def limit_groups(md):
 	return_values = collections.namedtuple('returns', ['md', 'rest_md'])
 
 	return_md = config.OrderedMultiDict()
-=======
 	for dialect_id, content in md.iteritems():
 		print ''
 		print 'DID:', dialect_id
@@ -990,7 +989,6 @@ def admin_insert_user_to_group():
 	# 	print i, ' --- ', x
 	# print '$$$$'
 	# print 'REST_MD'
-=======
 
 def admin_insert_user_to_group():
 	# Going to try to send a finished md to a function and sort it from there
@@ -1011,7 +1009,6 @@ def admin_insert_user_to_group():
 
 	# for i, x in md.iteritems():
 	# 	print i, x
->>>>>>> 4279409007dc8149b4c09b698be3bf4e408820e5
 	# print rest_md
 
 
