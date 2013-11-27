@@ -7,7 +7,8 @@
             <span class="label label-important">Om du vill radera detta album så använd knappen längst ned på sidan.</span>
             <br>
             <br>
-            <a href="/album_info/{{ album_id }}" class="btn btn-inverse"> Redigera detta album</a>
+            <a href="/album_info/{{ album_id }}" class="btn btn-inverse">Redigera bildbeskrivningar</a>
+            <a href="{{ url_for('/upload_pictures', gallery_id=album_id) }}" class="btn btn-inverse">Lägg till bilder</a>
         {% endif %}
         <h4>{{ album.description|safe }}</h4>
         <div id="links">
