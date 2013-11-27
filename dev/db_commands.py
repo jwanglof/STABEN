@@ -11,6 +11,7 @@ import read_csv
 import read_quotes
 import debug
 
+# To get namedtuple
 import collections
 
 db = config.db
@@ -641,6 +642,9 @@ def sort_groups(md):
 	# print dsa
 	return dsa
 
+def check_for_duplication_user(md, u_id, u_id_point):
+	return
+
 def check_for_duplication(md, r_md):
 	# print md
 	# print ''
@@ -672,6 +676,7 @@ def check_for_duplication(md, r_md):
 	# ELSE NOTHING HAPPENS
 	# AFTER THIS IS DONE IT SHOULD BE A CHECK SO THAT EACH GROUP HAS
 	# IT'S MAXIMUM NUMBER OF STUDENTS, IF NOT JUST TAKE FROM REST_MD
+
 	# ^^^^^^^^^^^^
 	# 1. Loop through md to get dialect_id and content (which is a OrderedMultiDict(UserID, UserIDPoint))
 	# 2. Loop through content to get UserID and UserIDPoint
@@ -745,6 +750,28 @@ def limit_groups(md):
 	return_values = collections.namedtuple('returns', ['md', 'rest_md'])
 
 	return_md = config.OrderedMultiDict()
+=======
+	for dialect_id, content in md.iteritems():
+		print ''
+		print 'DID:', dialect_id
+		print 'MD:', content
+		print 'REST:', r_md
+		for user_id, user_id_point in content.iteritems():
+			for rest_u_id, rest_u_id_point in r_md.values()[0].iteritems():
+				if user_id == rest_u_id:
+					print user_id, user_id_point
+					print rest_u_id, rest_u_id_point
+					print '####'
+			print ''
+		print ''
+
+
+def limit_groups(md):
+	# md = OrderedMultiDict(DialectID, OrderedMultiDict(UserID, UserIDPoint)
+	student_poll_dialects = get_student_poll_dialects()
+	return_md = config.OrderedMultiDict()
+	return_values = collections.namedtuple('returns', ['md', 'rest_md'])
+
 	rest_md = config.OrderedMultiDict()
 	for dialect_id, content in md.iteritems():
 		i = 1
@@ -963,6 +990,28 @@ def admin_insert_user_to_group():
 	# 	print i, ' --- ', x
 	# print '$$$$'
 	# print 'REST_MD'
+=======
+
+def admin_insert_user_to_group():
+	# Going to try to send a finished md to a function and sort it from there
+	rest_md = config.MultiDict()
+	md = add_to_groups(admin_get_top_groups_users_only(3))
+	md = sort_groups(md)
+	# Need to get all the users that got discarded = CHECK
+	# When all the discarded users are in rest_md = CHECK
+	# I need to to check for duplicated users
+	# and if there is I just need to keep the highest point
+	# in md
+	
+	limited = limit_groups(md)
+	md = limited.md
+	rest_md = limited.rest_md
+
+	check_for_duplication(md, rest_md)
+
+	# for i, x in md.iteritems():
+	# 	print i, x
+>>>>>>> 4279409007dc8149b4c09b698be3bf4e408820e5
 	# print rest_md
 
 
