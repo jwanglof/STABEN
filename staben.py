@@ -770,6 +770,10 @@ def add_comment(blog_id):
 	print db_commands.add_blog_comment(copy_request_form)
 	return blog_id
 
+@app.route('/nystaben')
+def nystaben():
+	return render('nystaben.html', st=static_texts);
+
 # @app.errorhandler(403)
 # def page_not_found(e):
 #     return render('error.html', st=static_texts), 403

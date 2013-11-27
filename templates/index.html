@@ -20,17 +20,21 @@
 <div class="span7">
 	<h3>Goddag och välkommen {{ st['nollan']|safe }}</h3>
 	Detta är {{ st['staben']|safe }}s eminenta hemsida.
-    <h3>Följ länken för att fylla i din utvärdering av nolle-p. <br>Tack på förhand.
-    <a href="https://docs.google.com/forms/d/1gBop2pOc0400I_DQ-7PxJCFOwBO8AFLyopjPWF-Sj40/viewform" target="_blank">Utvärdera nolle-p</a></h3>
-    <br>
+	<h4>
+		Nu är det dags att ansöka om du vill vara med i STABEN 14/15!
+		<br />
+		Följ följande länk för att komma till formuläret:
+		<br />
+		<a href="{{ url_for('nystaben') }}">Ansök om att söka STABEN 14/15</a>
+	</h4>
+	<br />
 	Segla försiktigt {{ st['nollan']|safe }} och kom ihåg, {{ st['staben']|safe }} ser dig alltid.
-    <br>
-    <br>
-    <br>
-    <br>
-    <p>{{ st['staben']|safe }} rekommenderar:</p>
-    <a href="http://bookify.se/" target="_blank">
-        <img src="{{ url_for('static', filename='sponsors/bookify.png') }}" width="246px" height="50px"></a>
+	<br />
+	<br />
+	<br />
+	<br />
+	<p>{{ st['staben']|safe }} rekommenderar:</p>
+	<a href="http://bookify.se/" target="_blank"><img src="{{ url_for('static', filename='sponsors/bookify.png') }}" width="246px" height="50px" /></a>
 </div>
 <div class='span4' style='margin-top: 15px;'>
 	<a class="twitter-timeline" data-theme="dark" height="500px" data-dnt="true" href="https://twitter.com/fadderi_staben" data-widget-id="339411237781794816">Tweets av @fadderi_staben</a>
