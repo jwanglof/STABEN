@@ -39,7 +39,12 @@ debug = debug.debug
 
 static_texts = {'nollan': '<span class="nollanfont">nollan</span>', 'nollans': '<span class="nollanfont">nollans</span>', 'staben': '<span class="stabenfont">STABEN</span>'}
 
-## 
+## Hämtar citat
+#
+# Hämtar alla citat som finns inlagda i databasen och returnerar ett random.
+# 
+# globals.update anropar en python-funktion så denna kan användas av Jinja.
+# Se rad 114 i templates/template.html för anropet.
 # TODO
 # Make get_quote() callable from a template. Used in template.html
 def get_quote():
@@ -50,6 +55,11 @@ def get_quote():
 		return False
 config.app.jinja_env.globals.update(get_quote=get_quote)
 
+## Hämtar en slumpad sträng
+#
+# Används för att skapa en slumpmässig sträng. Strängen kommer innehålla bokstäver och siffror.
+# Används för att skapa lösenord.
+#  @param length Anger vilken längd strängen ska ha. Förinställda värdet är att strängen blir 12 tecken långt.
 def random_string(length=12):
 	lst = [random.choice(string.ascii_letters + string.digits) for n in xrange(length)]
 	return ''.join(lst)
@@ -68,11 +78,21 @@ def send_email(recipients, subject, email_body=None, html_body=None):
 	except:
 		return False
 
-# Can not use this on CYD!
+## Asynkromt anrop för att skicka mail
+#
+# Skickar mail asynkromt.
+# OBS!
+# Kan inte använda denna funktion när hemsidan ligger i CYD-poolen.
+# Vet inte riktigt varför det inte fungerade.
+# @param msg Meddelandet som ska mailas.
 # @async
 # def send_async_email(msg):
 # 	config.mail.send(msg)
 
+## Lägga till en session
+# 
+# Lägger till de sessioner som används på hemsidan.
+# @param db_user Innehåller all information om användaren från databasen.
 def add_session(db_user):
 	config.session['email'] = db_user['user'].email
 	config.session['role'] = db_user['user'].role
@@ -90,10 +110,22 @@ def add_session(db_user):
 
 	return True
 
+## Redigera ett sessionsvärde
+# 
+# Redigerar ett sessionsvärde till det man vill
+# @param session_value Anger vilket sessionsvärde man vill ändra
+# @param value Anger det nya värdet
 def edit_session(session_value, value):
 	config.session[session_value] = value
 
+# Kan endast köras omm variabeln dev är satt som True.
+# dev-variabeln finns i dev/host_option.py
+# Denna BÖR sättas till False innan man laddar upp sidan!
 if config.host_option.dev:
+	## Route för att skapa databasen och alla tabeller
+	# 
+	# En route för att förenkla att skapa databasen. Binder ihop alla funktioner som skapar de olika tabellerna i databasen.
+	# db_commands finns i dev/db_commands.py
 	@app.route('/db_all')
 	def db_all():
 		try:
@@ -108,6 +140,7 @@ if config.host_option.dev:
 		except:
 			return 'NOOOOOO SUUUUUUUUCCESS!!!!!!!'
 
+	## Skapar databasen
 	@app.route('/db_create')
 	def db_create():
 		return db_commands.create_db()
