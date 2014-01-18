@@ -1,8 +1,19 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+
+ ## @package staben.py
+# Dokumentation för denna modul.
+#
+# Innehåller alla 'routes' för hemsidan, t.ex. /prices eller /schedule.
+# Innehåller även olika hjälpfunktioner.
+#
+# TODO
+# Borde verkligen dela upp denna fil!
+
 import os
-import Image
-# from PIL import Image
+
+# import Image
+from PIL import Image
 from werkzeug.utils import secure_filename
 
 import config
@@ -28,6 +39,8 @@ debug = debug.debug
 
 static_texts = {'nollan': '<span class="nollanfont">nollan</span>', 'nollans': '<span class="nollanfont">nollans</span>', 'staben': '<span class="stabenfont">STABEN</span>'}
 
+## 
+# TODO
 # Make get_quote() callable from a template. Used in template.html
 def get_quote():
 	quotes = db_commands.get_quotes()

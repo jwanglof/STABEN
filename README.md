@@ -24,12 +24,15 @@ TODO (x == finished)
 
 REQUIREMENTS
 ======
-[in pip] flask
-[in pip] flask-bcrypt (https://github.com/maxcountryman/flask-bcrypt)
-[in pip] flask-sqlalchemy (be sure to install version 0.16!)
-[in pip] flask-mysql
-[in pip] sqlalchemy-migrate
-[in pip] flask-mail
+<dl>
+	<dd>[in pip] flask</dd>
+	<dd>[in pip] flask-bcrypt (https://github.com/maxcountryman/flask-bcrypt)</dd>
+	<dd>[in pip] flask-sqlalchemy (be sure to install version 0.16! File in dev/files/)</dd>
+	<dd>[in pip] flask-mysql</dd>
+	<dd>[in pip] sqlalchemy-migrate</dd>
+	<dd>[in pip] flask-mail</dd>
+	<dd>[in pip] pillow</dd>
+</dl>
 
 PROFILE PAGE
 ======
