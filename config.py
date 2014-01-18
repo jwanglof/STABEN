@@ -25,8 +25,6 @@ USERNAME = 'admin'
 PASSWORD = 'default'
 
 UPLOADED_FILES_URL = host_option.root_path + '\upload\gallery'
-#UPLOADED_FILES_URL = 'upload/gallery'
-# UPLOADED_FILES_ALLOW = IMAGES
 
 app = Flask(__name__)
 app.secret_key = SECRET_KEY
