@@ -45,8 +45,6 @@ static_texts = {'nollan': '<span class="nollanfont">nollan</span>', 'nollans': '
 # 
 # globals.update anropar en python-funktion så denna kan användas av Jinja.
 # Se rad 114 i templates/template.html för anropet.
-# TODO
-# Make get_quote() callable from a template. Used in template.html
 def get_quote():
 	quotes = db_commands.get_quotes()
 	if quotes:
@@ -56,14 +54,26 @@ def get_quote():
 config.app.jinja_env.globals.update(get_quote=get_quote)
 
 ## Hämtar en slumpad sträng
-#
+# 
+#  @param length Anger vilken längd strängen ska ha. Förinställda värdet är att strängen blir 12 tecken långt.
+# 
 # Används för att skapa en slumpmässig sträng. Strängen kommer innehålla bokstäver och siffror.
 # Används för att skapa lösenord.
-#  @param length Anger vilken längd strängen ska ha. Förinställda värdet är att strängen blir 12 tecken långt.
 def random_string(length=12):
 	lst = [random.choice(string.ascii_letters + string.digits) for n in xrange(length)]
 	return ''.join(lst)
 
+## Skickar e-mail
+#
+# @param recipients 			Anger vilken e-mailadress som ska ta emot e-mailet.
+# @param subject				Anger titel  på e-mailet.
+# @param email_body 			Anger innehållet i e-mailet i plaintext.
+# @param html_body			Anger innehålleti e-mailet i html.
+# 
+# Skickar ett e-mail.
+# OBS!
+# Om det ska skickas asynkromt ska man använda send_async_email(msg) istället för config.mail.send(msg).
+# Samt att man måste kommentera ut funktionen.
 def send_email(recipients, subject, email_body=None, html_body=None):
 	try:
 		msg = config.Message(subject)
@@ -72,6 +82,7 @@ def send_email(recipients, subject, email_body=None, html_body=None):
 			msg.body = email_body
 		elif html_body:
 			msg.html = html_body
+
 		# send_async_email(msg)
 		config.mail.send(msg)
 		return True
@@ -79,20 +90,22 @@ def send_email(recipients, subject, email_body=None, html_body=None):
 		return False
 
 ## Asynkromt anrop för att skicka mail
-#
+# 
+# @param msg Meddelandet som ska mailas.
+# 
 # Skickar mail asynkromt.
 # OBS!
-# Kan inte använda denna funktion när hemsidan ligger i CYD-poolen.
-# Vet inte riktigt varför det inte fungerade.
-# @param msg Meddelandet som ska mailas.
+# Kan inte använda denna funktion när hemsidan ligger i CYD-poolen. Vet inte varför det inte fungerar.
+# 
 # @async
 # def send_async_email(msg):
 # 	config.mail.send(msg)
 
 ## Lägga till en session
 # 
-# Lägger till de sessioner som används på hemsidan.
 # @param db_user Innehåller all information om användaren från databasen.
+# 
+# Lägger till de sessioner som används på hemsidan.
 def add_session(db_user):
 	config.session['email'] = db_user['user'].email
 	config.session['role'] = db_user['user'].role
@@ -141,42 +154,79 @@ if config.host_option.dev:
 			return 'NOOOOOO SUUUUUUUUCCESS!!!!!!!'
 
 	## Skapar databasen
+	# 
+	# Skapar databasen. Denna måste köras innan alla andra funktioner som skapar tabeller!
 	@app.route('/db_create')
 	def db_create():
 		return db_commands.create_db()
+
+	## Tar bort databasen
+	# 
+	# OBS! Tar bort hela databasen.
 	@app.route('/db_delete')
 	def db_delete():
 		return db_commands.delete_db()
+
+	## Skapar sektionens program
+	# 
+	# Skapar de program som finns inom sektionen.
 	@app.route('/db_programs')
 	def db_programs():
 		return db_commands.create_school_programs()
+
+	## Skapar skolklasser
+	# 
+	# Skapar de skolklasser som finns inom de olika programmen.
+	# db_programs() måste köras innan denna eftersom varje klass har en foreign key till det program det tillhör.
 	@app.route('/db_classes')
 	def db_classes():
 		return db_commands.create_school_classes()
+
+	## Skapar kontaktuppgifter
+	# 
+	# Skapar de olika kontaktuppgifter som nollorna ska lätt hitta.
 	@app.route('/db_contacts')
 	def db_contacts():
 		return db_commands.create_contacts()
+	
+	## Skapar registreringskod
+	# 
+	# Skapar den registreringskod som är vald.
 	@app.route('/db_code')
 	def db_code():
 		return db_commands.create_secret_code()
+
+	## Skapar nolleenkäten
+	# 
+	# Skapar nolleenkäten.
 	@app.route('/db_student_poll')
 	def db_student_poll():
 		return db_commands.create_student_poll()
 
+## Route för index-sidan
 @app.route('/')
 def index():
 	return render('index.html', session=session, bla=config.user_roles, st=static_texts)
 
+## Route för pris-sidan
 @app.route('/prices')
 def prices():
 	return render('prices.html', st=static_texts)
 
+## Route för schema-sidan
+# 
+# Hämtar information från databasen.
 @app.route('/schedule')
 @app.route('/schedule/<show_week>')
 def schedule(show_week=1):
 	schedule = db_commands.get_schedule(show_week)
 	return render('schedule.html', week=show_week, schedule=schedule)
 
+## Route för galleri-sidan
+# 
+# @param album_id Specifierar vilket album som ska visas. Förinställda värdet är 0.
+#
+# Om album_id är 0 kommer alla gallerier visas, annars visas det valda galleriet.
 @app.route('/gallery/album/<album_id>')
 @app.route('/gallery/<notice>')
 @app.route('/gallery')
@@ -195,6 +245,11 @@ def gallery(album_id=0):
 			uploaders.append(db_commands.get_user_name(a.fk_user_id))
 	return render('gallery.html', albums=albums, thumbnails=thumbnails, uploaders=uploaders)
 
+## Route för lägga upp galleri-sidan
+# 
+# @params album_id Anger vilket galleri som ska visas. Förinställda värdet är 0.
+# 
+# VET INTE RIKTIGT VAD DETTA ÄR TILL FÖR!
 @app.route('/album_info/<album_id>', methods=['GET','POST'])
 @app.route('/album_info', methods=['POST'])
 def album_info(album_id=0):
@@ -212,21 +267,31 @@ def album_info(album_id=0):
 	flash(u'Bra jobbat <span class="nollanfont">nollan</span>. Om det var ett nytt album du lade till så måste det godkännas av <span class="stabenfont">STABEN</span> innan det syns. Gjorde du en ändring av en eller flera beskrivningar så syns de direkt.')
 	return redirect(url_for('gallery'))
 
+## Route för ta bort galleri-sidan
 @app.route('/delete_album/<album_id>')
 def delete_alum(album_id):
 	db_commands.delete_album(album_id)
 	return redirect(url_for('gallery'))
 
-@app.route('/upload_pictures/<gallery_id>', methods=['GET', 'POST'])
-def upload_pictures(gallery_id):
-	return 'hej'
+# @app.route('/upload_pictures/<gallery_id>', methods=['GET', 'POST'])
+# def upload_pictures(gallery_id):
+# 	return 'hej'
 
+## Route för ladda upp bilder-sidan
+# 
+# Laddar upp bilder. Se koden för kommentarer.
 @app.route('/upload', methods=['GET','POST'])
 def upload():
+	# Hämtar den inloggade användarens information
 	user = db_commands.get_db_user(db_user_email=session['email'])
+
+	# Uppladdningsformuläret skickas som POST
+	# Om sidan kallas på med GET kommer uppladdningsforumläret visas
 	if request.method == 'POST':
+		# Alla bilder
 		photos = request.files.getlist('file[]')
-		# if not len(photos) > 5:
+
+		# Sätter de olika värdena för galleriet
 		title = request.form['title']
 		description = request.form['description']
 		uploader = request.form['uploader']
@@ -235,22 +300,27 @@ def upload():
 		#Haha visa ej för nollan, ju
 		time = '13:37:00'
 
+		# Spara galleriet i databasen och returnera det ID galleriet fick
 		album_id_int = db_commands.save_album(uploader, date, time, title, description, 0)
 		album_id = 'album_' + str(album_id_int)
 	
 		photo_paths = []
 		photo_ids = []
 
+		# Sätt rätt mapp för bilderna
 		album_path = config.host_option.upload_dir + 'gallery/' + album_id + '/'
 		p_thumb_path = album_path + 'thumbnail/'
 
+		# Om mapparna inte finns skapas de
 		if not os.path.exists(album_path):
 			os.makedirs(album_path)
-
 		if not os.path.exists(p_thumb_path):
 			os.makedirs(p_thumb_path)
 
+		# Sätt provbildens storlek
 		thumbnail_size = 200, 200
+
+		# Gå igenom alla bilder som har laddats upp
 		for p in photos:
 			path_to_file = album_path + secure_filename(p.filename)
 			photo_paths.append(secure_filename(p.filename))
@@ -265,15 +335,19 @@ def upload():
 			p_id = db_commands.save_picture(uploader, album_id_int, date, time, secure_filename(p.filename), 'Beskrivning')
 			photo_ids.append(p_id)
 		return render('gallery_album_info.html', photo_ids=photo_ids, photo_paths=photo_paths,album_id=album_id)
-		# else:
-		# 	flash(u'Du kan bara ladda upp 5 bilder åt gången!')
 	return render('upload.html',user=user)
 
+## Route för ladda upp blogg-sidan
+# 
+# @param blog_id Anger vilken blogg som ska visas. Förinställda värdet är None.
+# 
+# Om blog_id inte är None kommer den valda blogga hämtas från databasen.
+# Annars visas alla inlägg.
 @app.route('/blog')
 @app.route('/blog/<blog_id>')
 def blog(blog_id=None):
-	db_blog = db_commands.get_blog(b_id=blog_id)
 	if not blog_id is None:
+		db_blog = db_commands.get_blog(b_id=blog_id)
 		gallery = db_commands.get_a_album(db_blog[0].fk_gallery_album_id)
 		photos = db_commands.get_all_pic_from_album(db_blog[0].fk_gallery_album_id)
 		comments = db_commands.get_comments(blog_id)
@@ -283,6 +357,9 @@ def blog(blog_id=None):
 		comments = None
 	return render('blog.html', blogs=db_blog, blog_id=blog_id, gallery=gallery, photos=photos)
 
+## Route för kontakt-sidan
+# 
+# @param show_page Anger vilken kontaktsida som ska visas. Förinställda värdet är att den ska visa kontaktsidan.
 @app.route('/contact')
 @app.route('/contact/<show_page>')
 def contact(show_page='contact'):
@@ -290,12 +367,9 @@ def contact(show_page='contact'):
 	role_studie = 1
 	klassforestandare = db_commands.get_contacts(role_klass)
 	studievagledning = db_commands.get_contacts(role_studie)
-	return render('contact.html', \
-		show=show_page, \
-		klassforestandare=klassforestandare, \
-		studievagledning=studievagledning, \
-		st=static_texts)
+	return render('contact.html', show=show_page, klassforestandare=klassforestandare, studievagledning=studievagledning, st=static_texts)
 
+## Route för login-sidan
 @app.route('/user/login', methods=['POST'])
 def login():
 	if request.form['email'] not in session:
@@ -322,11 +396,16 @@ def login():
 			return redirect(url_for('profile_class', user_email=request.form['email']))
 	return render('login.html', login=False)
 
+## Route för logga ut-sidan
 @app.route('/user/signout')
 def signout():
 	session.clear()
 	return redirect(url_for('index'))
 
+## Route för register-sidan
+# 
+# Kollar igenom varje värde som måste vara satt.
+# Om värdet inte är satt kommer användaren bli skickad tillbaka till register-sidan.
 @app.route('/register', methods=['POST', 'GET'])
 def register():
 	if request.method == 'POST':
@@ -381,11 +460,12 @@ def register():
 	else:
 		return render('register.html')
 
+## Route för glömt lösenord-sidan
+# 
+# @param code Om en användare har frågat efter nytt lösenord och fått en kod kommerr code bli satt. Förinställda värdet är None.
 @app.route('/forgot_password', defaults={'code': ''}, methods=['POST', 'GET'])
 @app.route('/forgot_password/<code>', methods=['POST', 'GET'])
 def forgot_password(code=None):
-	# bla = config.MultiDict([('recover_code', 'ZO9tnKQsv6nyjMptXbDYFN8k5')])
-	# print db_commands.get_db_user(recover_code='ZO9tnKQsv6nyjMptXbDYFN8k5')
 	if code:
 		# Query with the correct e-mail as well
 		# This can be done when the function is fixed to be more general!
@@ -446,30 +526,21 @@ def forgot_password(code=None):
 	else:
 		return render('forgot_password.html')
 
+## Route för nollebricke-sidan
 @app.route('/student_badge')
 def student_badge():
 	return render('student_badge.html')
 
+## Route för nollehandbok-sidan
 @app.route('/student_book')
 def student_book():
 	return render('student_book.html')
 
-'''
-	*
-	* User profile
-	*
-'''
-# @app.route('/profile', defaults={'user_email': ''})
-# @app.route('/profile/<user_email>/')
-# def profile(user_email):
-# 	if session and user_email == session['email']:
-# 		user = db_commands.get_db_user(db_user_email=user_email)
-# 		return render('profile.html', user=user['user'], user_info=user['info'])
-# 		#return render('profile.html', user_info=user_info, user_role=config.user_roles[user_info.role])
-# 	else:
-# 		return render('login.html', login=False)
+## Användarprofil
 
-#@app.route('/profile/<user_email>/edit', defaults={'user_email': ''})
+## Route för användares profil-sidan
+# 
+# @param user_email Kommer vara användarens e-mail som hen registrerade sig med.
 @app.route('/profile/<user_email>/edit/')
 def profile_edit(user_email):
 	if session and user_email == session['email']:
@@ -487,7 +558,9 @@ def profile_edit(user_email):
 	else:
 		return render('login.html', login=False)
 
-# @app.route('/profile/<user_email>/save', defaults={'user_email': ''})
+## Route för spara profil-sidan
+# 
+# @param user_email Kommer vara användarens e-mail som hen registrerade sig med.
 @app.route('/profile/<user_email>/save/', methods=['POST'])
 def profile_save(user_email):
 	if session and user_email == session['email']:
@@ -512,6 +585,9 @@ def profile_save(user_email):
 	else:
 		return render('login.html', login=False)
 
+## Route för spara lösenord-sidan
+# 
+# @param user_email Kommer vara användarens e-mail som hen registrerade sig med.
 @app.route('/profile/<user_email>/save/password', methods=['POST'])
 def profile_save_password(user_email):
 	if session and user_email == session['email']:
@@ -522,6 +598,10 @@ def profile_save_password(user_email):
 	else:
 		return render('login.html', login=False)
 
+## Route för skolprogram-sidan
+# 
+# @param user_email Kommer vara användarens e-mail som hen registrerade sig med.
+# @param school_program Anger vilket skolprogram användaren vill kolla på.
 @app.route('/profile/<user_email>/class/<school_program>')
 def profile_class(user_email, school_program):
 	if session and user_email == session['email']:
@@ -534,6 +614,9 @@ def profile_class(user_email, school_program):
 	else:
 		return render('login.html', login=False)
 
+## Route för nolleenkät-sidan
+# 
+# @param user_email Kommer vara användarens e-mail som hen registrerade sig med.
 @app.route('/profile/<user_email>/student_poll/')
 def profile_student_poll(user_email):
 	if session and user_email == session['email']:
@@ -552,11 +635,14 @@ def profile_student_poll(user_email):
 	else:
 		return render('login.html', login=False)
 
+## Route för spara nolleenkät-sidan
+# 
+# @param user_email Kommer vara användarens e-mail som hen registrerade sig med
 @app.route('/profile/<user_email>/save/student_poll/', methods=['POST'])
 def profile_save_student_poll(user_email):
 	if session and user_email == session['email']:
 		# Check if the user already have done the student poll
-		# Added this check so that no body tries to save his poll more than once
+		# Added this check so that no body tries to save his/hers poll more than once
 		if db_commands.get_db_user(db_user_email=session['email'])['info'].poll_done == 0:
 			if db_commands.update_db_user(user_email, config.ImmutableMultiDict([('poll_done', u'1')])):
 				if db_commands.save_student_poll(user_email, request.form):
@@ -573,6 +659,9 @@ def profile_save_student_poll(user_email):
 	else:
 		return render('login.html', login=False)
 
+## Route för lägga till blogg-sidan
+# 
+# @param user_email Kommer vara användarens e-mail som hen registrerade sig med.
 @app.route('/profile/<user_email>/blog')
 def profile_blog(user_email):
 	if session and user_email == session['email'] and (session['role'] is 6 or session['role'] is 0):
@@ -584,6 +673,10 @@ def profile_blog(user_email):
 	else:
 		return render('admin_fail.html')
 
+## Route för lägga till eller redigera blogg-sidan
+# 
+# @param user_email Kommer vara användarens e-mail som hen registrerade sig med.
+# @param command Anger vilket kommando som ska användas. Kan vara antigen add eller edit.
 @app.route('/profile/<user_email>/blog/<command>', methods=['POST'])
 def profile_blog_entry(user_email, command):
 	if session and user_email == session['email'] and (session['role'] is 6 or session['role'] is 0):
@@ -605,14 +698,16 @@ def profile_blog_entry(user_email, command):
 				return redirect(url_for('blog'))
 			else:
 				return 'Kunde inte uppdatera blogginlägget!'
+		else:
+			return 'Felaktigt kommando!'
 	else:
 		return render('admin_fail.html')
 
-'''
-	*
-	* Admin tools
-	*
-'''
+## Adminverktyg
+
+## Route för random verktyg-sidan
+# 
+# Här läggs lite random verktyg som förenklar arbetet lite.
 @app.route('/admin/pages/')
 def admin_pages():
 	# Need to check that the user is signed in and is an admin
@@ -621,18 +716,25 @@ def admin_pages():
 	else:
 		return render('admin_fail.html')
 
+## Route för spara random verktyg-sidan
+# 
+# @param command Anger vad man vill göra. Nu finns bara quote som lägger till ett citat.
 @app.route('/admin/pages/save/<command>', methods=['GET', 'POST'])
 def admin_page_save(command):
-	if request.method == 'POST':
-		if command == 'quote':
-			flash(u'Citat inlagt.')
-			result = db_commands.admin_add_quote(request.form)
+	if db_commands.check_role(session['email']) == 0:
+		if request.method == 'POST':
+			if command == 'quote':
+				flash(u'Citat inlagt.')
+				result = db_commands.admin_add_quote(request.form)
 
-		if result:
-			return redirect(url_for('admin_pages'))
-		else:
-			return 'Couldn\'t add quote'
+			if result:
+				return redirect(url_for('admin_pages'))
+			else:
+				return 'Couldn\'t add quote'
+	else:
+		return render('admin_fail.html')
 
+## Route för lägga till kontakt-sidan
 @app.route('/admin/addcontact/', methods=['GET', 'POST'])
 def admin_addcontact():
 	if db_commands.check_role(session['email']) is 0:
@@ -646,6 +748,7 @@ def admin_addcontact():
 	else:
 		return render('admin_fail.html')
 
+## Route för visa användare-sidan
 @app.route('/admin/users/')
 def admin_get_all_users():
 	# Need to check that the user is signed in and is an admin
@@ -655,6 +758,11 @@ def admin_get_all_users():
 	else:
 		return render('admin_fail.html')
 
+## Route för nolleenkätsinställnings-sidan
+# 
+# Kan lägga till prefix, frågor.
+# Kan ändra hur många nollor det ska vara i varje grupp.
+# Kan lägga till alla nollor i sin rätta grupp. OBS! Detta fungerar INTE! Måste skriva om hela nolleenkätssaken. GLHFosv.
 @app.route('/admin/student_poll/')
 def admin_student_poll():
 	if db_commands.check_role(session['email']) is 0:
@@ -664,32 +772,38 @@ def admin_student_poll():
 	else:
 		return render('admin_fail.html')
 
+## Route för spara nolleenkätsinställningar-sidan
+#
+# @param command Anger vilket kommando som ska användas. Kan vara prefix, question eller max_students.
 @app.route('/admin/student_poll/save/<command>', methods=['POST'])
 def admin_student_poll_save(command):
-	if request.method == 'POST':
-		if command == 'prefix':
-			flash('Prefix inlagt.')
-			result = db_commands.add_student_poll_prefix(request.form)
-		elif command == 'question':
-			flash(u'Fråga inlagd.')
-			result = db_commands.add_student_poll_question(request.form)
-		elif command == 'max_students':
-			flash(u'Max antal studenter inlagt.')
-			result = db_commands.add_student_poll_max_students(request.form)
+	if db_commands.check_role(session['email']) is 0:
+		if request.method == 'POST':
+			if command == 'prefix':
+				flash('Prefix inlagt.')
+				result = db_commands.add_student_poll_prefix(request.form)
+			elif command == 'question':
+				flash(u'Fråga inlagd.')
+				result = db_commands.add_student_poll_question(request.form)
+			elif command == 'max_students':
+				flash(u'Max antal studenter inlagt.')
+				result = db_commands.add_student_poll_max_students(request.form)
 
-		if result:
-			# Perhaps add some kind of alert here to show that the
-			#  prefix/question was successfully added??
-			return redirect(url_for('admin_student_poll'))
-		else:
-			return 'Couldn\'t add to poll'
+			if result:
+				# Perhaps add some kind of alert here to show that the
+				#  prefix/question was successfully added??
+				return redirect(url_for('admin_student_poll'))
+			else:
+				return 'Couldn\'t add to poll'
+	else:
+		return render('admin_fail.html')
 
+## Route för se alla nolleenkäter-sidan
+# 
+# Denna är väldigt seg, mycket för att nolleenkäten är så otroligt stor och därmed är databasen väldigt stor så det tar tid att sammanställa allting.
 @app.route('/admin_student_poll_result')
 def admin_student_poll_result():
 	if db_commands.check_role(session['email']) is 0:
-		#, \
-		# dialects=db_commands.get_student_poll_dialects(), \
-		# user_w_points=db_commands.admin_get_top_three_groups()
 		return render('admin_student_poll_result.html', \
 			users_info=db_commands.admin_get_all_users_w_poll_done(), \
 			dialects=db_commands.get_student_poll_dialects(), \
@@ -697,6 +811,9 @@ def admin_student_poll_result():
 	else:
 		return render('admin_fail.html')
 
+## Route för visa  en students nolleenkät-sidan
+#
+# @param user_id Anger vilken students nolleenkät man vill se.
 @app.route('/admin_show_student_poll_result/<user_id>')
 def admin_show_student_poll_result(user_id):
 	if db_commands.check_role(session['email']) is 0:
@@ -710,76 +827,91 @@ def admin_show_student_poll_result(user_id):
 	else:
 		return render('admin_fail.html')
 
+## Route för att lägga till en användare-sidan
+# 
+# Inte riktigt säker på vad denna skulle göra.
 @app.route('/admin_insert_user_to_group', methods=['POST'])
 def admin_insert_user_to_group():
-	if request.method == 'POST':
-		print db_commands.admin_insert_user_to_group()
-		
-		# REPLACE THE FINISHED MD WITH THIS::::::
-		# users = db_commands.admin_get_all_users()
-		# return render('admin_student_poll_show_assigned_groups.html', \
-		# 	md=db_commands.admin_insert_user_to_group(), \
-		# 	users=users, \
-		# 	dialects=db_commands.get_student_poll_dialects(), \
-		# 	school_programs=db_commands.get_school_programs())
+	if db_commands.check_role(session['email']) is 0:
+		if request.method == 'POST':
+			print db_commands.admin_insert_user_to_group()
+			
+			# REPLACE THE FINISHED MD WITH THIS::::::
+			# users = db_commands.admin_get_all_users()
+			# return render('admin_student_poll_show_assigned_groups.html', \
+			# 	md=db_commands.admin_insert_user_to_group(), \
+			# 	users=users, \
+			# 	dialects=db_commands.get_student_poll_dialects(), \
+			# 	school_programs=db_commands.get_school_programs())
+	else:
+		return render('admin_fail.html')
 
+## Route för att redigera en nollans svar-sidan
+# 
+# Denna används till nolleintervjuerna där de som intervjuar kan dubbelkolla allting som nollan har angett i sin profil.
+# Här ställer även den som intervjuar frågor om nollan vill tillhöra en speciell grupp.
+# OBS! Denna fungerar inte som den ska (tror jag) och bör kollas över.
 @app.route('/admin_edit_user/<user_id>')
 def admin_edit_user(user_id):
-	return render('admin_edit_user.html', user=db_commands.get_db_user(user_id=user_id))
+	if db_commands.check_role(session['email']) is 0:
+		return render('admin_edit_user.html', user=db_commands.get_db_user(user_id=user_id))
+	else:
+		return render('admin_fail.html')
 
+## Route för att spara en nollans svar-sidan
+# 
+# @param user_id Anger vilken nollans svar man ska spara.
+# 
+# 110, 111, 112 och 113 är kollen om nollan vill tillhöra någon speciell grupp eller inte.
+# Om nollan vill det kommer hen få extra poäng på de grupperna som kollen tillhör.
 @app.route('/admin_edit_user/save/<user_id>', methods=['POST'])
 def admin_edit_user_save(user_id):
-	try:
-		copy_request_form = request.form.copy()
-		if 'bicycle' in request.form:
-			copy_request_form.pop('bicycle')
-			copy_request_form.add('bicycle', 1)
+	if db_commands.check_role(session['email']) is 0:
+		try:
+			copy_request_form = request.form.copy()
 
-		if '110' in request.form:
-			db_commands.save_student_poll(request.form['email'], config.ImmutableMultiDict([('110', 110)]))
-		if '111' in request.form:
-			db_commands.save_student_poll(request.form['email'], config.ImmutableMultiDict([('111', 111)]))
-		if '112' in request.form:
-			db_commands.save_student_poll(request.form['email'], config.ImmutableMultiDict([('112', 112)]))
-		if '113' in request.form:
-			db_commands.save_student_poll(request.form['email'], config.ImmutableMultiDict([('113', 113)]))
-		copy_request_form.pop('email')
-		db_commands.update_db_user(request.form['email'], copy_request_form)
+			# Need this check because if the checkbox is checked it won't give it a value
+			# so it removes the value from the dict and re-adds it with value 1
+			if 'bicycle' in request.form:
+				copy_request_form.pop('bicycle')
+				copy_request_form.add('bicycle', 1)
 
-		return redirect(url_for('admin_get_all_users'))
-	except:
-		return False
+			if '110' in request.form:
+				db_commands.save_student_poll(request.form['email'], config.ImmutableMultiDict([('110', 110)]))
+			if '111' in request.form:
+				db_commands.save_student_poll(request.form['email'], config.ImmutableMultiDict([('111', 111)]))
+			if '112' in request.form:
+				db_commands.save_student_poll(request.form['email'], config.ImmutableMultiDict([('112', 112)]))
+			if '113' in request.form:
+				db_commands.save_student_poll(request.form['email'], config.ImmutableMultiDict([('113', 113)]))
+			copy_request_form.pop('email')
+			db_commands.update_db_user(request.form['email'], copy_request_form)
 
+			return redirect(url_for('admin_get_all_users'))
+		except:
+			return False
+	else:
+		return render('admin_fail.html')
+
+## Route för visa en nollan-sidan
+# 
+# @param user_id Anger vilken nollan man vill kolla på.
 @app.route('/admin_show_user/<user_id>')
 def admin_show_user(user_id):
-	return render('admin_show_user.html', \
-		user=db_commands.get_db_user(user_id=user_id), \
-		user_points=db_commands.admin_calc_user_points(user_id=user_id, order=True), \
-		dialects=db_commands.get_student_poll_dialects())
+	if db_commands.check_role(session['email']) is 0:
+		return render('admin_show_user.html', \
+			user=db_commands.get_db_user(user_id=user_id), \
+			user_points=db_commands.admin_calc_user_points(user_id=user_id, order=True), \
+			dialects=db_commands.get_student_poll_dialects())
+	else:
+		return render('admin_fail.html')
 
-@app.route('/test')
-def test():
-	# DialectID: [{UserID: Position}]
-	md = config.MultiDict()
-	# md.add(2, {1: 3})
-	# md.add(2, {2: 1})
-	# md.add(2, {10: 2})
-	# md.add(2, {11: 1})
-	# md.add(2, {17: 3})
-	# md.add(3, {1: 2})
-	# db_commands.check_if_in_md(md, 17, 1)
-	# return 'hej'
-	md.add('picture_id', 69)
-	md.add('picture_id', 22)
-	md.add('picture_id', 43)
-	md.add('description', 'Hej')
-	md.add('description', 'Hej22')
-	md.add('description', 'Tji')
-	asd = {}
-	print md
-	for i in md:
-		print md.getlist(i)
-
+## Route för godkänna galleri-sidan
+# 
+# @param album_id Anger vilket galleri man vill kolla på. Förinställda värdet är 0.
+# 
+# Om album_id inte är 0 kommer den visa det galleri man vill se.
+# Om man godkänner galleriet kommer formuläret skicka en POST request och då godkänns galleriet.
 @app.route('/admin_approve_album/<album_id>', methods=['GET','POST'])
 @app.route('/admin_approve_album', methods=['GET','POST'])
 def admin_approve_album(album_id=0):
@@ -801,6 +933,9 @@ def admin_approve_album(album_id=0):
 			uploaders.append(db_commands.get_user_name(a.fk_user_id))
 	return render('gallery.html', albums=albums, thumbnails=thumbnails, uploaders=uploaders, admin_approve=True)
 
+## Route för lägga till en kommentar-sidan
+# 
+# @param blog_id Anger vilken blogg man vill lägga till kommentaren i.
 @app.route('/add_comment/<blog_id>', methods=['GET','POST'])
 def add_comment(blog_id):
 	copy_request_form = request.form.copy()
@@ -813,13 +948,14 @@ def add_comment(blog_id):
 	copy_request_form.add('fk_user_id', int(db_commands.get_db_user(db_user_email=session['email'])['user'].id))
 	copy_request_form.add('fk_blog_id', int(blog_id))
 
-	print db_commands.add_blog_comment(copy_request_form)
 	return blog_id
 
+## Route för ansöka till STABEN-sidan
 @app.route('/nystaben')
 def nystaben():
 	return render('nystaben.html', st=static_texts);
 
+# Does not work..
 # @app.errorhandler(403)
 # def page_not_found(e):
 #     return render('error.html', st=static_texts), 403
@@ -833,9 +969,12 @@ def nystaben():
 # def page_not_found(e):
 #     return render('error.html', st=static_texts), 500
 
+## Funktion för att rensa allt från hemsidan som inte ska vara kvar efter nedstängning.
 @app.teardown_appcontext
 def shutdown_session(exception=None):
 	config.db_session.remove()
 
+## Från flask manuallen:
+# The if __name__ == '__main__': makes sure the server only runs if the script is executed directly from the Python interpreter and not used as an imported module.
 if __name__ == '__main__':
 	app.run(host=config.host_option.HOST, debug=config.host_option.DEBUG)
