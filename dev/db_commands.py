@@ -1,6 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+ ## @package db_commands.py
+# Dokumentation för denna modul.
+#
+# Innehåller alla funktioner som tillkallas från t.ex. staben.py.
+#
+# TODO
+# Borde verkligen dela upp denna fil!
+# 
 # READ
 # http://www.blog.pythonlibrary.org/2010/02/03/another-step-by-step-sqlalchemy-tutorial-part-2-of-2/
 
@@ -20,6 +28,7 @@ db_session = config.db_session
 
 debug = debug.debug
 
+# Förinställda värden som kommer matas in i databasen
 school_program = []
 school_program.append(models.SchoolProgram(1, 'D', 'Datateknik'))
 school_program.append(models.SchoolProgram(2, 'IT', 'Informationsteknologi'))
@@ -44,40 +53,67 @@ contacts.append(models.Contact('Alex Telon', '070-2647531', 'alete471@student.li
 contacts.append(models.Contact('Siv Söderlund', '013-282836', 'siv.soderlund@liu.se', 1, '', 'http://www.liu.se/personal/tfk/sivso41?l=sv'))
 
 if config.host_option.dev:
-	# Should check if the DB is created successfully or not!
+	## Skapa databas
+	# 
+	# Skapar databasen. Denna funktion måste köras innan någon annan funktion nedan kan köras!
+	# 
+	# TODO
+	# Kolla att databasen verkligen skapas.
 	def create_db():
 		config.Base.metadata.create_all(bind=config.engine, checkfirst=True)
 		return "DB creation done"
 
+	## Ta bort databas
+	# 
+	# Tar bort databasen.
 	def delete_db():
 		config.Base.metadata.drop_all(bind=config.engine)
 		return "JAAAA"
 
+	# Skapa registreringskod
+	# 
+	# Lägger till den kod alla nollor fick i sina välkomstbrev.
+	# För STABEN 13/14 var det two_weevil (kommer från Master and Commander).
 	def create_secret_code():
 		db_session.add(models.RegisterCode('two_weevil'))
 		db_session.commit()
 		return 'Secret code added'
-		# Add the secret code to the DB!
-		# two_weevil
 
+	## Skapa skolklasserna
+	#
+	# Skapar alla skolklasser.
+	# Hämtas från de förinställda värdena.
 	def create_school_classes():
 		for classes in school_class:
 			db_session.add(classes)
 		db_session.commit()
 		return "School classes added"
 
+	## Skapa sektionens program
+	#
+	# Skapar de program sektionen ansvarar för.
+	# Hämtas från de förinställda värdena.
 	def create_school_programs():
 		for program in school_program:
 			db_session.add(program)
 		db_session.commit()
 		return "School programs added"
 
+	## Skapa kontaktuppgifter
+	#
+	# Skapar de kontaktuppgifterna nollorna ska ha lättillgängliga.
+	# Hämtas från de förinställda värdena.
 	def create_contacts():
 		for contact in contacts:
 			db_session.add(contact)
 		db_session.commit()
 		return "Contacts added"
 
+	## Skapa nolleenkäten
+	# 
+	# Skapar hela nolleenkäten.
+	# Hämtar allting från config.host_option.student_poll_file.
+	# Denna fil måste följa ett visst mönster. Kolla i read_csv.py för detta mönster!
 	def create_student_poll():
 		# '/www/dstaben/htdocs/dev/studentpoll.csv'
 		# os.getcwd() + '/dev/studentpoll.csv'
@@ -98,9 +134,8 @@ if config.host_option.dev:
 			db_session.add(models.StudentPollDialect(index, d, max_students[index]))
 
 		# Add points
-		# Get the points from the CSV file
 		for index_in_db, points_dict in StudentPoll.get_points().iteritems():
-			# Get the question and 
+			# Get the question and points
 			for question, point_list in points_dict.iteritems():
 				for dialect_index, point in enumerate(point_list):
 					if point != '':
@@ -110,6 +145,9 @@ if config.host_option.dev:
 		db_session.commit()
 		return 'Student poll prefixes and questions added'
 
+	## Skapa citat
+	#
+	# Lägger till citat i databasen.
 	def create_quotes():
 		try:
 			Quotes = read_quotes.ReadQuotes(config.host_option.quote_file)
@@ -123,18 +161,34 @@ if config.host_option.dev:
 		except:
 			return 'Could not add quotes'
 
+## Lägg till kontakt
+# 
+# Lägger till en specificerad kontakt.
+# Kallad från /admin/addcontact/.
 def add_contact(name, phonenumber, email, role, school_class, link):
 	contact = models.Contact(name, phonenumber, email, role, school_class, link)
 	db_session.add(contact)
 	db_session.commit()
 	return 'success'
 
+## Uppdatera antal inloggningar
+# 
+# @param db_user_email Anger vilken användare som det ska uppdateras för
+# 
+# Uppdaterar en användares antal inloggningar i databasen.
+# Kallad från /user/login.
 def add_login_count(db_user_email):
 	db_user = models.User.query.filter_by(email=db_user_email).first()
 	user_info = models.UserInformation.query.filter_by(fk_user_id=db_user.id).first()
 	user_info.login_count += 1
 	db_session.commit()
 
+## Lägg till en användare
+# 
+# @param db_user_id Anger den nya användarens databas ID
+# 
+# Lägger till en användare i databasen.
+# Kallad från /register.
 def add_user_information(db_user_id):
 	try:
 		db_session.add(models.UserInformation(db_user_id, ''))
@@ -143,20 +197,41 @@ def add_user_information(db_user_id):
 	except:
 		return False
 
+## Kolla användarroll
+# 
+# @param db_user_email Anger vilken användare som ska kollas
+# 
+# Kollar vilken roll en användare har.
+# Finns olika roller för vilken typ av användare användaren är.
+# T.ex. admin, överfadder etc.
+# Kallad från olika routes, främst för adminverktygen.
 def check_role(db_user_email):
 	return models.User.query.filter_by(email=db_user_email).first().role
 
+## Kolla om e-mailen finns
+# 
+# @param email Anger vilken e-mail som ska kollas
+#
+# Kollar om e-mailen finns i databasen så en användare inte kan registrera sig fler gånger.
+# Kallas från /register.
 def check_if_email_exist(email):
 	if models.User.query.filter_by(email=email).first():
 		return True
 	else:
 		return False
 
+## Hämta alla gallerier
+# 
+# @param approved Anger vilken typ av galleri man vill hämta. Godkända eller inte
 def get_all_albums(approved):
 	return models.GalleryAlbum.query.filter_by(approved=approved).all()
 
+## Hämta ett galleri
+# 
+# @param album_id Anger vilket galleri man vill hämta
 def get_a_album(album_id):
 	return models.GalleryAlbum.query.filter_by(id=album_id).first()
+
 
 def get_all_pic_from_album(album_id):
 	return models.GalleryPicture.query.filter_by(fk_gallery_album_id=album_id).all()
