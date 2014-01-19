@@ -348,8 +348,6 @@ def get_contacts(role):
 # @param db_user_email Anger vilken e-mail man vill hämta användaruppgifter från. Förinställda värdet är None
 # @param db_user_password Anger vilket lösenord man vill hämta användaruppgifter från. Förinställda värdet är None
 # @param recover_code Anger vilken återställningskod man vill hämta användaruppgifter från. Förinställda värdet är None
-# 
-# 
 def get_db_user(user_id=None, db_user_email=None, db_user_password=None, recover_code=None):
 	# models.User.query.filter_by(id=1).first().user_information.fk_user_id
 	if db_user_email != None:
@@ -357,8 +355,6 @@ def get_db_user(user_id=None, db_user_email=None, db_user_password=None, recover
 	elif user_id != None:
 		db_user = models.User.query.filter_by(id=user_id).first()
 	elif recover_code != None:
-		# return db_session.query(models.User, models.UserInformation).join('user_information').filter_by(recover_code=recover_code).first()
-		# return models.User.query.join(models.User.user_information).filter_by(recover_code=recover_code).first()
 		return models.User.query.join(models.UserInformation).filter(models.UserInformation.recover_code==recover_code).first()
 
 	if db_user is not None:
@@ -374,48 +370,72 @@ def get_db_user(user_id=None, db_user_email=None, db_user_password=None, recover
 			return db_user_info
 	else:
 		return False
-		
+
+## Hämta citat
 def get_quotes():
 	try:
 		return models.Quote.query.all()
 	except:
 		return False
 
+## Hämta användare
+# 
+# @param db_user_recover_code Anger vilken återställningskod som ska kollas
 def get_recover_user(db_user_recover_code):
 	return models.UserInformation.query.filter_by(recover_code=db_user_recover_code).first()
 
+## Hämta registerkod
 def get_register_code():
 	return models.RegisterCode.query.first()
 
+## Hämta schema
+# 
+# @param week Anger vilken vecka som ska hämtas
 def get_schedule(week):
 	return models.Schedule.query.filter_by(week=week).order_by(config.asc(models.Schedule.id)).all()
 
+## Hämta skolprogram
+# 
+# @param program_abbreviation Skolprogrammets kortnamn (D, IP, IT, U). Förinställda värdet är None
+# 
+# Om program_abbreviation inte är satt kommer alla skolprogram att hämtas.
 def get_school_programs(program_abbreviation=None):
 	if program_abbreviation:
 		return models.SchoolProgram.query.filter_by(abbreviation=program_abbreviation).first()
 	return models.SchoolProgram.query.all()
 
+## Hämta skolklasser
 def get_school_classes():
 	return models.SchoolClass.query.all()
 
+## Hämta en användares nolleenkätssvar
+# 
+# @param db_user_email Anger vilken användare som det ska hämtas från
 def get_student_poll_answers(db_user_email):
 	user_id = get_db_user(db_user_email=db_user_email)['user'].id
 	return models.StudentPollAnswer.query.filter_by(fk_user_id=user_id).order_by(models.StudentPollAnswer.id).all()
 
+## Hämta nolleenkätsgrupper
 def get_student_poll_dialects():
 	return models.StudentPollDialect.query.order_by(models.StudentPollDialect.id).all()
 
+## Hämta nolleenkätspoäng
 def get_student_poll_points():
 	return models.StudentPollPoint.query.order_by(models.StudentPollPoint.fk_student_poll_question_id).all()
 
+## Hämta nolleenkätstitlar
 def get_student_poll_prefix():
 	admin_prefix_id = models.StudentPollPrefix.query.filter_by(prefix = 'Admin').first().id
 	return models.StudentPollPrefix.query.filter(models.StudentPollPrefix.id != admin_prefix_id).order_by(models.StudentPollPrefix.id).all()
 
+## Hämta nolleenkätsfrågor
 def get_student_poll_question():
 	admin_prefix_id = models.StudentPollPrefix.query.filter_by(prefix = 'Admin').first().id
 	return models.StudentPollQuestion.query.filter(models.StudentPollQuestion.fk_student_poll_prefix_id != admin_prefix_id).order_by(models.StudentPollQuestion.id).all()
 
+## Hämta en användares skolprogram
+# 
+# @param db_user_email Anger vilken användares skolprogram som ska hämtas
 def get_user_school_program(db_user_email):
 	db_user = models.User.query.filter_by(email=db_user_email).first()
 	school_program = models.SchoolProgram.query.filter_by(id=db_user.r_user_information.school_program).first()
@@ -424,11 +444,17 @@ def get_user_school_program(db_user_email):
 	else:
 		return 0
 
+## Hämta alla användare i ett program
+# 
+# @param school_program Anger vilket program som det ska hämtas från
 def get_school_program_users(school_program):
 	if school_program == str(0):
 		return models.User.query.join(models.UserInformation).filter(models.UserInformation.school_program==1).filter(models.User.role!=0).all()
 	return models.User.query.join(models.UserInformation).filter(models.UserInformation.school_program==get_school_programs(school_program).id).filter(models.User.role!=0).all()
 
+## Registrera användare
+# 
+# @param db_user_dict Användarens uppgifter
 def register_user(db_user_dict):
 	try:
 		new_user = models.User(db_user_dict['email'], config.bcrypt.generate_password_hash(db_user_dict['password']))
@@ -438,6 +464,10 @@ def register_user(db_user_dict):
 	except:
 		return False
 
+## Spara nolleenkät för användare
+# 
+# @param db_user_email Anger vilken användare nolleenkäten ska sparas för
+# @param db_student_poll_dict Användarens nolleenkätssvar
 def save_student_poll(db_user_email, db_student_poll_dict):
 	try:
 		db_user = models.User.query.filter_by(email=db_user_email).first()
@@ -448,16 +478,24 @@ def save_student_poll(db_user_email, db_student_poll_dict):
 	except:
 		return False
 
+## Lägg till bloggkommentar
+# 
+# @param request_form Formuläret som innehåller kommentarinformationen
 def add_blog_comment(request_form):
 	try:
 		new_comment = models.BlogComment(request_form['fk_user_id'], request_form['fk_blog_id'], request_form['comment'], request_form['date'], request_form['time'])
-		# new_comment = models.BlogComment(1, 1, 'SAdds', '2013-08-27', '13:37:00')
 		db_session.add(new_comment)
 		db_session.commit()
 		return True
 	except:
 		return False
 
+## Spara blogginlägg
+# 
+# @param blog_dict Innehåller bloggens innehåll från formuläret
+# @param blog_id Anger bloggen som ska uppdateras. Förinställda värdet är False
+# 
+# Om blog_id är satt kommer bloggen uppdateras.
 def save_blog(blog_dict, blog_id=False):
 	try:
 		if not blog_id:
@@ -469,6 +507,10 @@ def save_blog(blog_dict, blog_id=False):
 	except:
 		return False
 
+## Hämta blogg
+# 
+# @param b_id Anger bloggen som ska hämtas
+# @param b_date Anger vilket datum som ska hämtas
 def get_blog(b_id=None, b_date=None):
 	try:
 		if b_id:
@@ -480,9 +522,19 @@ def get_blog(b_id=None, b_date=None):
 	except:
 		return False
 
+## Hämta blogg
+# 
+# @param date Anger vilket datum som ska hämtas
+# 
+# Inte riktigt säker på när denna används ;P
 def check_if_blog_done(date):
 	return models.Blog.query.filter_by(date=date).first()
 
+## Hämta galleri
+# 
+# @param g_id Anger vilket galleri som ska hämtas. Förinställda värdet är None
+# 
+# Om g_id inte är satt kommer alla gallerier hämtas.
 def get_gallery(g_id=None):
 	try:
 		if not g_id:
@@ -492,6 +544,10 @@ def get_gallery(g_id=None):
 	except:
 		return False
 
+## Uppdatera användare
+# 
+# @param db_user_email  Anger vilken användare som ska uppdateras
+# @param db_user_dict Innehåller användarens uppgifter
 def update_db_user(db_user_email, db_user_dict):
 	try:
 		db_user = models.User.query.filter_by(email=db_user_email).first()
@@ -657,7 +713,7 @@ def check_if_user_in_md(md, user_id):
 
 def check_points(md, r_md, d_id, u_id, u_point):
 	# OBS!
-	# I am assume that the u_id has the same point on d_id
+	# I assume that the u_id has the same point on d_id
 
 	# md = MultiDict([DialectID, {UserID: TotalPoints}])
 	poped_list = md.poplist(d_id)
