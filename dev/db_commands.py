@@ -232,58 +232,90 @@ def get_all_albums(approved):
 def get_a_album(album_id):
 	return models.GalleryAlbum.query.filter_by(id=album_id).first()
 
-
+## Hämta alla bilder från ett galleri
+# 
+# @param album_id Anger från vilket galleri man vill hämta bilder från
 def get_all_pic_from_album(album_id):
 	return models.GalleryPicture.query.filter_by(fk_gallery_album_id=album_id).all()
 
+## Hämta den första galleribilden
+# 
+# @param album_id Anger från vilket galleri man vill hämta bilden från
 def get_thumbnail(album_id):
 	return models.GalleryPicture.query.filter_by(fk_gallery_album_id=album_id).first()
 
+## Spara galleri
+# 
+# @param uploader Anger vem som laddat upp galleriet
+# @param date Anger vilket datum galleriet skapades
+# @param time Anger vilken tid galleriet skapades
+# @param title Anger namnet på galleriet
+# @param description Anger en beskrivning för galleriet
+# @param approved Anger om galleriet är godkänt eller inte. Detta sätts till 0 för alla nya gallerier
 def save_album(uploader, date, time, title, description, approved):
 	try:
-		# return 'S'
 		user_id = models.User.query.filter_by(email=uploader).first().id
-		# return 'U'
 		album = models.GalleryAlbum(user_id, date, time, title, description, approved)
-		# return 'P'
 		db_session.add(album)
-		# return 'A'
 		db_session.commit()
-		# return '!'
+
 		return models.GalleryAlbum.query.filter_by(fk_user_id=user_id, date=date, time=time, title=title).first().id
 	except:
 		return 'KUNDE EJ SPARA ALBUMET!'
 
+## Spara bild
+# 
+# @param uploader Anger vem som laddat upp bilden
+# @param album_id Anger vilket galleri bilden tillhör
+# @param date Anger vilket datum galleriet skapades
+# @param time Anger vilken tid galleriet skapades
+# @param path Anger filplats
+# @param description Anger en beskrivning för bilden
 def save_picture(uploader, album_id, date, time, path, description):
 	try:
 		user_id = models.User.query.filter_by(email=uploader).first().id
 		picture = models.GalleryPicture(user_id, album_id, date, time, path, description)
 		db_session.add(picture)
 		db_session.commit()
+
 		return models.GalleryPicture.query.filter_by(fk_user_id=user_id, fk_gallery_album_id=album_id, date=date, time=time, path=path).first().id
 	except:
 		return 'KUNDE EJ SPARA BILDEN!'
 
+## Uppdatera beskrivning för en bild
+# 
+# @param pic_id Anger vilken bild som ska uppdateras
+# @param description Anger den nya beskrivningen för bilden
 def update_picture(pic_id, description):
 	models.GalleryPicture.query.filter_by(id=pic_id).update({"description": description})
 	db_session.commit()
 
+## Godkänn galleri
+# 
+# @param album_id Anger vilket galleri man vill godkänna
 def album_approve(album_id):
 	models.GalleryAlbum.query.filter_by(id=album_id).update({"approved": 1})
 	db_session.commit()
 
+## Ta bort galleri
+# 
+# @param album_id Anger vilket galleri man vill ta bort
 def delete_album(album_id):
 	album = models.GalleryAlbum.query.filter_by(id=album_id).first()
 	db_session.delete(album)
 	db_session.commit()
 	return True
 
+## Hämta användares namn
+# 
+# @param user_id Anger vilken användare man vill ha namnet på
 def get_user_name(user_id):
-	first_name = models.UserInformation.query.filter_by(fk_user_id=user_id).first().firstname
-	last_name = models.UserInformation.query.filter_by(fk_user_id=user_id).first().lastname
-	name = first_name + ' ' + last_name
-	return name
+	query = models.UserInformation.query.filter_by(fk_user_id=user_id).first()
+	return query.firstname + ' ' + query.lastname
 
+## Hämta klasskompisar
+# 
+# @param db_user_email Anger vilken användare man vill hämta klasskompisar för
 def get_class_mates(db_user_email):
 	db_user = models.User.query.filter_by(email=db_user_email).first()
 	if db_user.r_user_information.school_program > 0:
@@ -292,9 +324,17 @@ def get_class_mates(db_user_email):
 	else:
 		return False
 
+## Hämta bloggkommentarer
+# 
+# @param blog_id Anger från vilken blogg man vill hämta kommentarer från
+# 
+# Inte implementerad än då man inte kan kommentera på bloggar.
 def get_comments(blog_id):
 	return
 
+## Hämta kontakter
+# 
+# @param role Anger vilken typ av kontakt man vill hämta
 def get_contacts(role):
 	if role is 0:
 		contacts = models.Contact.query.filter_by(role=role).order_by(models.Contact.school_class).all()
@@ -302,6 +342,14 @@ def get_contacts(role):
 		contacts = models.Contact.query.filter_by(role=role).all()
 	return contacts
 
+## Hämta användare
+# 
+# @param user_id Anger vilket användarid man vill hämta. Förinställda värdet är None
+# @param db_user_email Anger vilken e-mail man vill hämta användaruppgifter från. Förinställda värdet är None
+# @param db_user_password Anger vilket lösenord man vill hämta användaruppgifter från. Förinställda värdet är None
+# @param recover_code Anger vilken återställningskod man vill hämta användaruppgifter från. Förinställda värdet är None
+# 
+# 
 def get_db_user(user_id=None, db_user_email=None, db_user_password=None, recover_code=None):
 	# models.User.query.filter_by(id=1).first().user_information.fk_user_id
 	if db_user_email != None:
