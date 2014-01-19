@@ -1,3 +1,6 @@
+## Create groups
+# 
+# Is not used (I think...)
 class CreateGroups():
 	def __init__(self):
 		top_five = db_commands.admin_get_top_groups_users_only(5)
@@ -9,5 +12,6 @@ class CreateGroups():
 		return
 
 ## Run example:
-x = CreateGroups()
-print x.user_in_group(3)		## {1: 'Har med sig', 2: 'Gillar', ....}
+## x = CreateGroups()
+## print x.user_in_group(3)
+## Will return {1: 'Har med sig', 2: 'Gillar', ....}
